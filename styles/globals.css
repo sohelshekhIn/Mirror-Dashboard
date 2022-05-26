@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.underline {
+  @apply bg-accent h-1;
+}
+
+.debug {
+  @apply xs:bg-rose-900 sm:bg-orange-500 md:bg-cyan-400 lg:bg-red-500 xl:bg-blue-500 2xl:bg-gray-500 3xl:bg-indigo-700;
+}
+
+* {
+  transition: all 0.3s ease;
+  -webkit-transition: all;
+  -moz-transition: all;
+  -ms-transition: all;
+  -o-transition: all;
+}
