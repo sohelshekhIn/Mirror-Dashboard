@@ -17,11 +17,18 @@ export default function Login() {
   const handleFormSubmission = (e) => {
     e.preventDefault();
     axios
-      .post(`${process.env.NEXT_PUBLIC_STRAPI_API}/auth/local`, {
-        identifier: formData.username,
-        password: formData.password,
-      })
+      .post(
+        `${process.env.NEXT_PUBLIC_STRAPI_API}/auth/cookielogin`,
+        {
+          identifier: formData.username,
+          password: formData.password,
+        },
+        {
+          withCredentials: true,
+        }
+      )
       .then((response) => {
+        console.log(response.data.jwt);
         axios
           .get("http://localhost:1337/api/users/me", {
             headers: {
@@ -29,11 +36,9 @@ export default function Login() {
             },
           })
           .then((response) => {
-            // Handle success.
             console.log("Data: ", response.data);
           })
           .catch((error) => {
-            // Handle error.
             console.log("An error occurred:", error.response);
           });
       })
