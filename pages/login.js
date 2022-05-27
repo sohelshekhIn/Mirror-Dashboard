@@ -12,13 +12,11 @@ export default function Login() {
     });
   };
 
-  // get strapi api url from env
-
   const handleFormSubmission = (e) => {
     e.preventDefault();
     axios
       .post(
-        `${process.env.NEXT_PUBLIC_STRAPI_API}/auth/cookielogin`,
+        `${process.env.NEXT_PUBLIC_STRAPI_API}/auth/login`,
         {
           identifier: formData.username,
           password: formData.password,
@@ -28,19 +26,7 @@ export default function Login() {
         }
       )
       .then((response) => {
-        console.log(response.data.jwt);
-        axios
-          .get("http://localhost:1337/api/users/me", {
-            headers: {
-              Authorization: `Bearer ${response.data.jwt}`,
-            },
-          })
-          .then((response) => {
-            console.log("Data: ", response.data);
-          })
-          .catch((error) => {
-            console.log("An error occurred:", error.response);
-          });
+        console.log(response.data);
       })
       .catch((error) => {
         // Handle error.
@@ -77,6 +63,7 @@ export default function Login() {
             <span className="bg-accent h-1 w-5/12"></span>
           </div>
           <form
+            onSubmit={handleFormSubmission}
             autoSave="true"
             className="flex flex-col w-full"
             autoComplete="true"
@@ -86,6 +73,7 @@ export default function Login() {
                 <span className="label-text">Username</span>
               </label>
               <input
+                autoFocus
                 type="text"
                 name="username"
                 onChange={handleChange}
@@ -123,10 +111,7 @@ export default function Login() {
                 </label>
               </div>
             </div>
-            <button
-              onClick={handleFormSubmission}
-              className="btn btn-accent my-4"
-            >
+            <button type="submit" className="btn btn-accent my-4">
               Login
             </button>
           </form>
