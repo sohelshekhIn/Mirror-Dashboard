@@ -2,8 +2,11 @@ import Image from "next/image";
 import { useState } from "react";
 import { hidePass, showPass, logo } from "../public/images";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 export default function Login() {
+  const router = useRouter();
+
   const [formData, setFormData] = useState({ username: "", password: "" });
   const handleChange = (e) => {
     setFormData({
@@ -12,14 +15,21 @@ export default function Login() {
     });
   };
 
+  const hardcodedDetails = {
+    username: "sohel",
+    password: "Shekh2212a.",
+  };
+
   const handleFormSubmission = (e) => {
     e.preventDefault();
     axios
       .post(
         `${process.env.NEXT_PUBLIC_STRAPI_API}/auth/login`,
         {
-          identifier: formData.username,
-          password: formData.password,
+          identifier: hardcodedDetails.username,
+          password: hardcodedDetails.password,
+          // identifier: formData.username,
+          // password: formData.password,
         },
         {
           withCredentials: true,
@@ -27,9 +37,10 @@ export default function Login() {
       )
       .then((response) => {
         console.log(response.data);
+        // setUser(response.data);
+        router.push("/dashboard");
       })
       .catch((error) => {
-        // Handle error.
         console.log("An error occurred:", error.response);
       });
   };
