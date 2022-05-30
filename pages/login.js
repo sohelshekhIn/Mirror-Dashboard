@@ -1,51 +1,15 @@
 import Image from "next/image";
-import { useState } from "react";
 import { hidePass, showPass, logo } from "../public/images";
-import axios from "axios";
+import { useState } from "react";
 import { useRouter } from "next/router";
+import { signIn, getCsrfToken } from "next-auth/react";
+import * as Yup from "yup";
+import { Formik, Field } from "formik";
 
-export default function Login() {
+export default function Login({ csrfToken }) {
   const router = useRouter();
+  const [error, setError] = useState(null);
 
-  const [formData, setFormData] = useState({ username: "", password: "" });
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const hardcodedDetails = {
-    username: "sohel",
-    password: "Shekh2212a.",
-  };
-
-  const handleFormSubmission = (e) => {
-    e.preventDefault();
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_STRAPI_API}/auth/login`,
-        {
-          identifier: hardcodedDetails.username,
-          password: hardcodedDetails.password,
-          // identifier: formData.username,
-          // password: formData.password,
-        },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((response) => {
-        console.log(response.data);
-        // setUser(response.data);
-        router.push("/dashboard");
-      })
-      .catch((error) => {
-        console.log("An error occurred:", error.response);
-      });
-  };
-
-  // if #passwordMask is checked then set #password to type: password else set #password to type: text
   const [passwordType, setPasswordType] = useState("password");
   const handlePasswordMask = () => {
     if (passwordType === "password") {
@@ -73,61 +37,109 @@ export default function Login() {
             <h1 className="text-primary text-3xl font-bold uppercase">Login</h1>
             <span className="bg-accent h-1 w-5/12"></span>
           </div>
-          <form
-            onSubmit={handleFormSubmission}
-            autoSave="true"
-            className="flex flex-col w-full"
-            autoComplete="true"
+          <Formik
+            initialValues={{
+              username: "",
+              password: "",
+            }}
+            validationSchema={Yup.object({
+              username: Yup.string()
+                .required("Username is required")
+                .min(3, "Username must be at least 3 characters"),
+              password: Yup.string()
+                .required("Password is required")
+                .min(3, "Password must be at least 3 characters"),
+            })}
+            onSubmit={async (values, { setSubmitting }) => {
+              setError(null);
+              const res = await signIn("credentials", {
+                redirect: true,
+                identifier: values.username,
+                password: values.password,
+                callbackUrl: `${window.location.origin}/dashboard`,
+              });
+              if (res.error) {
+                setError(res.error);
+              } else {
+                setError(null);
+                if (res.url) router.push(res.url);
+              }
+              setSubmitting(false);
+            }}
           >
-            <div className="form-control w-100 max-w-lg py-2 m-0">
-              <label htmlFor="username" className="label">
-                <span className="label-text">Username</span>
-              </label>
-              <input
-                autoFocus
-                type="text"
-                name="username"
-                onChange={handleChange}
-                value={formData.username}
-                placeholder="Enter your Username here"
-                className="input input-bordered w-full max-w-lg"
-              />
-            </div>
-            <div className="form-control  w-full max-w-lg py-1 m-0">
-              <label htmlFor="password" className="label">
-                <span className="label-text">Password</span>
-              </label>
-              <div className="input-group">
+            {(formik) => (
+              <form
+                onSubmit={formik.handleSubmit}
+                autoSave="true"
+                className="flex flex-col w-full"
+                autoComplete="true"
+              >
+                <div className="text-red-400 font-semibold text-md text-center rounded p-2">
+                  {error}
+                </div>
                 <input
-                  id="password"
-                  name="password"
-                  type={passwordType}
-                  onChange={handleChange}
-                  value={formData.password}
-                  placeholder="Enter your password here"
-                  className="input input-bordered w-full max-w-lg"
+                  name="csrfToken"
+                  type="hidden"
+                  defaultValue={csrfToken}
                 />
-                <label className="btn btn-ghost bg-transparent border-1 border-slate-300 swap swap-rotate">
-                  <input
-                    id="passwordMask"
-                    onChange={handlePasswordMask}
-                    type="checkbox"
+                <div className="form-control w-100 max-w-lg py-2 m-0">
+                  <label htmlFor="username" className="label">
+                    <span className="label-text">Username</span>
+                  </label>
+                  <Field
+                    type="text"
+                    name="username"
+                    aria-label="Enter your Username here"
+                    aria-required="true"
+                    placeholder="Enter your Username here"
+                    className="input input-bordered w-full max-w-lg"
                   />
-                  <div className="swap-on">
-                    <Image src={hidePass} />
+                </div>
+                <div className="form-control  w-full max-w-lg py-1 m-0">
+                  <label htmlFor="password" className="label">
+                    <span className="label-text">Password</span>
+                  </label>
+                  <div className="input-group">
+                    <Field
+                      id="password"
+                      name="password"
+                      type={passwordType}
+                      aria-label="Enter your Password here"
+                      aria-required="true"
+                      placeholder="Enter your password here"
+                      className="input input-bordered w-full max-w-lg"
+                    />
+                    <label className="btn btn-ghost bg-transparent border-1 border-slate-300 swap swap-rotate">
+                      <input onChange={handlePasswordMask} type="checkbox" />
+                      <div className="swap-on">
+                        <Image src={hidePass} />
+                      </div>
+                      <div className="swap-off">
+                        <Image src={showPass} />
+                      </div>
+                    </label>
                   </div>
-                  <div className="swap-off">
-                    <Image src={showPass} />
-                  </div>
-                </label>
-              </div>
-            </div>
-            <button type="submit" className="btn btn-accent my-4">
-              Login
-            </button>
-          </form>
+                </div>
+                <button
+                  accessKey="S"
+                  type="submit"
+                  className="btn btn-accent my-4"
+                >
+                  {formik.isSubmitting ? "Please wait..." : "Log In"}
+                </button>
+              </form>
+            )}
+          </Formik>
         </div>
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  return {
+    props: {
+      csrfToken: await getCsrfToken(context),
+    },
+  };
 }

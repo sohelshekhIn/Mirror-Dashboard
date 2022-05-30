@@ -1,38 +1,43 @@
 import "../styles/globals.css";
 import { useEffect } from "react";
-import axios from "axios";
-import { useRouter } from "next/router";
+import { SessionProvider, useSession, signIn } from "next-auth/react";
 
-function MyApp({ Component, pageProps }) {
-  const router = useRouter();
-  let user = "sohel";
-  useEffect(() => {
-    if (user === null && !router.pathname.includes("/login")) {
-      axios
-        .get(`${process.env.NEXT_PUBLIC_STRAPI_API}/users/me`, {
-          withCredentials: true,
-        })
-        .then((res) => {
-          // setFetchUserStatus(true);
-          // setUser(res.data);
-          router.push("/dashboard");
-        })
-        .catch((err) => {
-          if (
-            err.response &&
-            (err.response.status === 401 ||
-              err.response.status === 403 ||
-              err.response.status === 500)
-          ) {
-            if (router.pathname !== "/login") {
-              router.push("/login");
-            }
-          }
-        });
-    }
-  }, []);
-
-  return <Component {...pageProps} />;
+export default function MyApp({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
+  return (
+    <SessionProvider session={session}>
+      <Component {...pageProps} />
+    </SessionProvider>
+    // <SessionProvider session={session}>
+    //   <Component {...pageProps} />
+    //   {Component.isProtected ? (
+    //     <Auth>
+    //       <Component {...pageProps} />
+    //     </Auth>
+    //   ) : (
+    //     <Component {...pageProps} />
+    //   )}
+    // </SessionProvider>
+  );
 }
 
-export default MyApp;
+function Auth({ children }) {
+  const { data: session, status } = useSession();
+  const isUser = !!session?.user;
+  useEffect(() => {
+    console.log(status);
+    console.log(isUser);
+    if (status === "loading") return;
+    if (!isUser) signIn();
+  }, [isUser, status]);
+
+  if (isUser) {
+    return children;
+  }
+
+  // Session is being fetched, or no user.
+  // If no user, useEffect() will redirect.
+  return <div>Loading...</div>;
+}
