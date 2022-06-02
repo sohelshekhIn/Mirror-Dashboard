@@ -1,4 +1,4 @@
-import { useSession, signOut, getSession, signIn } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import PageNotFound from "./404";
 import Loading from "../components/utilities/Loading";
 import StudentDashboard from "../components/Students";

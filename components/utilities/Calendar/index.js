@@ -1,5 +1,6 @@
 import moment from "moment";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Calendar({ className, apiResponse, minYear, maxYear }) {
   let weekdayshort = moment.weekdaysShort();
@@ -304,12 +305,12 @@ export default function Calendar({ className, apiResponse, minYear, maxYear }) {
   });
 
   var nextBtnStatus =
-    (year() == maxPossibleYear) &
+    (year() >= maxPossibleYear) &
     (month().toLowerCase() == "December".toLowerCase())
       ? "disabled"
       : "";
   var prevBtnStatus =
-    (year() == minPossibleYear) &
+    (year() <= minPossibleYear) &
     (month().toLowerCase() == "January".toLowerCase())
       ? "disabled"
       : "";
@@ -398,7 +399,7 @@ export default function Calendar({ className, apiResponse, minYear, maxYear }) {
 
       {state.showDateTable && (
         <div className="m-0 p-0">
-          <table className=" w-full m-0 p-0">
+          <table className="calendar-day w-full m-0 p-0">
             <thead>
               <tr>{weekdayshortname}</tr>
             </thead>
@@ -406,6 +407,29 @@ export default function Calendar({ className, apiResponse, minYear, maxYear }) {
           </table>
         </div>
       )}
+      <div className="flex justify-end mt-8">
+        <div className="flex w-full mx-5 justify-start">
+          <Link href="/student/attendance">
+            <a className="btn btn-accent">See More</a>
+          </Link>
+        </div>
+        <div className="flex flex-col mx-5">
+          <span className="bg-transparent mx-auto bg-opacity-30 w-6 h-6 border-info border-2 rounded-full"></span>
+          <span className="text-md">Today</span>
+        </div>
+        <div className="flex flex-col mx-5">
+          <span className="bg-success mx-auto bg-opacity-30 w-6 h-6 border-success border-2 rounded-full"></span>
+          <span className="text-md">Present</span>
+        </div>
+        <div className="flex flex-col mx-5">
+          <span className="bg-error mx-auto bg-opacity-30 w-6 h-6 border-error border-2 rounded-full"></span>
+          <span className="text-md">Absent</span>
+        </div>
+        <div className="flex flex-col mx-5">
+          <span className="bg-primary mx-auto bg-opacity-30 w-6 h-6 border-primary border-2 rounded-full"></span>
+          <span className="text-md">Holiday</span>
+        </div>
+      </div>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import hidePass from "./hidePass.svg";
 import logoBlue from "./logo-blue.png";
 import maleAvatar from "./male.png";
 import femaleAvatar from "./female.png";
-import loading from "./loading.svg";
+import loadingAnimation from "./loading.svg";
 
 export {
   logo,
@@ -13,5 +13,5 @@ export {
   logoBlue,
   maleAvatar,
   femaleAvatar,
-  loading,
+  loadingAnimation,
 };

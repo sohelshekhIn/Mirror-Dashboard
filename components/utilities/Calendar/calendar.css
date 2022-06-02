@@ -23,8 +23,10 @@
   leading-9 table-cell bg-no-repeat bg-center backdrop-brightness-100 hover:backdrop-brightness-95 duration-200;
 }
 
-thead tr > *,
-tbody tr > * {
+table.calendar-day thead tr > *,
+table.calendar-day tbody tr > *,
+table.calendar-month thead tr > *,
+table.calendar-month tbody tr > * {
   @apply text-gray-500
   w-10
   h-10
@@ -32,13 +34,15 @@ tbody tr > * {
   text-center p-0 font-normal;
 }
 
-tbody tr > * {
+table.calendar-day tbody tr > *,
+table.calendar-month tbody tr > * {
   @apply text-secondary cursor-not-allowed relative text-sm;
   @apply hover:text-gray-400 after:hover:backdrop-brightness-95;
   @apply after:p-0 after:absolute after:w-10 after:h-10 after:border-2 after:border-transparent after:top-[50%] after:left-[50%] after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:text-accent;
 }
 
-tbody tr > * > span {
+table.calendar-day tbody tr > * > span,
+table.calendar-month tbody tr > * > span {
   @apply text-inherit z-10 relative;
 }
 

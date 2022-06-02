@@ -9,18 +9,16 @@ export default function Index() {
   useState(() => {
     if (typeof window === "undefined") return null;
   });
-  const changeRoute = () => {
-    useEffect(() => {
+  useEffect(() => {
+    if (session) {
       router.push("/dashboard");
-    }, []);
-  };
-  if (session) {
-    changeRoute();
-    // return <Loading />;
-    return <Loading />;
-  }
-  signIn();
-  return;
+    }
+    if (!session) {
+      signIn();
+    }
+  }, [session]);
+
+  return <Loading />;
 }
 
 export async function getServerSideProps(context) {

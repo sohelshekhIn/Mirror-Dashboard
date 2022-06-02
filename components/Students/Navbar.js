@@ -6,9 +6,8 @@ import { maleAvatar, femaleAvatar } from "../../public/images";
 import { useRouter } from "next/router";
 
 export default function Navbar() {
-  const router = useRouter();
   return (
-    <div className="navbar bg-base-100 lg:px-28 z-50 pt-5 shadow-md fixed">
+    <div className="navbar bg-white z-50 pt-5 shadow-md fixed top-0 duration-500 lg:px-16 xl:px-48">
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex="0" className="btn btn-ghost btn-circle">
@@ -32,7 +31,7 @@ export default function Navbar() {
             className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <a>Homepage</a>
+              <a>Website</a>
             </li>
             <li>
               <a>Portfolio</a>
