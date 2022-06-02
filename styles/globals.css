@@ -11,9 +11,5 @@
 }
 
 * {
-  transition: all 0.3s ease;
-  -webkit-transition: all;
-  -moz-transition: all;
-  -ms-transition: all;
-  -o-transition: all;
+  @apply transition-all ease-in-out duration-1000;
 }

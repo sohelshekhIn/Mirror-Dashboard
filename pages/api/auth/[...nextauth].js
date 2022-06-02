@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
-import { logout } from "../../../../backend/src/api/custom/controllers/custom";
 
+var error = "";
 export default NextAuth({
   providers: [
     CredentialsProvider({
@@ -24,11 +24,16 @@ export default NextAuth({
             })
             .catch((error) => {
               if (
+                error.response &&
                 error.response.data.error.details.messages.id ===
-                "invalid_credentials"
+                  "invalid_credentials"
               ) {
-                console.log("Invalid credentials");
-                throw new Error("Username or Password is incorrect");
+                throw new Error("Invalid Credentials");
+              } else if (error.code) {
+                // Handle all axios errors here
+                if (error.code === "ECONNREFUSED") {
+                  throw new Error("Connection refused");
+                }
               }
             }) || null
         );

@@ -1,19 +1,32 @@
+import { useSession, getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Loading from "../components/utilities/Loading";
 
-export default function Home() {
+export default function Index() {
   const router = useRouter();
-  useEffect(() => {
-    router.push("/login");
+  const { data: session } = useSession();
+  useState(() => {
+    if (typeof window === "undefined") return null;
   });
+  const changeRoute = () => {
+    useEffect(() => {
+      router.push("/dashboard");
+    }, []);
+  };
+  if (session) {
+    changeRoute();
+    // return <Loading />;
+    return <Loading />;
+  }
+  signIn();
+  return;
+}
 
-  return (
-    <>
-      <center>
-        <h1 className="mt-28 text-5xl text-primary font-bold">
-          Redirecting to Login Page...
-        </h1>
-      </center>
-    </>
-  );
+export async function getServerSideProps(context) {
+  return {
+    props: {
+      session: await getSession(context),
+    },
+  };
 }

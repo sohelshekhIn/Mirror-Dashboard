@@ -1,0 +1,77 @@
+.calendar-parent {
+  @apply min-w-fit 
+  m-5
+  p-5
+  relative
+  shadow-xl
+  rounded-lg
+  bg-white
+  overflow-hidden
+  after:clear-both
+  after:block
+  transition-all
+  duration-150
+  select-none;
+}
+
+.calendar-nav {
+  @apply bg-white p-3 rounded-t-xl w-full table border-collapse;
+}
+
+.calendar-nav-span {
+  @apply cursor-pointer  p-2 text-center text-lg rounded-lg
+  leading-9 table-cell bg-no-repeat bg-center backdrop-brightness-100 hover:backdrop-brightness-95 duration-200;
+}
+
+thead tr > *,
+tbody tr > * {
+  @apply text-gray-500
+  w-10
+  h-10
+  text-xs
+  text-center p-0 font-normal;
+}
+
+tbody tr > * {
+  @apply text-secondary cursor-not-allowed relative text-sm;
+  @apply hover:text-gray-400 after:hover:backdrop-brightness-95;
+  @apply after:p-0 after:absolute after:w-10 after:h-10 after:border-2 after:border-transparent after:top-[50%] after:left-[50%] after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:text-accent;
+}
+
+tbody tr > * > span {
+  @apply text-inherit z-10 relative;
+}
+
+table.calendar-month thead tr > * {
+  @apply text-lg;
+}
+
+table.calendar-month tbody tr > * {
+  @apply p-5 w-24 cursor-pointer;
+  @apply after:p-0 after:absolute after:w-full  after:h-full after:border-none after:rounded-md after:top-[50%] after:left-[50%] after:-translate-x-1/2 after:-translate-y-1/2;
+  @apply hover:text-gray-500 after:hover:backdrop-brightness-95;
+}
+
+.present {
+  @apply hover:text-success text-success after:border-success after:bg-success after:bg-opacity-20;
+}
+
+.absent {
+  @apply hover:text-error text-error after:border-error after:bg-error after:bg-opacity-20;
+}
+
+.holiday {
+  @apply hover:text-primary text-primary after:border-primary after:bg-primary after:bg-opacity-20;
+}
+
+.today {
+  @apply text-info after:border-info;
+}
+.empty {
+  @apply cursor-not-allowed after:hover:hidden;
+}
+.disabled,
+table.calendar-month tbody tr > *.disabled {
+  @apply fill-gray-300
+   cursor-not-allowed text-gray-300 hover:text-gray-300 after:hover:hidden;
+}
