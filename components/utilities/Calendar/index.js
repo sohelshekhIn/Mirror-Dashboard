@@ -61,6 +61,7 @@ export default function Calendar({ className, apiResponse, minYear, maxYear }) {
     let monthNo = state.allmonths.indexOf(month);
     let dateObject = Object.assign({}, state.dateObject);
     dateObject = moment(dateObject).set("month", monthNo);
+    console.log(dateObject);
     setState({
       ...state,
       dateObject: dateObject,
@@ -267,7 +268,7 @@ export default function Calendar({ className, apiResponse, minYear, maxYear }) {
     let currentDay =
       (d == currentDayFunc()) &
       (moment(state.dateObject).month() == moment().month()) &
-      (moment(state.dateObject.year()) == moment().year())
+      (moment(state.dateObject).year() == moment().year())
         ? "today"
         : "";
     daysInMonthUi.push(
@@ -325,7 +326,7 @@ export default function Calendar({ className, apiResponse, minYear, maxYear }) {
             }
             onPrev();
           }}
-          className={"calendar-nav-span " + prevBtnStatus}
+          className={"calendar-nav-span" + prevBtnStatus}
         >
           <svg
             className={"mx-auto fill-secondary rotate-180 " + prevBtnStatus}
@@ -407,27 +408,31 @@ export default function Calendar({ className, apiResponse, minYear, maxYear }) {
           </table>
         </div>
       )}
-      <div className="flex justify-end mt-8">
-        <div className="flex w-full mx-5 justify-start">
-          <Link href="/student/attendance">
-            <a className="btn btn-accent">See More</a>
-          </Link>
+      <div className="flex xs:flex-col-reverse lg:flex-row justify-end mt-8">
+        <div className="xs:w-full xs:mx-auto xs:mt-5 lg:mt-0">
+          <div className="flex lg:w-full mx-5 xs:justify-center justify-start">
+            <Link href="/student/attendance">
+              <a className="btn btn-accent">See More</a>
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col mx-5">
-          <span className="bg-transparent mx-auto bg-opacity-30 w-6 h-6 border-info border-2 rounded-full"></span>
-          <span className="text-md">Today</span>
-        </div>
-        <div className="flex flex-col mx-5">
-          <span className="bg-success mx-auto bg-opacity-30 w-6 h-6 border-success border-2 rounded-full"></span>
-          <span className="text-md">Present</span>
-        </div>
-        <div className="flex flex-col mx-5">
-          <span className="bg-error mx-auto bg-opacity-30 w-6 h-6 border-error border-2 rounded-full"></span>
-          <span className="text-md">Absent</span>
-        </div>
-        <div className="flex flex-col mx-5">
-          <span className="bg-primary mx-auto bg-opacity-30 w-6 h-6 border-primary border-2 rounded-full"></span>
-          <span className="text-md">Holiday</span>
+        <div className="xs:w-full flex xs:mx-auto">
+          <div className="flex flex-col mx-5">
+            <span className="bg-transparent mx-auto bg-opacity-30 w-6 h-6 border-info border-2 rounded-full"></span>
+            <span className="text-md">Today</span>
+          </div>
+          <div className="flex flex-col mx-5">
+            <span className="bg-success mx-auto bg-opacity-30 w-6 h-6 border-success border-2 rounded-full"></span>
+            <span className="text-md">Present</span>
+          </div>
+          <div className="flex flex-col mx-5">
+            <span className="bg-error mx-auto bg-opacity-30 w-6 h-6 border-error border-2 rounded-full"></span>
+            <span className="text-md">Absent</span>
+          </div>
+          <div className="flex flex-col mx-5">
+            <span className="bg-primary mx-auto bg-opacity-30 w-6 h-6 border-primary border-2 rounded-full"></span>
+            <span className="text-md">Holiday</span>
+          </div>
         </div>
       </div>
     </div>

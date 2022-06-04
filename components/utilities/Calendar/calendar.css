@@ -1,7 +1,5 @@
 .calendar-parent {
-  @apply min-w-fit 
-  m-5
-  p-5
+  @apply /* min-w-fit  */
   relative
   shadow-xl
   rounded-lg
@@ -56,26 +54,27 @@ table.calendar-month tbody tr > * {
   @apply hover:text-gray-500 after:hover:backdrop-brightness-95;
 }
 
-.present {
+table.calendar-day tbody tr > .present {
   @apply hover:text-success text-success after:border-success after:bg-success after:bg-opacity-20;
 }
 
-.absent {
+table.calendar-day tbody tr > .absent {
   @apply hover:text-error text-error after:border-error after:bg-error after:bg-opacity-20;
 }
 
-.holiday {
+table.calendar-day tbody tr > .holiday {
   @apply hover:text-primary text-primary after:border-primary after:bg-primary after:bg-opacity-20;
 }
 
-.today {
-  @apply text-info after:border-info;
-}
-.empty {
+table.calendar-day tbody tr > .empty {
   @apply cursor-not-allowed after:hover:hidden;
 }
-.disabled,
+table.calendar-day tbody tr > .disabled,
 table.calendar-month tbody tr > *.disabled {
   @apply fill-gray-300
    cursor-not-allowed text-gray-300 hover:text-gray-300 after:hover:hidden;
+}
+
+table.calendar-day tbody tr > .today {
+  @apply text-info after:border-info;
 }

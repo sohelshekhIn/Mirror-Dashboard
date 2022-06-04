@@ -20,6 +20,7 @@ export default NextAuth({
               password: credentials.password,
             })
             .then((response) => {
+              console.log(response.data.user.role);
               return response.data;
             })
             .catch((error) => {

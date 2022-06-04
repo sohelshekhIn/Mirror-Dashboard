@@ -1,10 +1,12 @@
 import Link from "next/link";
+import DashboardHandler from "../components/utilities/DashbordHandler";
 
 export default function PageNotFound() {
   return (
     <div
       className="
     flex
+    fixed
     items-center
     justify-center
     w-screen
@@ -25,9 +27,9 @@ export default function PageNotFound() {
           <p className="mb-8 text-center text-gray-500 md:text-lg">
             The page you’re looking for doesn’t exist.
           </p>
-          <Link href="/">
+          <Link href={DashboardHandler({ session: false, wantUrl: true })}>
             <a className="px-6 py-2 text-sm font-semibold text-blue-800 bg-blue-100">
-              Go home
+              Go Dashboard
             </a>
           </Link>
         </div>

@@ -13,3 +13,5 @@
 * {
   @apply transition-all ease-in-out duration-1000;
 }
+
+@import url("../components/utilities/Calendar/calendar.css");

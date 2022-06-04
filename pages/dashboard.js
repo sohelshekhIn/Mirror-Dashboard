@@ -1,7 +1,7 @@
 import { useSession, signIn } from "next-auth/react";
 import PageNotFound from "./404";
 import Loading from "../components/utilities/Loading";
-import StudentDashboard from "../components/Students";
+import DashboardHandler from "../components/utilities/DashbordHandler";
 
 export default function Dashboard() {
   const { status, data } = useSession({
@@ -15,8 +15,9 @@ export default function Dashboard() {
     return <Loading />;
   }
 
-  if (data.user && data.user.role === "students") {
-    return <StudentDashboard />;
+  // This Dashboard is resposible to drive the loged in user to its dashboard url base on its role
+  if (data.user) {
+    DashboardHandler({ session: data });
   } else if (data.user) {
     return <PageNotFound />;
   }

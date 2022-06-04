@@ -6,6 +6,7 @@ import { signIn, getCsrfToken, getSession, useSession } from "next-auth/react";
 import * as Yup from "yup";
 import { Formik, Field } from "formik";
 import Link from "next/link";
+import DashboardHandler from "../components/utilities/DashbordHandler";
 
 export default function Login({ csrfToken }) {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function Login({ csrfToken }) {
   }, []);
   if (session) {
     // Check if user can go back then go back or else redirect to dashboard
-    router.push("/dashboard");
+    DashboardHandler({ session });
   }
 
   const [passwordType, setPasswordType] = useState("password");
@@ -42,8 +43,11 @@ export default function Login({ csrfToken }) {
       <div className="px-5 pt-3 lg:px-8 lg:pt-8">
         <div className="navbar bg-gray-100 shadow-xl p-5 rounded-lg">
           <div className="mx-auto">
-            <Link href="/">
-              <a className="btn btn-ghost normal-case text-xl pb-5">
+            <Link tabIndex="0" href="/">
+              <a
+                tabIndex="0"
+                className="btn btn-ghost normal-case text-xl pb-5"
+              >
                 <span className="w-10/12">
                   <Image src={logoBlue} />
                 </span>
@@ -84,7 +88,6 @@ export default function Login({ csrfToken }) {
                 setLoginError(res.error);
               } else {
                 setLoginError(null);
-                console.log("Re");
                 if (res.url) router.push(res.url);
               }
               setSubmitting(false);

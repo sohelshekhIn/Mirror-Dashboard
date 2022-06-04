@@ -1,30 +1,18 @@
-import { useSession, getSession, signIn } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useSession, signIn } from "next-auth/react";
+import DashboardHandler from "../components/utilities/DashbordHandler";
 import Loading from "../components/utilities/Loading";
+import PageNotFound from "./404";
 
 export default function Index() {
-  const router = useRouter();
-  const { data: session } = useSession();
-  useState(() => {
-    if (typeof window === "undefined") return null;
-  });
-  useEffect(() => {
-    if (session) {
-      router.push("/dashboard");
-    }
-    if (!session) {
+  const { status, data } = useSession({
+    required: true,
+    onUnauthenticated() {
       signIn();
-    }
-  }, [session]);
-
-  return <Loading />;
-}
-
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      session: await getSession(context),
     },
-  };
+  });
+  if (status === "loading") {
+    return <Loading />;
+  }
+  console.log(data);
+  return DashboardHandler({ data });
 }

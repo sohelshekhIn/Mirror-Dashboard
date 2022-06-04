@@ -3,11 +3,10 @@ import Image from "next/image";
 import { logoBlue } from "../../public/images";
 import { signIn, signOut } from "next-auth/react";
 import { maleAvatar, femaleAvatar } from "../../public/images";
-import { useRouter } from "next/router";
 
 export default function Navbar() {
   return (
-    <div className="navbar bg-white z-50 pt-5 shadow-md fixed top-0 duration-500 lg:px-16 xl:px-48">
+    <div className="navbar bg-white z-50 pt-5 shadow-md fixed top-0 duration-500 lg:px-16 xl:px-48 3xl:px-96">
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex="0" className="btn btn-ghost btn-circle">
@@ -31,13 +30,24 @@ export default function Navbar() {
             className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <a>Website</a>
+              <Link href="/">
+                <a>Website</a>
+              </Link>
             </li>
             <li>
-              <a>Portfolio</a>
+              <Link href="/student/attendance">
+                <a>Attendence</a>
+              </Link>
             </li>
             <li>
-              <a>About</a>
+              <Link href="/student/homeworks">
+                <a>Homeworks</a>
+              </Link>
+            </li>
+            <li>
+              <Link href="/student/test-results">
+                <a>Test Results</a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -54,6 +64,7 @@ export default function Navbar() {
         </Link>
       </div>
       <div className="navbar-end">
+        <div className="mx-5">Sohel Shekh</div>
         <div className="dropdown dropdown-end">
           <label tabIndex="0" className="btn btn-ghost btn-circle avatar">
             <div className="w-10 rounded-full">
