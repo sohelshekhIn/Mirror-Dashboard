@@ -47,6 +47,7 @@ export default NextAuth({
   },
   callbacks: {
     async jwt({ token, user }) {
+      console.log(user);
       if (user) {
         return {
           ...token,
@@ -57,6 +58,7 @@ export default NextAuth({
             username: user.user.username,
             email: user.user.email,
             role: user.user.role.type,
+            batch: user.user.batch.batch,
           },
         };
       }
@@ -69,6 +71,7 @@ export default NextAuth({
       session.user.username = token.user.username;
       session.user.email = token.user.email;
       session.user.role = token.user.role;
+      session.user.batch = token.user.batch;
       return session;
     },
   },

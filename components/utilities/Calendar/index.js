@@ -239,16 +239,24 @@ export default function Calendar({ className, apiResponse, minYear, maxYear }) {
 
   let monthObject = [];
   for (let key in apiResponse) {
-    // format of date is "DD-MM-YYYY"
-    let dateArray = apiResponse[key].date.split("-");
-    let month = dateArray[1].length === 1 ? "0" + dateArray[1] : dateArray[1];
-    if (
-      month == moment(state.dateObject).month() + 1 &&
-      dateArray[2] == moment(state.dateObject).year()
-    ) {
-      monthObject.push(apiResponse[key]);
-    }
+    // format of date is "DD/MM/YYYY"
+    let dateArray = key.split("/");
+    console.log(dateArray);
+    let month = dateArray[1];
+    // let calendarMonth = moment(state.dateObject).month() + 1
+    let calendarMonth =
+      dateArray[1].length === 1
+        ? "0" + (parseInt(dateArray[1]) + 1)
+        : parseInt(dateArray[1]) + 1;
+    console.log(month);
+    // if (
+    //   month == moment(state.dateObject).month() + 1 &&
+    //   dateArray[2] == moment(state.dateObject).year()
+    // ) {
+    //   monthObject.push(apiResponse[key]);
+    // }
   }
+  console.log(monthObject);
   // get
   let weekdayshortname = weekdayshort.map((day) => {
     return <th key={day}>{day[0]}</th>;

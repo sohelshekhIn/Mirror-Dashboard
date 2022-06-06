@@ -1,40 +1,70 @@
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 import Calendar from "../utilities/Calendar";
 
 export default function Attendance() {
   let apiData = {
-    1: {
-      date: "2-5-2022",
-      value: "present",
-    },
-    2: {
-      date: "3-5-2022",
-      value: "absent",
-    },
-    3: {
-      date: "4-5-2022",
-      value: "present",
-    },
-    4: {
-      date: "5-6-2022",
-      value: "present",
-    },
-    5: {
-      date: "6-6-2022",
-      value: "present",
-    },
-    6: {
-      date: "7-6-2022",
-      value: "absent",
-    },
-    7: {
-      date: "8-6-2022",
-      value: "present",
-    },
-    8: {
-      date: "9-6-2022",
-      value: "holiday",
-    },
+    // 1: {
+    //   date: "2-5-2022",
+    //   value: "present",
+    // },
+    // 2: {
+    //   date: "3-5-2022",
+    //   value: "absent",
+    // },
+    "01/04/2022": "absent",
+    "02/05/2022": "present",
+    "03/05/2022": "present",
+    "04/05/2022": "absent",
   };
+
+  const { data } = useSession();
+
+  useEffect(() => {
+    axios
+      .get(
+        process.env.NEXT_PUBLIC_STRAPI_API +
+          `/attendance/me?batch=${data.user.batch}&id=${data.user.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${data.user.accessToken}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+        loadAttendanceData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const resolveAttendanceState = (data) => {
+    //  if data.method is false and data.found is true then return absent
+    //  if data.method is false and data.found is false then return present
+    //  if data.method is true and data.found is true then return present
+    //  if data.method is true and data.found is false then return absent
+    if (data.method === false && data.found === true) {
+      return "absent";
+    } else if (data.method === false && data.found === false) {
+      return "present";
+    } else if (data.method === true && data.found === true) {
+      return "present";
+    } else if (data.method === true && data.found === false) {
+      return "absent";
+    }
+  };
+
+  const loadAttendanceData = (data) => {
+    for (let key in data) {
+      console.log(data[key]);
+      apiData[key] = resolveAttendanceState(data[key]);
+    }
+    console.log(apiData);
+  };
+
   return (
     <div className="flex flex-col mx-auto lg:mx-0 xs:w-full sm:w-11/12 md:w-8/12 lg:w-7/12">
       <div className="transform">
