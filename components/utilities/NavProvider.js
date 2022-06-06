@@ -1,5 +1,6 @@
-import { signIn, useSession } from "next-auth/react";
-import Navbar from "../student/Navbar";
+import { useSession } from "next-auth/react";
+import StudentNavbar from "../student/Navbar";
+import FacultyNavbar from "../faculty/Navbar";
 import Loading from "./Loading";
 
 export default function NavProvider({ children }) {
@@ -11,8 +12,14 @@ export default function NavProvider({ children }) {
     if (data.user && data.user.role === "student") {
       return (
         <>
-          <Navbar />
+          <StudentNavbar session={data} />
           <div className="mt-24">{children}</div>
+        </>
+      );
+    } else if (data.user && data.user.role === "faculty") {
+      return (
+        <>
+          <FacultyNavbar session={data}>{children}</FacultyNavbar>
         </>
       );
     } else {

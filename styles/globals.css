@@ -11,7 +11,24 @@
 }
 
 * {
-  @apply transition-all ease-in-out duration-1000;
+  @apply transition-all ease-in-out duration-200;
 }
 
 @import url("../components/utilities/Calendar/calendar.css");
+
+#sidebar {
+  @apply -translate-x-[100%] md:translate-x-0;
+}
+#menu-close-icon {
+  @apply hidden;
+}
+
+#menu-open:checked ~ #sidebar {
+  @apply translate-x-0;
+}
+#menu-open:checked ~ * #menu-open-icon {
+  @apply hidden;
+}
+#menu-open:checked ~ * #menu-close-icon {
+  @apply block;
+}

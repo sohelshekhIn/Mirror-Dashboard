@@ -1,6 +1,6 @@
 import { signIn, useSession } from "next-auth/react";
-import Loading from "../../../components/utilities/Loading";
-import PageNotFound from "../../404";
+import Loading from "../../components/utilities/Loading";
+import PageNotFound from "../404";
 
 export default function AttendancePage() {
   const { status, data } = useSession({

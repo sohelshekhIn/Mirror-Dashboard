@@ -1,6 +1,7 @@
 import { signIn, useSession } from "next-auth/react";
-import Loading from "../../../components/utilities/Loading";
-import PageNotFound from "../../404";
+import Link from "next/link";
+import Loading from "../../components/utilities/Loading";
+import PageNotFound from "../404";
 
 export default function StudentDashboard() {
   const { status, data } = useSession({
@@ -15,5 +16,11 @@ export default function StudentDashboard() {
   if (data.user && data.user.role !== "faculty") {
     return <PageNotFound />;
   }
-  return "Facultty Dashboard";
+  console.log(data);
+  return (
+    <div className="mt-5">
+      <div className="font-bold text-primary text-3xl">Hello, Sahil</div>
+      <Link href="/faculty/attendance">Attendance</Link>
+    </div>
+  );
 }

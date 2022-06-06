@@ -1,9 +1,9 @@
 import { signIn, useSession } from "next-auth/react";
-import Attendance from "../../../components/student/Attendance";
-import Homework from "../../../components/student/Homework";
-import TestResults from "../../../components/student/TestResults";
-import Loading from "../../../components/utilities/Loading";
-import PageNotFound from "../../404";
+import Attendance from "../../components/student/Attendance";
+import Homework from "../../components/student/Homework";
+import TestResults from "../../components/student/TestResults";
+import Loading from "../../components/utilities/Loading";
+import PageNotFound from "../404";
 
 export default function StudentDashboard() {
   const { status, data } = useSession({

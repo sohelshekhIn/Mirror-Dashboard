@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { Formik, Field } from "formik";
 import Link from "next/link";
 import DashboardHandler from "../components/utilities/DashbordHandler";
+import NotificationAlert from "../components/utilities/NotificationAlert";
 
 export default function Login({ csrfToken }) {
   const router = useRouter();
@@ -87,6 +88,10 @@ export default function Login({ csrfToken }) {
               if (res.error) {
                 setLoginError(res.error);
               } else {
+                NotificationAlert({
+                  message: "Login Successful",
+                  type: "success",
+                });
                 setLoginError(null);
                 if (res.url) router.push(res.url);
               }
@@ -175,7 +180,7 @@ export default function Login({ csrfToken }) {
           </Formik>
         </div>
       </div>
-      <ErrorNotification error={loginError} />
+      <NotificationAlert message={loginError} type="error" />
     </div>
   );
 }
@@ -187,39 +192,3 @@ export async function getServerSideProps(context) {
     },
   };
 }
-
-const ErrorNotification = ({ error }) => {
-  var yCords = 96;
-  const [animateClass, setAnimateClass] = useState(`translate-y-${yCords}`);
-  useEffect(() => {
-    if (error) {
-      setAnimateClass("translate-y-0");
-      setTimeout(() => {
-        setAnimateClass(`translate-y-${yCords}`);
-      }, 6000);
-    }
-  }, [error]);
-
-  return (
-    <div
-      className={`absolute w-96 transform transition-all ease-in-out duration-1000 right-[50%] translate-x-[50%] lg:translate-x-0 lg:right-14 bottom-24 alert alert-error shadow-lg ${animateClass}`}
-    >
-      <div>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="stroke-current flex-shrink-0 h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        <span>{error}</span>
-      </div>
-    </div>
-  );
-};

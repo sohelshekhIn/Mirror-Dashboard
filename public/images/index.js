@@ -5,6 +5,7 @@ import logoBlue from "./logo-blue.png";
 import maleAvatar from "./male.png";
 import femaleAvatar from "./female.png";
 import loadingAnimation from "./loading.svg";
+import search from "./search.svg";
 
 export {
   logo,
@@ -14,4 +15,5 @@ export {
   maleAvatar,
   femaleAvatar,
   loadingAnimation,
+  search,
 };

@@ -1,22 +1,33 @@
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import DashboardHandler from "../components/utilities/DashbordHandler";
 
 export default function PageNotFound() {
+  const { data, status } = useSession();
+  const [facultyUiClass, setFacultyUiClass] = useState("justify-center");
+
+  useEffect(() => {
+    if (data && data.user && data.user.role === "faculty") {
+      setFacultyUiClass("justify-start lg:pl-[5%] xl:pl-[10%] 3xl:pl-[10%]");
+    }
+  }, [data, status]);
+
   return (
     <div
-      className="
+      className={`
     flex
     fixed
     items-center
-    justify-center
     w-screen
     h-screen
     bg-gradient-to-r
     from-primary
     to-blue-400
-  "
+    ${facultyUiClass}
+  `}
     >
-      <div className="px-40 py-20 bg-white rounded-md shadow-xl">
+      <div className="px-20 md:px-40 py-20 bg-white rounded-md shadow-xl">
         <div className="flex flex-col items-center">
           <h1 className="font-bold text-blue-600 text-9xl">404</h1>
 

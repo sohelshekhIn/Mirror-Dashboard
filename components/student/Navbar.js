@@ -4,7 +4,7 @@ import { logoBlue } from "../../public/images";
 import { signIn, signOut } from "next-auth/react";
 import { maleAvatar, femaleAvatar } from "../../public/images";
 
-export default function Navbar() {
+export default function StudentNavbar({ session }) {
   return (
     <div className="navbar bg-white z-50 pt-5 shadow-md fixed top-0 duration-500 lg:px-16 xl:px-48 3xl:px-96">
       <div className="navbar-start">
@@ -27,7 +27,7 @@ export default function Navbar() {
           </label>
           <ul
             tabIndex="0"
-            className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+            className="menu menu-normal dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
               <Link href="/">
@@ -64,7 +64,7 @@ export default function Navbar() {
         </Link>
       </div>
       <div className="navbar-end">
-        <div className="mx-5">Sohel Shekh</div>
+        <div className="mx-5">{session.user.name}</div>
         <div className="dropdown dropdown-end">
           <label tabIndex="0" className="btn btn-ghost btn-circle avatar">
             <div className="w-10 rounded-full">
@@ -73,8 +73,11 @@ export default function Navbar() {
           </label>
           <ul
             tabIndex="0"
-            className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+            className="menu menu-normal dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
           >
+            <li>
+              <a className="justify-between">{session.user.name}</a>
+            </li>
             <li>
               <a className="justify-between">Profile</a>
             </li>

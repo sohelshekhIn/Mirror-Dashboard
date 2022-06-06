@@ -20,7 +20,8 @@ export default NextAuth({
               password: credentials.password,
             })
             .then((response) => {
-              console.log(response.data.user.role);
+              // console.log(response.data.user.role);
+              console.log(response);
               return response.data;
             })
             .catch((error) => {
@@ -50,9 +51,10 @@ export default NextAuth({
       if (user) {
         return {
           ...token,
-          accessToken: user.user.jwt,
+          accessToken: user.jwt,
           user: {
-            id: user.user.id,
+            id: user.user.UserID,
+            name: user.user.name,
             username: user.user.username,
             email: user.user.email,
             role: user.user.role.type,
@@ -64,6 +66,7 @@ export default NextAuth({
     async session({ session, token }) {
       session.user.accessToken = token.accessToken;
       session.user.id = token.user.id;
+      session.user.name = token.user.name;
       session.user.username = token.user.username;
       session.user.email = token.user.email;
       session.user.role = token.user.role;
