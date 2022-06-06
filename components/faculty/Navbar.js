@@ -5,7 +5,7 @@ import { signIn, signOut } from "next-auth/react";
 import { maleAvatar, femaleAvatar } from "../../public/images";
 import { useEffect } from "react";
 
-export default function FacultyNavbar({ children }) {
+export default function FacultyNavbar({ children, session }) {
   // when #main is clicked, check the checkbox
 
   useEffect(() => {

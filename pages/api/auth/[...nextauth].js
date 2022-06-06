@@ -21,7 +21,6 @@ export default NextAuth({
             })
             .then((response) => {
               // console.log(response.data.user.role);
-              console.log(response);
               return response.data;
             })
             .catch((error) => {
