@@ -20,7 +20,6 @@ export default NextAuth({
               password: credentials.password,
             })
             .then((response) => {
-              // console.log(response.data.user.role);
               return response.data;
             })
             .catch((error) => {
@@ -47,8 +46,11 @@ export default NextAuth({
   },
   callbacks: {
     async jwt({ token, user }) {
-      console.log(user);
       if (user) {
+        let batch = null;
+        if (user.user.role.type === "student") {
+          batch = user.user.batch;
+        }
         return {
           ...token,
           accessToken: user.jwt,
@@ -58,7 +60,7 @@ export default NextAuth({
             username: user.user.username,
             email: user.user.email,
             role: user.user.role.type,
-            batch: user.user.batch.batch,
+            batch: batch,
           },
         };
       }

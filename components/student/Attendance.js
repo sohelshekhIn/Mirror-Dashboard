@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Calendar from "../utilities/Calendar";
 
 export default function Attendance() {
@@ -20,6 +20,7 @@ export default function Attendance() {
   };
 
   const { data } = useSession();
+  const [loadCalendar, setLoadCalendar] = useState("");
 
   useEffect(() => {
     axios
@@ -33,7 +34,6 @@ export default function Attendance() {
         }
       )
       .then((res) => {
-        console.log(res.data);
         loadAttendanceData(res.data);
       })
       .catch((err) => {
@@ -59,10 +59,17 @@ export default function Attendance() {
 
   const loadAttendanceData = (data) => {
     for (let key in data) {
-      console.log(data[key]);
       apiData[key] = resolveAttendanceState(data[key]);
     }
-    console.log(apiData);
+    setLoadCalendar(
+      <Calendar
+        key={data.id}
+        apiResponse={apiData}
+        className="lg:max-w-xl m-5 p-5"
+        minYear="0"
+        maxYear="1"
+      />
+    );
   };
 
   return (
@@ -71,12 +78,7 @@ export default function Attendance() {
         <h1 className="m-5 p-5 mb-0 pb-0 font-semibold text-secondary text-2xl">
           Attendance
         </h1>
-        <Calendar
-          apiResponse={apiData}
-          className="lg:max-w-xl m-5 p-5"
-          minYear="0"
-          maxYear="1"
-        />
+        {loadCalendar}
       </div>
     </div>
   );

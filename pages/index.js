@@ -13,6 +13,5 @@ export default function Index() {
   if (status === "loading") {
     return <Loading />;
   }
-  console.log(data);
   return DashboardHandler({ data });
 }

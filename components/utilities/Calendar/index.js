@@ -61,7 +61,6 @@ export default function Calendar({ className, apiResponse, minYear, maxYear }) {
     let monthNo = state.allmonths.indexOf(month);
     let dateObject = Object.assign({}, state.dateObject);
     dateObject = moment(dateObject).set("month", monthNo);
-    console.log(dateObject);
     setState({
       ...state,
       dateObject: dateObject,
@@ -241,22 +240,22 @@ export default function Calendar({ className, apiResponse, minYear, maxYear }) {
   for (let key in apiResponse) {
     // format of date is "DD/MM/YYYY"
     let dateArray = key.split("/");
-    console.log(dateArray);
-    let month = dateArray[1];
     // let calendarMonth = moment(state.dateObject).month() + 1
     let calendarMonth =
-      dateArray[1].length === 1
-        ? "0" + (parseInt(dateArray[1]) + 1)
-        : parseInt(dateArray[1]) + 1;
-    console.log(month);
-    // if (
-    //   month == moment(state.dateObject).month() + 1 &&
-    //   dateArray[2] == moment(state.dateObject).year()
-    // ) {
-    //   monthObject.push(apiResponse[key]);
-    // }
+      moment(state.dateObject).month().toString().length === 1
+        ? "0" + dateArray[1]
+        : parseInt(dateArray[1]);
+    if (
+      calendarMonth == moment(state.dateObject).month() + 1 &&
+      dateArray[2] == moment(state.dateObject).year()
+    ) {
+      monthObject.push({
+        date: key,
+        value: apiResponse[key],
+      });
+    }
   }
-  console.log(monthObject);
+
   // get
   let weekdayshortname = weekdayshort.map((day) => {
     return <th key={day}>{day[0]}</th>;
@@ -268,8 +267,14 @@ export default function Calendar({ className, apiResponse, minYear, maxYear }) {
   let daysInMonthUi = [];
   for (let d = 1; d <= daysInMonth(); d++) {
     let attendence = "";
+    let dateWithZero = d.toString().length === 1 ? "0" + d : d;
     for (let i = 0; i < monthObject.length; i++) {
-      if (monthObject[i].date.split("-")[0] == d) {
+      if (
+        monthObject[i].date.split("/")[0] == dateWithZero &&
+        monthObject[i].date.split("/")[1] ==
+          moment(state.dateObject).month() + 1 &&
+        monthObject[i].date.split("/")[2] == moment(state.dateObject).year()
+      ) {
         attendence = monthObject[i].value;
       }
     }

@@ -56,6 +56,7 @@ const AttendanceTable = ({ apiData, batch, sessionData }) => {
           setAttendanceState(null);
           // set checked to false which are having class attendance
           let checkboxes = document.getElementsByClassName("attendance");
+          document.getElementById("attendance").checked = false;
           for (let i = 0; i < checkboxes.length; i++) {
             checkboxes[i].checked = false;
           }
@@ -70,6 +71,7 @@ const AttendanceTable = ({ apiData, batch, sessionData }) => {
     setAttendanceMethod(attendanceData.attendanceMethod);
     document.getElementById("attendanceMethod").checked =
       attendanceData.attendanceMethod;
+
     for (let key in attendanceData.data) {
       document.getElementById(attendanceData.data[key]).checked = true;
     }
@@ -87,7 +89,6 @@ const AttendanceTable = ({ apiData, batch, sessionData }) => {
       tempAttendanceData.splice(tempAttendanceData.indexOf(e.target.name), 1);
     }
     setAttendanceData(tempAttendanceData);
-    console.log(tempAttendanceData);
   };
 
   const handleAttendanceSubmission = () => {
@@ -165,9 +166,14 @@ const AttendanceTable = ({ apiData, batch, sessionData }) => {
     }
   };
   return (
-    <div className="flex flex-col mt-10 px-4 py-8 rounded-xl bg-white shadow-xl max-h-[60vh] overflow-y-scroll">
-      <div className="flex flex-row justify-between align-bottom">
+    <div className="flex flex-col mt-10 px-4 py-10 rounded-xl bg-white shadow-xl max-h-[60vh] overflow-y-scroll">
+      <div className="flex flex-row space-x-4 align-bottom">
         <h1 className="font-bold text-3xl">12 CBSE</h1>
+        {attendanceState === null ? (
+          ""
+        ) : (
+          <p className="font-semibold text-success pt-3">(Taken)</p>
+        )}
       </div>
       <div className="flex w-full">
         <div className="form-control w-full">
@@ -192,7 +198,9 @@ const AttendanceTable = ({ apiData, batch, sessionData }) => {
         </div>
         {studentTable}
         <div className="flex space-x-5 justify-end pt-5">
-          <button className="btn btn-ghost">Cancel</button>
+          <button tabIndex="-1" className="btn btn-ghost">
+            Cancel
+          </button>
           <button
             onClick={handleAttendanceSubmission}
             className="btn btn-accent"

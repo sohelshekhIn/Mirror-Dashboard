@@ -16,7 +16,6 @@ export default function StudentDashboard() {
   if (data.user && data.user.role !== "faculty") {
     return <PageNotFound />;
   }
-  console.log(data);
   return (
     <div className="mt-5">
       <div className="font-bold text-primary text-3xl">Hello, Sahil</div>
