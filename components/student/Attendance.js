@@ -4,20 +4,7 @@ import { useEffect, useState } from "react";
 import Calendar from "../utilities/Calendar";
 
 export default function Attendance() {
-  let apiData = {
-    // 1: {
-    //   date: "2-5-2022",
-    //   value: "present",
-    // },
-    // 2: {
-    //   date: "3-5-2022",
-    //   value: "absent",
-    // },
-    "01/04/2022": "absent",
-    "02/05/2022": "present",
-    "03/05/2022": "present",
-    "04/05/2022": "absent",
-  };
+  let apiData = {};
 
   const { data } = useSession();
   const [loadCalendar, setLoadCalendar] = useState("");

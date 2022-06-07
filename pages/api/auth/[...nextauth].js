@@ -49,7 +49,7 @@ export default NextAuth({
       if (user) {
         let batch = null;
         if (user.user.role.type === "student") {
-          batch = user.user.batch;
+          batch = user.user.batch.batch;
         }
         return {
           ...token,
