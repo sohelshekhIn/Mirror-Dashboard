@@ -16,7 +16,6 @@ export default function AuthProvider({ children, role, required = true }) {
   if (data == undefined) {
     return signIn();
   }
-  console.log(data.user.role);
   if (data.user && data.user.role !== role) {
     return <PageNotFound />;
   }
