@@ -57,6 +57,19 @@ export default function RegisterStudent() {
     document.getElementById("dobDatePickerToggle").checked = false;
   };
 
+  // get school names from options in select element
+  const getSelectOptions = (selectId) => {
+    const schoolNames = [];
+    window.addEventListener("onload", () => {
+      const schoolOptions = document.getElementById(selectId).options;
+      for (let i = 0; i < schoolOptions.length; i++) {
+        i != 0 ? schoolNames.push(schoolOptions[i].value) : null;
+      }
+      console.log(schoolNames);
+    });
+    return schoolNames;
+  };
+
   return (
     <DashboardContent>
       <div className="flex flex-col">
@@ -82,15 +95,56 @@ export default function RegisterStudent() {
               fatherMobile: "",
               motherMobile: "",
               msgMobile: "",
-              active: "",
-              canLogin: "",
+              active: true,
+              canLogin: true,
             }}
             validationSchema={Yup.object({
               name: Yup.string()
                 .required("Name is required")
                 .min(3, "Name must be atleast 3 characters"),
-              gender: Yup.string().is(["Male", "Female"], "Select Gender"),
+              gender: Yup.string()
+                .required("Gender is Required")
+                .is(getSelectOptions("gender"), "Select Gender"),
               // Using Yup check if value is not DEFAULT
+              school: Yup.string()
+                .required("School Name is required")
+                .is(getSelectOptions("school"), "Select School"),
+              batch: Yup.string()
+                .required("Batch is required")
+                .is(getSelectOptions("batch"), "Select Batch"),
+              subjects: Yup.string()
+                .required("Subjects is required")
+                .min(1, "Select atleast one subject"),
+              joinDate: Yup.date()
+                .required("Join Date is required")
+                // Date must be less than or equal to today
+                .max(
+                  new Date(),
+                  "Join Date must be less than or equal to today"
+                ),
+              dob: Yup.date()
+                .required("Date of Birth is required")
+                .max(
+                  new Date(),
+                  "Date of Birth must be less than or equal to today"
+                ),
+              fatherName: Yup.string()
+                .required("Father Name is required")
+                .min(3, "Father Name must be atleast 3 characters"),
+              motherName: Yup.string()
+                .required("Mother Name is required")
+                .min(3, "Mother Name must be atleast 3 characters"),
+              fatherMobile: Yup.number()
+                .required("Father Mobile is required")
+                .min(10, "Father Mobile must be atleast 10 digits"),
+              motherMobile: Yup.number()
+                .required("Mother Mobile is required")
+                .min(10, "Mother Mobile must be atleast 10 digits"),
+              msgMobile: Yup.number()
+                .required("Message Mobile is required")
+                .min(10, "Message Mobile must be atleast 10 digits"),
+              active: Yup.bool().required("Mirror Student is required"),
+              canLogin: Yup.bool().required("Can Login is required"),
             })}
             onSubmit={async (values, { setSubmitting }) => {
               setTimeout(() => {
@@ -109,6 +163,44 @@ export default function RegisterStudent() {
                 {formik.errors.gender &&
                   formik.touched.gender &&
                   setValidationError(formik.errors.gender)}
+                {formik.errors.school &&
+                  formik.touched.school &&
+                  setValidationError(formik.errors.school)}
+                {formik.errors.batch &&
+                  formik.touched.batch &&
+                  setValidationError(formik.errors.batch)}
+                {formik.errors.subjects &&
+                  formik.touched.subjects &&
+                  setValidationError(formik.errors.subjects)}
+                {formik.errors.joinDate &&
+                  formik.touched.joinDate &&
+                  setValidationError(formik.errors.joinDate)}
+                {formik.errors.dob &&
+                  formik.touched.dob &&
+                  setValidationError(formik.errors.dob)}
+                {formik.errors.fatherName &&
+                  formik.touched.fatherName &&
+                  setValidationError(formik.errors.fatherName)}
+                {formik.errors.motherName &&
+                  formik.touched.motherName &&
+                  setValidationError(formik.errors.motherName)}
+                {formik.errors.fatherMobile &&
+                  formik.touched.fatherMobile &&
+                  setValidationError(formik.errors.fatherMobile)}
+                {formik.errors.motherMobile &&
+                  formik.touched.motherMobile &&
+                  setValidationError(formik.errors.motherMobile)}
+                {formik.errors.msgMobile &&
+                  formik.touched.msgMobile &&
+                  setValidationError(formik.errors.msgMobile)}
+                {formik.errors.active &&
+                  formik.touched.active &&
+                  setValidationError(formik.errors.active)}
+                {formik.errors.canLogin &&
+                  formik.touched.canLogin &&
+                  setValidationError(formik.errors.canLogin)}
+                {/* Handle Formik Values */}
+
                 <div className="flex flex-wrap flex-col-reverse md:flex-row space-y-5 md:space-y-0">
                   {/* <div className="flex flex-wrap md:w-12/12 space-y-5 md:space-y-0"> */}
                   {/* --- Skipped --- */}
@@ -134,6 +226,7 @@ export default function RegisterStudent() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         name="gender"
+                        id="gender"
                         className="select select-bordered"
                       >
                         <option value="DEFAULT">Select Gender</option>
@@ -145,7 +238,14 @@ export default function RegisterStudent() {
                       <label htmlFor="school" className="label">
                         <span className="label-text">School</span>
                       </label>
-                      <select name="school" className="select select-bordered">
+                      <select
+                        id="school"
+                        name="school"
+                        value={formik.values.school}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        className="select select-bordered"
+                      >
                         <option value="DEFAULT">Select School</option>
                         <option>Bharatiya Vidya Bhavans</option>
                         <option>Vrajbhoomi International</option>
@@ -165,11 +265,15 @@ export default function RegisterStudent() {
                       </select>
                     </div>
                     <div className="form-control w-100 max-w-2xl md:max-w-md w-full">
-                      <label htmlFor="studbatch" className="label">
+                      <label htmlFor="batch" className="label">
                         <span className="label-text">Batch</span>
                       </label>
                       <select
-                        name="studbatch"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.batch}
+                        id="batch"
+                        name="batch"
                         className="select select-bordered"
                       >
                         <option value="DEFAULT">Select Batch</option>
@@ -188,7 +292,8 @@ export default function RegisterStudent() {
                           <div className="form-control w-5/12">
                             <label className="label cursor-pointer">
                               <span className="label-text">Maths</span>
-                              <input
+                              <Field
+                                name="subjects"
                                 type="checkbox"
                                 id="checkbox"
                                 className="checkbox"
@@ -198,7 +303,8 @@ export default function RegisterStudent() {
                           <div className="form-control w-5/12">
                             <label className="label cursor-pointer">
                               <span className="label-text">Physics</span>
-                              <input
+                              <Field
+                                name="subjects"
                                 type="checkbox"
                                 id="checkbox"
                                 className="checkbox"
@@ -210,7 +316,8 @@ export default function RegisterStudent() {
                           <div className="form-control w-5/12">
                             <label className="label cursor-pointer">
                               <span className="label-text">Chemistry</span>
-                              <input
+                              <Field
+                                name="subjects"
                                 type="checkbox"
                                 id="checkbox"
                                 className="checkbox"
@@ -220,7 +327,8 @@ export default function RegisterStudent() {
                           <div className="form-control w-5/12">
                             <label className="label cursor-pointer">
                               <span className="label-text">Biology</span>
-                              <input
+                              <Field
+                                name="subjects"
                                 type="checkbox"
                                 id="checkbox"
                                 className="checkbox"
@@ -238,6 +346,10 @@ export default function RegisterStudent() {
                         <input
                           id="joinDatePickerInput"
                           type="text"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.joinDate}
+                          name="joinDate"
                           placeholder="Select Date (DD/MM/YY)"
                           className="outline-none bg-transparent"
                         />
@@ -283,6 +395,10 @@ export default function RegisterStudent() {
                         <input
                           id="dobDatePickerInput"
                           type="text"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.dob}
+                          name="dob"
                           placeholder="Select Date (DD/MM/YY)"
                           className="outline-none bg-transparent"
                         />
@@ -319,60 +435,75 @@ export default function RegisterStudent() {
                       </div>
                     </div>
                     <div className="form-control w-100 max-w-2xl md:max-w-md w-full">
-                      <label htmlFor="fathername" className="label">
+                      <label htmlFor="fatherName" className="label">
                         <span className="label-text">Father Name</span>
                       </label>
                       <input
                         type="text"
-                        name="fathername"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.fatherName}
+                        name="fatherName"
                         aria-label="Enter Father Name"
                         placeholder="Enter Father Name"
                         className="input input-bordered w-full max-w-full"
                       />
                     </div>
                     <div className="form-control w-100 max-w-2xl md:max-w-md w-full">
-                      <label htmlFor="mothername" className="label">
+                      <label htmlFor="motherName" className="label">
                         <span className="label-text">Mother Name</span>
                       </label>
                       <input
                         type="text"
-                        name="mothername"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.motherName}
+                        name="motherName"
                         aria-label="Enter Mother Name"
                         placeholder="Enter Mother Name"
                         className="input input-bordered w-full max-w-full"
                       />
                     </div>
                     <div className="form-control w-100 max-w-2xl md:max-w-md w-full">
-                      <label htmlFor="fathermobile" className="label">
+                      <label htmlFor="fatherMobile" className="label">
                         <span className="label-text">Father Mobile No.</span>
                       </label>
                       <input
                         type="tel"
-                        name="fathermobile"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.fatherMobile}
+                        name="fatherMobile"
                         aria-label="Enter Father Mobile No."
                         placeholder="Enter Father Mobile No."
                         className="input input-bordered w-full max-w-full"
                       />
                     </div>
                     <div className="form-control w-100 max-w-2xl md:max-w-md w-full">
-                      <label htmlFor="mothermobile" className="label">
+                      <label htmlFor="motherMobile" className="label">
                         <span className="label-text">Mother Mobile No.</span>
                       </label>
                       <input
                         type="tel"
-                        name="mothermobile"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.motherMobile}
+                        name="motherMobile"
                         aria-label="Enter Mother Mobile No."
                         placeholder="Enter Mother Mobile No."
                         className="input input-bordered w-full max-w-full"
                       />
                     </div>
                     <div className="form-control w-100 max-w-2xl md:max-w-md w-full">
-                      <label htmlFor="smsnumber" className="label">
+                      <label htmlFor="msgNumber" className="label">
                         <span className="label-text">Message Mobile No.</span>
                       </label>
                       <input
                         type="tel"
-                        name="smsnumber"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.msgNumber}
+                        name="msgNumber"
                         aria-label="Enter Message Mobile No."
                         placeholder="Enter Message Mobile No."
                         className="input input-bordered w-full max-w-full"
@@ -382,9 +513,12 @@ export default function RegisterStudent() {
                       <label className="label cursor-pointer">
                         <span className="label-text">Mirror Student?</span>
                         <input
-                          defaultChecked
                           type="checkbox"
                           id="checkbox"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.active}
+                          name="active"
                           className="checkbox"
                         />
                       </label>
@@ -393,7 +527,10 @@ export default function RegisterStudent() {
                       <label className="label cursor-pointer">
                         <span className="label-text">Can Login?</span>
                         <input
-                          defaultChecked
+                          name="canLogin"
+                          onClick={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.canLogin}
                           type="checkbox"
                           id="checkbox"
                           className="checkbox"
@@ -420,7 +557,9 @@ export default function RegisterStudent() {
               </div> */}
                 </div>
                 <div className="form-control mx-auto py-10 max-w-2xl md:max-w-md w-full">
-                  <button className="btn btn-accent">Submit</button>
+                  <button type="submit" className="btn btn-accent">
+                    Submit
+                  </button>
                 </div>
               </form>
             )}
