@@ -1,5 +1,6 @@
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
+import { DashboardContent } from "../../components/faculty/Navbar";
 import Loading from "../../components/utilities/Loading";
 import PageNotFound from "../404";
 
@@ -17,9 +18,11 @@ export default function StudentDashboard() {
     return <PageNotFound />;
   }
   return (
-    <div className="mt-5">
-      <div className="font-bold text-primary text-3xl">Hello, Sahil</div>
+    <DashboardContent>
+      <div className="font-bold text-primary text-3xl">
+        Hello, {data.user.name.split(" ")[0]}
+      </div>
       <Link href="/faculty/attendance">Attendance</Link>
-    </div>
+    </DashboardContent>
   );
 }

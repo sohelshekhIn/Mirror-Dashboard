@@ -18,6 +18,10 @@ export default function FacultyNavbar({ children, session }) {
     navLinks.addEventListener("click", () => {
       menu.checked = false;
     });
+    // var avatar = maleAvatar;
+    // if (session.user.gender == "Female") {
+    //   avatar = femaleAvatar;
+    // }
   }, []);
   return (
     <div className="flex flex-col ">
@@ -108,13 +112,25 @@ export default function FacultyNavbar({ children, session }) {
                 <a className="text-secondary">Take Attendance</a>
               </Link>
             </li>
+            <li className="navli duration-200">
+              <Link href="/faculty/register-student">
+                <a className="text-secondary">Register Student</a>
+              </Link>
+            </li>
           </ul>
         </aside>
 
-        <main id="content" className="w-screen h-screen flex-1">
-          <div className="max-w-7xl mx-auto mt-24">{children} </div>
+        <main
+          id="content"
+          className="w-screen h-screen flex-1 overflow-y-scroll"
+        >
+          <div className="max-w-7xl h-100 mt-24 mb-24">{children} </div>
         </main>
       </div>
     </div>
   );
+}
+
+export function DashboardContent({ children }) {
+  return <div className="m-10 my-32 md:m-24 md:my-40 h-100">{children}</div>;
 }

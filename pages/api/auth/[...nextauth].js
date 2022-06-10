@@ -7,7 +7,7 @@ export default NextAuth({
   providers: [
     CredentialsProvider({
       id: "credentials",
-      name: "NextAuthBackendApi Mirror",
+      name: "NextAuthBackendApiMirror",
       credentials: {
         identifier: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
@@ -26,7 +26,7 @@ export default NextAuth({
               if (
                 error.response &&
                 error.response.data.error.details.messages.id ===
-                  "invalid_credentials"
+                "invalid_credentials"
               ) {
                 throw new Error("Invalid Credentials");
               } else if (error.code) {

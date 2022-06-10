@@ -6,6 +6,8 @@ import maleAvatar from "./male.png";
 import femaleAvatar from "./female.png";
 import loadingAnimation from "./loading.svg";
 import search from "./search.svg";
+import calendarSVG from "./calendar.svg";
+import calendarPNG from "./calendar.png";
 
 export {
   logo,
@@ -16,4 +18,6 @@ export {
   femaleAvatar,
   loadingAnimation,
   search,
+  calendarSVG,
+  calendarPNG,
 };

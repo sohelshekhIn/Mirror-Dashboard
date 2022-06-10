@@ -6,6 +6,10 @@
   @apply bg-accent h-1;
 }
 
+.heading1 {
+  @apply font-bold text-3xl;
+}
+
 .debug {
   @apply xs:bg-rose-900 sm:bg-orange-500 md:bg-cyan-400 lg:bg-red-500 xl:bg-blue-500 2xl:bg-gray-500 3xl:bg-indigo-700;
 }
@@ -15,6 +19,7 @@
 }
 
 @import url("../components/utilities/Calendar/calendar.css");
+@import url("../components/utilities/DatePicker/datepicker.css");
 
 #sidebar {
   @apply -translate-x-[100%] md:translate-x-0;

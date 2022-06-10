@@ -6,6 +6,7 @@ import Image from "next/image";
 import Loading from "../../components/utilities/Loading";
 import PageNotFound from "../404";
 import { search } from "../../public/images";
+import { DashboardContent } from "../../components/faculty/Navbar";
 
 export default function TakeAttendance() {
   const { status, data } = useSession({
@@ -78,48 +79,49 @@ export default function TakeAttendance() {
   };
 
   return (
-    <div className="m-5 xs:m-0 px-5 pt-10 max-w-xl">
-      <div className="flex flex-col">
-        <div className="flex flex-col px-5">
-          <h1 className="font-bold text-primary text-3xl">Take Attendance</h1>
-          <span className="bg-accent h-1 w-24"></span>
+    <DashboardContent>
+      <div className="max-w-xl">
+        <div className="flex flex-col">
+          <div className="flex flex-col">
+            <h1 className="heading1 text-primary">Take Attendance</h1>
+            <span className="underline w-24 my-4"></span>
+          </div>
+          <form
+            onSubmit={handleLoadStudents}
+            className="w-full mt-14 flex flex-col md:flex-row"
+          >
+            <div className="form-control mx-auto md:mx-0 w-full max-w-xs">
+              <label className="label">
+                <span className="label-text">Select Batch</span>
+              </label>
+              <select
+                id="selectBatch"
+                defaultValue="DEFAULT"
+                required
+                className="select select-bordered"
+              >
+                <option value="DEFAULT" disabled>
+                  Select Batch
+                </option>
+                {batch.map((batch) => {
+                  return (
+                    <option key={batch} value={batch}>
+                      {batch}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <div className="form-control w-full md:w-36 mx-auto md:mx-5 max-w-xs flex justify-end my-5 md:my-0 ">
+              <button type="submit" className="btn btn-accent">
+                Proceed
+              </button>
+            </div>
+          </form>
+          {atteendanceView}
         </div>
-        <form
-          onSubmit={handleLoadStudents}
-          className="w-full mt-14 flex flex-col md:flex-row"
-        >
-          <div className="form-control mx-auto md:mx-0 w-full max-w-xs">
-            <label className="label">
-              <span className="label-text">Select Batch</span>
-            </label>
-            <select
-              id="selectBatch"
-              defaultValue="DEFAULT"
-              required
-              className="select select-bordered"
-            >
-              <option value="DEFAULT" disabled>
-                Select Batch
-              </option>
-              {batch.map((batch) => {
-                return (
-                  <option key={batch} value={batch}>
-                    {batch}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          <div className="form-control w-full md:w-36 mx-auto md:mx-5 max-w-xs flex justify-end my-5 md:my-0 ">
-            <button type="submit" className="btn btn-accent">
-              Proceed
-            </button>
-          </div>
-        </form>
-        {atteendanceView}
       </div>
-    </div>
-  );
+    </DashboardContent>);
 }
 
 const EmptyMessage = () => {
