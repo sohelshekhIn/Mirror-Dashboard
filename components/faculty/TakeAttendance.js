@@ -8,7 +8,7 @@ const AttendanceTable = ({ apiData, batch, sessionData }) => {
   const [studentTable, setStudentTable] = useState([]); //true for student table, false for attendance table
   const [attendanceData, setAttendanceData] = useState([]);
   const [attendanceState, setAttendanceState] = useState({});
-  const [notification, setNotification] = useState({ message: "", type: "" });
+  const [notification, setNotification] = useState({ message: null, type: "" });
   const router = useRouter();
 
   useEffect(() => {
@@ -41,7 +41,9 @@ const AttendanceTable = ({ apiData, batch, sessionData }) => {
   useEffect(() => {
     axios
       .get(
-        process.env.NEXT_PUBLIC_STRAPI_API + "/attendance/check?batch=" + batch,
+        process.env.NEXT_PUBLIC_STRAPI_API +
+          "/info/attendance/check?batch=" +
+          batch,
         {
           headers: {
             Authorization: `Bearer ${sessionData.user.accessToken}`,
@@ -103,8 +105,8 @@ const AttendanceTable = ({ apiData, batch, sessionData }) => {
       axios
         .put(
           process.env.NEXT_PUBLIC_STRAPI_API +
-          "/attendances/" +
-          attendanceState.id,
+            "/attendances/" +
+            attendanceState.id,
           {
             data: {
               AttendanceId: batch.replace(/\s/g, "") + "_" + today,

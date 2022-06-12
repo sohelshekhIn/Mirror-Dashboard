@@ -7,6 +7,7 @@ import Loading from "../../components/utilities/Loading";
 import PageNotFound from "../404";
 import { search } from "../../public/images";
 import { DashboardContent } from "../../components/faculty/Navbar";
+import NotificationAlert from "../../components/utilities/NotificationAlert";
 
 export default function TakeAttendance() {
   const { status, data } = useSession({
@@ -22,24 +23,50 @@ export default function TakeAttendance() {
     return <PageNotFound />;
   }
 
-  const [batch, setBatch] = useState([]);
-  const [atteendanceView, setAttendanceView] = useState(<EmptyMessage />);
+  const [batch, setBatch] = useState(["Loading Batches..."]);
+  const [attendanceView, setAttendanceView] = useState(<EmptyMessage />);
+  const [notification, setNotification] = useState({
+    message: null,
+    type: "",
+  });
 
   useEffect(() => {
     axios
-      .get(process.env.NEXT_PUBLIC_STRAPI_API + "/batches?fields[0]=batch", {
-        headers: {
-          Authorization: `Bearer ${data.user.accessToken}`,
-        },
-      })
+      .get(
+        process.env.NEXT_PUBLIC_STRAPI_API +
+          "/batches?fields[0]=batch&fields[1]=subjects",
+        {
+          headers: {
+            Authorization: `Bearer ${data.user.accessToken}`,
+          },
+        }
+      )
       .then((res) => {
+        console.log(res);
+        // let tempBatch = {};
         let tempBatch = [];
         for (let key in res.data.data) {
           tempBatch.push(res.data.data[key].attributes.batch);
+          //  ==> Temp Batch Object
+          // tempBatch[res.data.data[key].attributes.batch] =
+          //   res.data.data[key].attributes.subjects;
         }
+        // Priority Changed to Admiin Panel: Dismissing for now
+        // tempBatch structure:
+        // {
+        //   "12 NCERT": ["Chemistry", "Physics", "Maths", "Biology"],
+        // }
         setBatch(tempBatch);
       })
       .catch((err) => {
+        // if (err.code && err.code === "ERR_BAD_REQUEST") {
+
+        // }
+        setNotification({
+          message: err.message,
+          type: "error",
+          id: new Date(),
+        });
         console.log(err);
       });
   }, [data]);
@@ -50,14 +77,13 @@ export default function TakeAttendance() {
     if (batch === "DEFAULT") {
       return;
     }
+
+    // Get students of batch for attendance
     axios
-      .post(
-        process.env.NEXT_PUBLIC_STRAPI_API + "/attendance/students",
-        {
-          data: {
-            batch: batch,
-          },
-        },
+      .get(
+        process.env.NEXT_PUBLIC_STRAPI_API +
+          "/info/attendance/students?batch=" +
+          batch,
         {
           headers: {
             Authorization: `Bearer ${data.user.accessToken}`,
@@ -75,6 +101,11 @@ export default function TakeAttendance() {
       })
       .catch((err) => {
         console.log(err);
+        setNotification({
+          message: err.message,
+          type: "error",
+          id: new Date(),
+        });
       });
   };
 
@@ -104,6 +135,13 @@ export default function TakeAttendance() {
                   Select Batch
                 </option>
                 {batch.map((batch) => {
+                  if (batch === "Loading Batches...") {
+                    return (
+                      <option disabled value={batch}>
+                        {batch}
+                      </option>
+                    );
+                  }
                   return (
                     <option key={batch} value={batch}>
                       {batch}
@@ -118,10 +156,16 @@ export default function TakeAttendance() {
               </button>
             </div>
           </form>
-          {atteendanceView}
+          {attendanceView}
         </div>
       </div>
-    </DashboardContent>);
+      <NotificationAlert
+        message={notification.message}
+        type={notification.type}
+        id={notification.id}
+      />
+    </DashboardContent>
+  );
 }
 
 const EmptyMessage = () => {

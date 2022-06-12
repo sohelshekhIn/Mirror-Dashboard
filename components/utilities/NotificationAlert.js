@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 
-const NotificationAlert = ({ type, message }) => {
+const NotificationAlert = ({ type, message, id }) => {
   // type can be alert, success, error, warning, info
   var yCords = 96;
   const [animateClass, setAnimateClass] = useState(`translate-y-${yCords}`);
   const [svgElem, setSvgElem] = useState("");
 
   useEffect(() => {
-    if (message !== "") {
+    if (message !== null) {
       setAnimateClass("translate-y-0");
       setTimeout(() => {
         setAnimateClass(`translate-y-${yCords}`);
@@ -119,7 +119,7 @@ const NotificationAlert = ({ type, message }) => {
     if (type === "alert") {
       type = "";
     }
-  }, [message, type]);
+  }, [message, type, id]);
 
   return (
     <div

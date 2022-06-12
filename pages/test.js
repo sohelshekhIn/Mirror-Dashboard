@@ -25,7 +25,10 @@ export default function Test() {
   return (
     <>
       <div className="hiden md:max-w-md xs:max-w-sm lg:max-w-xl m-5 p-5  bg-primary translate-y-96 max-w-xs"></div>
-      <div className="hiden "></div>
+      <div className="hiden alert alert-success "></div>
+      <div className="hiden alert alert-info"></div>
+      <div className="hiden alert  alert-error"></div>
+      <div className="hiden alert  alert-warning"></div>
       <center>
         <h1>Testing...</h1>
       </center>

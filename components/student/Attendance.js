@@ -13,7 +13,7 @@ export default function Attendance() {
     axios
       .get(
         process.env.NEXT_PUBLIC_STRAPI_API +
-          `/attendance/me?batch=${data.user.batch}&id=${data.user.id}`,
+          `/info/attendance/me?batch=${data.user.batch}&id=${data.user.id}`,
         {
           headers: {
             Authorization: `Bearer ${data.user.accessToken}`,

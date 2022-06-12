@@ -7,7 +7,6 @@ import { useEffect } from "react";
 
 export default function FacultyNavbar({ children, session }) {
   // when #main is clicked, check the checkbox
-
   useEffect(() => {
     let content = document.getElementById("content");
     let menu = document.getElementById("menu-open");
@@ -73,10 +72,8 @@ export default function FacultyNavbar({ children, session }) {
               tabIndex="0"
               className="menu menu-normal dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
             >
-              <li className="md:hidden">
-                <a className="justify-between">
-                  <div className="mx-5">{session.user.name}</div>
-                </a>
+              <li>
+                <a className="justify-between">{session.user.name}</a>
               </li>
               <li>
                 <a className="justify-between">Profile</a>
@@ -115,6 +112,11 @@ export default function FacultyNavbar({ children, session }) {
             <li className="navli duration-200">
               <Link href="/faculty/register-student">
                 <a className="text-secondary">Register Student</a>
+              </Link>
+            </li>
+            <li className="navli duration-200">
+              <Link href="/faculty/view-student">
+                <a className="text-secondary">View Student</a>
               </Link>
             </li>
           </ul>
