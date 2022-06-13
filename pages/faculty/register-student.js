@@ -10,6 +10,7 @@ import Image from "next/image";
 import { calendarPNG } from "../../public/images";
 import axios from "axios";
 import NotificationAlert from "../../components/utilities/NotificationAlert";
+import { useRouter } from "next/router";
 
 export default function RegisterStudent() {
   // Page Authentication Checker
@@ -38,6 +39,8 @@ export default function RegisterStudent() {
   });
   const [subjects, setSubjects] = useState([]);
   const [submittedData, setSubmittedData] = useState({});
+
+  const router = useRouter();
 
   useEffect(() => {
     const handleEsc = (event) => {
@@ -213,6 +216,7 @@ export default function RegisterStudent() {
                     setSubmitting(false);
                     setSubmittedData(values);
                     // Empty all the fields
+                    router.reload();
                   })
                   .catch((err) => {
                     setNotification({

@@ -28,7 +28,7 @@ export default function ViewStudent() {
   const [formData, setFormData] = useState({
     class: null,
     batch: null,
-    subjects: null,
+    subjects: [],
   });
   const [notification, setNotification] = useState({
     message: null,
@@ -81,18 +81,59 @@ export default function ViewStudent() {
     if (e.target.name === "class") {
       setValidationError(null);
     }
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    // if name is subjects then add to subjects array
+    if (e.target.name === "subjects") {
+      if (e.target.checked) {
+        setFormData({
+          ...formData,
+          subjects: [...formData.subjects, e.target.value],
+        });
+      } else {
+        setFormData({
+          ...formData,
+          subjects: formData.subjects.filter(
+            (subject) => subject !== e.target.value
+          ),
+        });
+      }
+    } else {
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value,
+      });
+    }
   };
-
+  console.log(formData);
+  console.log(formData.subjects);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.class === "" || formData.class === "DEFAULT") {
       setValidationError("Please select a class");
       return;
     }
+    axios
+      .post(
+        process.env.NEXT_PUBLIC_STRAPI_API + "/data/students/view",
+        {
+          data: formData,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${data.user.accessToken}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        setNotification({
+          message: err.message,
+          type: "error",
+          id: new Date(),
+        });
+      });
   };
 
   return (
@@ -198,6 +239,7 @@ export default function ViewStudent() {
                               type="checkbox"
                               id="subjectCheckBox"
                               value={subject}
+                              onChange={handleChange}
                               className="subjectCheckBox checkbox"
                             />
                           </label>
@@ -220,15 +262,22 @@ export default function ViewStudent() {
                             // set checked to true of all subjects
                             let subjectElems =
                               document.querySelectorAll(".subjectCheckBox");
+                            let selectedSubjects = [];
                             if (e.target.checked) {
                               for (let i = 0; i < subjectElems.length; i++) {
                                 subjectElems[i].checked = true;
+                                selectedSubjects.push(subjectElems[i].value);
                               }
                             } else {
                               for (let i = 0; i < subjectElems.length; i++) {
                                 subjectElems[i].checked = false;
+                                selectedSubjects = [];
                               }
                             }
+                            setFormData({
+                              ...formData,
+                              subjects: selectedSubjects,
+                            });
                           }}
                           className="checkbox"
                         />
