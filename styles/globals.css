@@ -37,3 +37,31 @@
 #menu-open:checked ~ * #menu-close-icon {
   @apply block;
 }
+
+.studentTableTh {
+  @apply bg-white font-medium text-secondary;
+}
+
+/* Change scroll bar bg color using css */
+::-webkit-scrollbar {
+  @apply w-1.5 bg-transparent;
+}
+::-webkit-scrollbar:horizontal {
+  @apply h-0.5;
+}
+
+/* change scrollbar thumb color */
+::-webkit-scrollbar-thumb {
+  @apply bg-accent rounded-xl;
+}
+
+.seperatingDots {
+  @apply h-2 w-2 bg-gray-400 rounded-full;
+}
+.seperatingDots:first-child {
+  @apply w-0 h-0 hidden bg-transparent;
+}
+
+.studentTableSubjectInfo:first-child {
+  margin-left: 0 !important;
+}

@@ -675,7 +675,7 @@ export default function RegisterStudent() {
                         className="input input-bordered w-full max-w-full"
                       />
                     </div>
-                    <div className="form-control w-100 max-w-2xl md:max-w-md w-full">
+                    {/* <div className="form-control w-100 max-w-2xl md:max-w-md w-full">
                       <label className="label cursor-pointer">
                         <span className="label-text">Mirror Student?</span>
                         <input
@@ -704,7 +704,7 @@ export default function RegisterStudent() {
                           className="checkbox"
                         />
                       </label>
-                    </div>
+                    </div> */}
                   </div>
                   {/* </div> */}
                   {/* Photo Upload Section  ---Skipped --- */}

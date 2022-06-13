@@ -134,5 +134,9 @@ export default function FacultyNavbar({ children, session }) {
 }
 
 export function DashboardContent({ children }) {
-  return <div className="m-10 my-32 md:m-24 md:my-40 h-100">{children}</div>;
+  return (
+    <div className="m-5 my-32 md:m-16 md:my-32 lg:m-24 lg:my-40 h-100">
+      {children}
+    </div>
+  );
 }

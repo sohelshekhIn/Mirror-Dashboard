@@ -42,7 +42,6 @@ export default function TakeAttendance() {
         }
       )
       .then((res) => {
-        console.log(res);
         // let tempBatch = {};
         let tempBatch = [];
         for (let key in res.data.data) {
