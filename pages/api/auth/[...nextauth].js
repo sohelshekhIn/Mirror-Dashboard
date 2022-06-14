@@ -26,7 +26,7 @@ export default NextAuth({
               if (
                 error.response &&
                 error.response.data.error.details.messages.id ===
-                "invalid_credentials"
+                  "invalid_credentials"
               ) {
                 throw new Error("Invalid Credentials");
               } else if (error.code) {
@@ -43,6 +43,7 @@ export default NextAuth({
   secret: process.env.JWT_SECRET,
   pages: {
     signIn: "/login",
+    error: "/404",
   },
   callbacks: {
     async jwt({ token, user }) {

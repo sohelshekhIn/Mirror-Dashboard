@@ -1,9 +1,12 @@
-import Image from "next/image";
 import { useEffect, useState } from "react";
-import NotificationAlert from "../utilities/NotificationAlert";
+import UpdateStudentForm from "./UpdateStudent";
 
 export default function StudentTableView({ requestData, studentsData }) {
   const [studentTableViewColumns, setStudentTableViewColumns] = useState({
+    0: {
+      // setting area
+      tableCompact: false,
+    },
     1: {
       fieldName: "name",
       label: "Name",
@@ -30,31 +33,34 @@ export default function StudentTableView({ requestData, studentsData }) {
   });
   const [tableHeaders, setTableHeaders] = useState([]);
   const [tableStudentData, setTableStudentData] = useState([]);
-  var subjectList = [];
+  const [subjectList, setSubjectList] = useState([]);
+  const [editClickData, setEditClickData] = useState({});
 
   // check if localStorage has studentTableViewColumns
-  if (localStorage.getItem("studentTableViewColumns")) {
-    setStudentTableViewColumns(
-      JSON.parse(localStorage.getItem("studentTableViewColumns"))
-    );
-  }
+  // if (localStorage.getItem("studentTableViewColumns")) {
+  //   setStudentTableViewColumns(
+  //     JSON.parse(localStorage.getItem("studentTableViewColumns"))
+  //   );
+  // }
 
   useEffect(() => {
     // map studentTableViewColumns to tableHeaders
     let tableHeaders = [];
     if (studentsData.length > 0) {
       for (let key in studentTableViewColumns) {
-        // tableHeaders.push(<h1>{studentTableViewColumns[key].label}</h1>);
-        tableHeaders.push(
-          <th className="studentTableTh">
-            {studentTableViewColumns[key].label}
-          </th>
-        );
+        if (key !== 0) {
+          // tableHeaders.push(<h1>{studentTableViewColumns[key].label}</h1>);
+          tableHeaders.push(
+            <th className="studentTableTh">
+              {studentTableViewColumns[key].label}
+            </th>
+          );
+        }
       }
       setTableHeaders(tableHeaders);
     } else {
       setTableHeaders([
-        <div className="flex flex-col text-lg font-semibold text-error">
+        <div className="flex flex-col px-5 text-lg font-semibold text-error">
           No Records Found
         </div>,
       ]);
@@ -66,11 +72,28 @@ export default function StudentTableView({ requestData, studentsData }) {
     // if (studentsData) {
     for (let i = 0; i < studentsData.length; i++) {
       for (let j = 0; j < Object.keys(studentTableViewColumns).length; j++) {
-        tableStudentData.push(
-          <th className="studentTableTh">
-            {studentsData[i][studentTableViewColumns[j + 1].fieldName]}
-          </th>
-        );
+        if (j !== 0) {
+          tableStudentData.push(
+            <th className="studentTableTh">
+              {studentsData[i][studentTableViewColumns[j].fieldName]}
+            </th>
+          );
+          if (Object.keys(studentTableViewColumns).length - 1 === j) {
+            tableStudentData.push(
+              <th className="studentTableTh">
+                <label
+                  onClick={() => {
+                    setEditClickData(studentsData[i - 1]);
+                  }}
+                  for="my-modal-3"
+                  className="btn modal-button"
+                >
+                  <button>Edit</button>
+                </label>
+              </th>
+            );
+          }
+        }
       }
       tableStudentRow.push(
         <tr>
@@ -82,8 +105,19 @@ export default function StudentTableView({ requestData, studentsData }) {
       tableStudentData = [];
     }
     setTableStudentData(tableStudentRow);
+
+    let tempSubjectList = [];
+    requestData.subjects.map((subject) =>
+      tempSubjectList.push(
+        <span className="flex space-x-5 subjectShowDiv items-center">
+          <span className="seperatingDots"></span>
+          <p>{subject}</p>
+        </span>
+      )
+    );
+    setSubjectList(tempSubjectList);
   }, [requestData, studentsData]);
-  console.log(requestData.subjects);
+
   return (
     <div className="flex flex-col mt-10 px-4 py-10 rounded-xl bg-white shadow-xl">
       <div className="flex flex-col space-y-3">
@@ -93,8 +127,8 @@ export default function StudentTableView({ requestData, studentsData }) {
           ) : (
             <h1 className="font-bold text-3xl">{requestData.batch}</h1>
           )}
-          <div class="dropdown dropdown-left">
-            <label tabindex="0" class="btn btn-ghost">
+          <div className="dropdown dropdown-left">
+            <label tabindex="0" className="btn btn-ghost">
               <span className=" flex flex-col space-y-1">
                 <span className="w-1 h-1 bg-black rounded-full"></span>
                 <span className="w-1 h-1 bg-black rounded-full"></span>
@@ -103,10 +137,27 @@ export default function StudentTableView({ requestData, studentsData }) {
             </label>
             <ul
               tabindex="0"
-              class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+              className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li>
-                <a>Item 1</a>
+                <div className="w-full">
+                  <label className="label cursor-pointer w-full flex justify-between">
+                    <span className="label-text">Compact View</span>
+                    <input
+                      type="checkbox"
+                      onChange={() => {
+                        setStudentTableViewColumns({
+                          ...studentTableViewColumns,
+                          0: {
+                            tableCompact:
+                              !studentTableViewColumns[0].tableCompact,
+                          },
+                        });
+                      }}
+                      className="checkbox"
+                    />
+                  </label>
+                </div>
               </li>
               <li>
                 <a>Item 2</a>
@@ -115,59 +166,46 @@ export default function StudentTableView({ requestData, studentsData }) {
           </div>
         </div>
         <div className="flex flex-row flex-wrap space-x-5 items-center">
-          {/* map through requestData.subjects */}
-          {requestData.subjects.map((subject) =>
-            subjectList.push(
-              <span>
-                <span className="seperatingDots"></span>
-                <p>{subject}</p>
-              </span>
-            )
-          )}
           {subjectList}
-          {/* <span className="seperatingDots"></span>
-          <p>Maths</p>
-          <span className="seperatingDots"></span>
-          <p>Physics</p>
-          <span className="seperatingDots"></span>
-          <p>Chemistry</p> */}
         </div>
       </div>
       <div className="flex flex-col space-y-5">
-        <div class="overflow-x-auto mt-14">
-          <table class="table w-full">
+        <div className="overflow-x-auto mt-14">
+          <table
+            className={
+              studentTableViewColumns[0].tableCompact
+                ? "table w-full table-compact"
+                : "table w-full"
+            }
+          >
             <thead>
               <tr>
-                <th className="studentTableTh"></th>
                 {tableHeaders}
+                <th className="studentTableTh"></th>
               </tr>
             </thead>
             <tbody>{tableStudentData}</tbody>
           </table>
         </div>
-        {/* <div className="flex flex-col space-y-5 mt-14 text-gray-600 overflow-x-auto">
-          <div className="flex justify-between font-semibold  text-base">
-            <span className="flex space-x-8">{tableHeaders}</span>
-            <h1></h1>
-          </div>
-          <div className="flex shadow-sm py-2">
-            <div className="w-full label text-md font-semibold">
-              <input name="" type="checkbox" className="checkbox hidden" />
-              <span className="flex space-x-8 w-full">
-                <span>Sohel Shekh</span>
-                <span>Alam Shekh</span>
-                <span>Momtaj Shekh</span>
-                <span>9427381130</span>
-                <span>8866081130</span>
-              </span>
+
+        <input type="checkbox" id="my-modal-3" className="modal-toggle" />
+        <div className="modal">
+          <div className="modal-box w-11/12 max-w-5xl">
+            <div className="sticky right-0 -top-1 bg-base-100 pb-10 pt-2">
+              <span className="text-2xl font-semibold">Edit Student</span>
+              <label
+                for="my-modal-3"
+                className="btn btn-sm btn-circle absolute top-2 right-2 btn-ghost"
+              >
+                ✕
+              </label>
+            </div>
+            <div className="flex flex-col">
+              <UpdateStudentForm studentsData={editClickData} />;
             </div>
           </div>
-        </div> */}
+        </div>
       </div>
-      {/* <NotificationAlert
-        message={notification.message}
-        type={notification.type}
-      /> */}
     </div>
   );
 }

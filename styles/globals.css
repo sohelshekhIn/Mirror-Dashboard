@@ -56,12 +56,8 @@
 }
 
 .seperatingDots {
-  @apply h-2 w-2 bg-gray-400 rounded-full;
+  @apply h-2 w-2 bg-gray-500 rounded-full;
 }
-.seperatingDots:first-child {
+.subjectShowDiv:first-child > .seperatingDots {
   @apply w-0 h-0 hidden bg-transparent;
-}
-
-.studentTableSubjectInfo:first-child {
-  margin-left: 0 !important;
 }

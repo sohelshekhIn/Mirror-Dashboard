@@ -162,15 +162,15 @@ export default function ViewStudent() {
       <div className="flex flex-col">
         <div className="flex flex-col">
           <div className="flex flex-col">
-            <div class="collapse collapse-arrow">
+            <div className="collapse collapse-arrow">
               <input type="checkbox" id="showFormCheckbox" />
-              <div class="collapse-title">
+              <div className="collapse-title">
                 <div className="flex flex-col">
                   <h1 className="heading1 text-primary">View Student</h1>
                   <span className="underline w-24 my-4"></span>
                 </div>
               </div>
-              <div class="collapse-content">
+              <div className="collapse-content">
                 <form
                   onSubmit={handleSubmit}
                   className="flex flex-col space-y-5"

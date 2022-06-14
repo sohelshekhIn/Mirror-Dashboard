@@ -9,7 +9,7 @@ import Image from "next/image";
 import { calendarPNG } from "../../public/images";
 import axios from "axios";
 
-export default function UpdateStudentForm() {
+export default function UpdateStudentForm({ studentsData }) {
   // Page Authentication Checker
   const { status, data } = useSession({
     required: true,
@@ -104,6 +104,9 @@ export default function UpdateStudentForm() {
         }
         console.log(err);
       });
+
+    console.log(studentsData);
+    console.log(studentsData.name);
   }, [data, status]);
 
   return (
@@ -113,9 +116,9 @@ export default function UpdateStudentForm() {
       </div>
       <Formik
         initialValues={{
-          name: "",
-          gender: "",
-          school: "",
+          name: studentsData.name,
+          gender: studentsData.gender,
+          school: studentsData.school,
           batch: "",
           subjects: "",
           joinDate: "",

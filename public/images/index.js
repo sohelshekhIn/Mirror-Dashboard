@@ -8,6 +8,7 @@ import loadingAnimation from "./loading.svg";
 import search from "./search.svg";
 import calendarSVG from "./calendar.svg";
 import calendarPNG from "./calendar.png";
+import editPNG from "./edit.png";
 
 export {
   logo,
@@ -20,4 +21,5 @@ export {
   search,
   calendarSVG,
   calendarPNG,
+  editPNG,
 };
