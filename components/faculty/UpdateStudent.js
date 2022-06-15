@@ -8,8 +8,9 @@ import DatePicker from "../utilities/DatePicker";
 import Image from "next/image";
 import { calendarPNG } from "../../public/images";
 import axios from "axios";
+import NotificationAlert from "../utilities/NotificationAlert";
 
-export default function UpdateStudentForm({ studentsData }) {
+export default function UpdateStudentForm({ studentData }) {
   // Page Authentication Checker
   const { status, data } = useSession({
     required: true,
@@ -35,6 +36,10 @@ export default function UpdateStudentForm({ studentsData }) {
   });
   const [subjects, setSubjects] = useState([]);
   const [submittedData, setSubmittedData] = useState({});
+  const [notification, setNotification] = useState({
+    type: "",
+    message: "",
+  });
 
   useEffect(() => {
     const handleEsc = (event) => {
@@ -49,15 +54,15 @@ export default function UpdateStudentForm({ studentsData }) {
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (selectedJoinDate != null) {
-  //     document.getElementById("joinDatePickerInput").value = selectedJoinDate;
-  //   }
-  //   if (selectedDOB != null) {
-  //     document.getElementById("dobDatePickerInput").value = selectedDOB;
-  //   }
-  //   closeDatePicker();
-  // }, [selectedJoinDate, selectedDOB]);
+  useEffect(() => {
+    if (selectedJoinDate != null) {
+      document.getElementById("joinDatePickerInput").value = selectedJoinDate;
+    }
+    if (selectedDOB != null) {
+      document.getElementById("dobDatePickerInput").value = selectedDOB;
+    }
+    closeDatePicker();
+  }, [selectedJoinDate, selectedDOB]);
 
   const closeDatePicker = () => {
     document.getElementById("joinDatePickerToggle").checked = false;
@@ -91,8 +96,10 @@ export default function UpdateStudentForm({ studentsData }) {
         //        subjects: ["Chemistry", "Physics", "Maths", "Biology"],
         // }
         // }
+        console.log("settb");
         setBatch(tempBatch);
       })
+
       .catch((err) => {
         console.log(err);
         if (err.message) {
@@ -104,10 +111,7 @@ export default function UpdateStudentForm({ studentsData }) {
         }
         console.log(err);
       });
-
-    console.log(studentsData);
-    console.log(studentsData.name);
-  }, [data, status]);
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -116,20 +120,20 @@ export default function UpdateStudentForm({ studentsData }) {
       </div>
       <Formik
         initialValues={{
-          name: studentsData.name,
-          gender: studentsData.gender,
-          school: studentsData.school,
+          name: studentData.name,
+          gender: studentData.gender,
+          school: studentData.school,
           batch: "",
           subjects: "",
-          joinDate: "",
-          dob: "",
-          fatherName: "",
-          motherName: "",
-          fatherMobile: "",
-          motherMobile: "",
-          msgMobile: "",
-          active: true,
-          canLogin: true,
+          joinDate: studentData.joinDate,
+          dob: studentData.dob,
+          fatherName: studentData.fatherName,
+          motherName: studentData.motherName,
+          fatherMobile: studentData.fatherMobile,
+          motherMobile: studentData.motherMobile,
+          msgMobile: studentData.msgMobile,
+          active: studentData.blocked,
+          canLogin: studentData.canLogin,
         }}
         validationSchema={Yup.object({
           name: Yup.string()
@@ -226,7 +230,6 @@ export default function UpdateStudentForm({ studentsData }) {
         {(formik) => (
           <form className="flex flex-col" onSubmit={formik.handleSubmit}>
             {/* Handle Formik Validation Errors */}
-
             {setValidationError(null)}
             {formik.errors.name &&
               formik.touched.name &&
@@ -318,22 +321,45 @@ export default function UpdateStudentForm({ studentsData }) {
                     className="select select-bordered"
                   >
                     <option value="DEFAULT">Select School</option>
-                    <option>Bharatiya Vidya Bhavans</option>
-                    <option>Vrajbhoomi International</option>
-                    <option>Podar International</option>
-                    <option>Euro / Altius Foritious</option>
-                    <option>ETS CBSE</option>
-                    <option>Zen School</option>
-                    <option>Vibrant International</option>
-                    <option>SNV International</option>
-                    <option>St.Anne's School</option>
-                    <option>St.Marry's School</option>
-                    <option>Unique School</option>
-                    <option>Mother Care</option>
-                    <option>ETS GSEB</option>
-                    <option>Santram English</option>
-                    <option>Shrishti English</option>
+                    <option className="schoolOptions">
+                      Bharatiya Vidya Bhavans
+                    </option>
+                    <option className="schoolOptions">
+                      Vrajbhoomi International
+                    </option>
+                    <option className="schoolOptions">
+                      Podar International
+                    </option>
+                    <option className="schoolOptions">
+                      Euro / Altius Foritious
+                    </option>
+                    <option className="schoolOptions">ETS CBSE</option>
+                    <option className="schoolOptions">Zen School</option>
+                    <option className="schoolOptions">
+                      Vibrant International
+                    </option>
+                    <option className="schoolOptions">SNV International</option>
+                    <option className="schoolOptions">St.Anne's School</option>
+                    <option className="schoolOptions">St.Marry's School</option>
+                    <option className="schoolOptions">Unique School</option>
+                    <option className="schoolOptions">Mother Care</option>
+                    <option className="schoolOptions">ETS GSEB</option>
+                    <option className="schoolOptions">Santram English</option>
+                    <option className="schoolOptions">Shrishti English</option>
                   </select>
+                  {/* Set school from DB */}
+                  {useEffect(() => {
+                    formik.setFieldValue("school", studentData.school);
+                    // Get contents of options
+                    let schoolOptions =
+                      document.querySelectorAll(".batchOptions");
+                    // Loop through options
+                    for (let i = 0; i < schoolOptions.length; i++) {
+                      if (schoolOptions[i].textContent === studentData.school) {
+                        schoolOptions[i].selected = true;
+                      }
+                    }
+                  }, [])}
                 </div>
                 <div className="form-control w-100 max-w-2xl md:max-w-md w-full">
                   <label htmlFor="batch" className="label">
@@ -357,12 +383,42 @@ export default function UpdateStudentForm({ studentsData }) {
                           </option>
                         );
                       }
+                      let selected = null;
+                      if (key == studentData.batch.id) {
+                        selected = "selected";
+                      }
                       return (
-                        <option key={key} value={key}>
+                        <option className="batchOptions" key={key} value={key}>
                           {batch[key].batch}
                         </option>
                       );
                     })}
+
+                    {/* // Set Batch from DB */}
+                    {useEffect(() => {
+                      console.log("Batch Run");
+                      console.log(batch, batch[0]);
+                      if (batch && batch[0]) {
+                        formik.setFieldValue("batch", studentData.batch.id);
+                      }
+                      // // Get contents of options
+                      // let batchOptions =
+                      //   document.querySelectorAll(".batchOptions");
+                      // // Loop through options
+                      // for (let i = 0; i < batchOptions.length; i++) {
+                      //   if (
+                      //     batchOptions[i].textContent ===
+                      //     studentData.batch.batch
+                      //   ) {
+                      //     console.log("Selecting");
+                      //     batchOptions[i].selected = true;
+                      //   }
+                      // }
+                    }, [batch])}
+                    {/* {useEffect(() => {
+                      formik.setFieldValue("batch", studentData.batch.id);
+                      console.log(formik.values.batch);
+                    }, [studentData])} */}
                   </select>
                 </div>
                 <div className="w-100 max-w-2xl md:max-w-md w-full">
@@ -371,10 +427,12 @@ export default function UpdateStudentForm({ studentsData }) {
                   </label>
 
                   {useEffect(() => {
+                    console.log(formik.values.batch);
                     if (
                       formik.values.batch &&
                       formik.values.batch !== "DEFAULT"
                     ) {
+                      console.log(formik.values.batch);
                       const subjects = batch[formik.values.batch].subjects;
                       let subjectsAppendedCount = 0;
                       var subjectsDivHorizontal = [];
@@ -419,7 +477,7 @@ export default function UpdateStudentForm({ studentsData }) {
                       }
                       setSubjects(subjectsDivHorizontal);
                     }
-                  }, [formik.values.batch])}
+                  }, [formik.values.batch, batch])}
 
                   {subjects && subjects.length > 0 ? (
                     <div className="input flex-col space-y-4 py-4 h-fit input-bordered">
@@ -719,6 +777,11 @@ export default function UpdateStudentForm({ studentsData }) {
           </form>
         )}
       </Formik>
+      <NotificationAlert
+        message={notification.message}
+        type={notification.type}
+        id={notification.id}
+      />
     </div>
   );
 }

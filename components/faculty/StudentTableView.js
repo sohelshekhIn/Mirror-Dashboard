@@ -1,7 +1,8 @@
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import UpdateStudentForm from "./UpdateStudent";
 
 export default function StudentTableView({ requestData, studentsData }) {
+  console.log(requestData);
   const [studentTableViewColumns, setStudentTableViewColumns] = useState({
     0: {
       // setting area
@@ -34,8 +35,6 @@ export default function StudentTableView({ requestData, studentsData }) {
   const [tableHeaders, setTableHeaders] = useState([]);
   const [tableStudentData, setTableStudentData] = useState([]);
   const [subjectList, setSubjectList] = useState([]);
-  const [editClickData, setEditClickData] = useState({});
-
   // check if localStorage has studentTableViewColumns
   // if (localStorage.getItem("studentTableViewColumns")) {
   //   setStudentTableViewColumns(
@@ -81,15 +80,11 @@ export default function StudentTableView({ requestData, studentsData }) {
           if (Object.keys(studentTableViewColumns).length - 1 === j) {
             tableStudentData.push(
               <th className="studentTableTh">
-                <label
-                  onClick={() => {
-                    setEditClickData(studentsData[i - 1]);
-                  }}
-                  for="my-modal-3"
-                  className="btn modal-button"
+                <Link
+                  href={`/faculty/view-student/edit-details?id=${studentsData[i].UserID}`}
                 >
-                  <button>Edit</button>
-                </label>
+                  <a className="btn modal-button">Edit</a>
+                </Link>
               </th>
             );
           }
@@ -186,24 +181,6 @@ export default function StudentTableView({ requestData, studentsData }) {
             </thead>
             <tbody>{tableStudentData}</tbody>
           </table>
-        </div>
-
-        <input type="checkbox" id="my-modal-3" className="modal-toggle" />
-        <div className="modal">
-          <div className="modal-box w-11/12 max-w-5xl">
-            <div className="sticky right-0 -top-1 bg-base-100 pb-10 pt-2">
-              <span className="text-2xl font-semibold">Edit Student</span>
-              <label
-                for="my-modal-3"
-                className="btn btn-sm btn-circle absolute top-2 right-2 btn-ghost"
-              >
-                ✕
-              </label>
-            </div>
-            <div className="flex flex-col">
-              <UpdateStudentForm studentsData={editClickData} />;
-            </div>
-          </div>
         </div>
       </div>
     </div>

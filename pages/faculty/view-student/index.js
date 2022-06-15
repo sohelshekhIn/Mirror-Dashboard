@@ -1,10 +1,11 @@
 import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { DashboardContent } from "../../components/faculty/Navbar";
-import StudentTableView from "../../components/faculty/StudentTableView";
-import Loading from "../../components/utilities/Loading";
-import NotificationAlert from "../../components/utilities/NotificationAlert";
+import { DashboardContent } from "../../../components/faculty/Navbar";
+import StudentTableView from "../../../components/faculty/StudentTableView";
+import Loading from "../../../components/utilities/Loading";
+import NotificationAlert from "../../../components/utilities/NotificationAlert";
 
 export default function ViewStudent() {
   const { status, data } = useSession({
@@ -21,6 +22,7 @@ export default function ViewStudent() {
   }
 
   // == Main ==
+
   const [batch, setBatch] = useState({
     Loading: {
       batch: "Loading Batches...",
@@ -36,10 +38,37 @@ export default function ViewStudent() {
     type: "",
   });
   const [validationError, setValidationError] = useState(null);
-  const [tableView, setTableView] = useState();
+  const [apiResponse, setApiResponse] = useState(null);
   var classes = [];
   var batches = [];
   var subjects = [];
+
+  const router = useRouter();
+
+  useEffect(() => {
+    document.getElementById("showFormCheckbox").checked = true;
+
+    const {
+      class: classSelected,
+      batch: batchSelected,
+      subjects: subjectsSelected,
+    } = router.query;
+
+    if (classSelected) {
+      document.getElementById("showFormCheckbox").checked = false;
+      let subjectsSelectedArray = [];
+      if (subjectsSelected) {
+        subjectsSelected.split(",").map((subject) => {
+          subjectsSelectedArray.push(subject);
+        });
+      }
+      handleSubmit(null, {
+        class: classSelected,
+        batch: batchSelected,
+        subjects: subjectsSelectedArray,
+      });
+    }
+  }, []);
 
   useEffect(() => {
     axios
@@ -79,10 +108,6 @@ export default function ViewStudent() {
       });
   }, [data]);
 
-  useEffect(() => {
-    document.getElementById("showFormCheckbox").checked = true;
-  }, []);
-
   const toggleShowForm = () => {
     let showFormCheckbox = document.getElementById("showFormCheckbox");
     if (showFormCheckbox.checked) {
@@ -118,43 +143,78 @@ export default function ViewStudent() {
       });
     }
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (
-      formData.class === "" ||
-      formData.class === "DEFAULT" ||
-      !formData.class
-    ) {
-      setValidationError("Please select a class");
-      return;
-    }
-    axios
-      .post(
-        process.env.NEXT_PUBLIC_STRAPI_API + "/data/students/view",
-        {
-          data: formData,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${data.user.accessToken}`,
-          },
+  const handleSubmit = (e, onRefreshData) => {
+    let submittingData = "";
+    if (e) {
+      e.preventDefault();
+      // convert formData to URL params
+      let subjectParams = "";
+      for (let i = 0; i < formData.subjects; i++) {
+        if (key === "subjects") {
+          subjectParams += `&subjects=${formData.subjects.join(",")}`;
         }
-      )
-      .then((res) => {
-        console.log(res.data);
-        toggleShowForm();
-        setTableView(
-          <StudentTableView requestData={formData} studentsData={res.data} />
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-        setNotification({
-          message: err.message,
-          type: "error",
-          id: new Date(),
-        });
+      }
+      let urlQuery = "";
+      if (formData.class !== null) {
+        urlQuery += `?class=${formData.class}`;
+      }
+      if (formData.batch !== null) {
+        urlQuery += `&batch=${formData.batch}`;
+      }
+      if (formData.subjects.length > 0) {
+        urlQuery += `&subjects=${formData.subjects.join(",")}`;
+      }
+      router.push(`/faculty/view-student${urlQuery}`);
+      // Yes
+
+      if (
+        formData.class === "" ||
+        formData.class === "DEFAULT" ||
+        !formData.class
+      ) {
+        setValidationError("Please select a class");
+        return;
+      }
+      submittingData = formData;
+    } else {
+      setFormData({
+        class: onRefreshData.class,
+        batch: onRefreshData.batch,
+        subjects: onRefreshData.subjects,
       });
+      submittingData = onRefreshData;
+    }
+    if (submittingData.class !== null) {
+      axios
+        .post(
+          process.env.NEXT_PUBLIC_STRAPI_API + "/data/students/view",
+          {
+            data: submittingData,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${data.user.accessToken}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          toggleShowForm();
+          console.log(formData);
+          setApiResponse(res.data);
+          // setTableView(
+          //   <StudentTableView requestData={formData} studentsData={res.data} />
+          // );
+        })
+        .catch((err) => {
+          console.log(err);
+          setNotification({
+            message: err.message,
+            type: "error",
+            id: new Date(),
+          });
+        });
+    }
   };
 
   return (
@@ -164,13 +224,13 @@ export default function ViewStudent() {
           <div className="flex flex-col">
             <div className="collapse collapse-arrow">
               <input type="checkbox" id="showFormCheckbox" />
-              <div className="collapse-title">
+              <div className="collapse-title p-0">
                 <div className="flex flex-col">
                   <h1 className="heading1 text-primary">View Student</h1>
                   <span className="underline w-24 my-4"></span>
                 </div>
               </div>
-              <div className="collapse-content">
+              <div className="collapse-content p-0">
                 <form
                   onSubmit={handleSubmit}
                   className="flex flex-col space-y-5"
@@ -348,7 +408,17 @@ export default function ViewStudent() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col">{tableView}</div>
+          {/* <div className="flex flex-col">{tableView}</div> */}
+          <div className="flex flex-col">
+            {apiResponse ? (
+              <StudentTableView
+                requestData={formData}
+                studentsData={apiResponse}
+              />
+            ) : (
+              ""
+            )}
+          </div>
         </div>
         <div className="data section"></div>
       </div>

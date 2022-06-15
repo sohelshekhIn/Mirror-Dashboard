@@ -178,6 +178,7 @@ export default function RegisterStudent() {
               canLogin: Yup.bool().required("Can Login is required"),
             })}
             onSubmit={async (values, { setSubmitting }) => {
+              console.log(values);
               if (submittedData !== values) {
                 // axios post data to /data/students/register
                 axios
@@ -382,6 +383,7 @@ export default function RegisterStudent() {
                       </label>
 
                       {useEffect(() => {
+                        console.log("H");
                         if (
                           formik.values.batch &&
                           formik.values.batch !== "DEFAULT"
