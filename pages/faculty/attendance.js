@@ -27,7 +27,7 @@ export default function TakeAttendance() {
   const [attendanceView, setAttendanceView] = useState(<EmptyMessage />);
   const [notification, setNotification] = useState({
     message: null,
-    type: "",
+    type: null,
   });
 
   useEffect(() => {

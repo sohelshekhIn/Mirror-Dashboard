@@ -8,7 +8,10 @@ const AttendanceTable = ({ apiData, batch, sessionData }) => {
   const [studentTable, setStudentTable] = useState([]); //true for student table, false for attendance table
   const [attendanceData, setAttendanceData] = useState([]);
   const [attendanceState, setAttendanceState] = useState({});
-  const [notification, setNotification] = useState({ message: null, type: "" });
+  const [notification, setNotification] = useState({
+    message: null,
+    type: null,
+  });
   const router = useRouter();
 
   useEffect(() => {

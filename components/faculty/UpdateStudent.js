@@ -37,8 +37,8 @@ export default function UpdateStudentForm({ studentData }) {
   const [subjects, setSubjects] = useState([]);
   const [submittedData, setSubmittedData] = useState({});
   const [notification, setNotification] = useState({
-    type: "",
-    message: "",
+    type: null,
+    message: null,
   });
 
   useEffect(() => {
@@ -96,7 +96,6 @@ export default function UpdateStudentForm({ studentData }) {
         //        subjects: ["Chemistry", "Physics", "Maths", "Biology"],
         // }
         // }
-        console.log("settb");
         setBatch(tempBatch);
       })
 
@@ -112,7 +111,6 @@ export default function UpdateStudentForm({ studentData }) {
         console.log(err);
       });
   }, []);
-
   return (
     <div className="flex flex-col">
       <div className="text-red-400 font-semibold text-md text-center rounded p-2">
@@ -176,10 +174,11 @@ export default function UpdateStudentForm({ studentData }) {
           if (submittedData !== values) {
             // axios post data to /data/students/register
             axios
-              .post(
-                process.env.NEXT_PUBLIC_STRAPI_API + "/data/students/register",
+              .put(
+                process.env.NEXT_PUBLIC_STRAPI_API + "/data/students/update",
                 {
                   data: {
+                    reffId: studentData.reffId,
                     name: values.name,
                     batch: values.batch,
                     subjects: values.subjects,
@@ -193,6 +192,7 @@ export default function UpdateStudentForm({ studentData }) {
                     dob: values.dob,
                     blocked: values.active,
                     canLogin: values.canLogin,
+                    school: values.school,
                   },
                 },
                 {
@@ -203,13 +203,14 @@ export default function UpdateStudentForm({ studentData }) {
               )
               .then((res) => {
                 setNotification({
-                  message: "Student Registered Successfully",
+                  message: "Student Updated Successfully",
                   type: "success",
                   id: new Date(),
                 });
                 setSubmitting(false);
                 setSubmittedData(values);
                 // Empty all the fields
+                router.reload();
               })
               .catch((err) => {
                 setNotification({
@@ -220,7 +221,7 @@ export default function UpdateStudentForm({ studentData }) {
               });
           } else {
             setNotification({
-              message: "Cannot Register Same Data",
+              message: "Cannot update duplicate data",
               type: "error",
               id: new Date(),
             });
@@ -396,29 +397,22 @@ export default function UpdateStudentForm({ studentData }) {
 
                     {/* // Set Batch from DB */}
                     {useEffect(() => {
-                      console.log("Batch Run");
-                      console.log(batch, batch[0]);
-                      if (batch && batch[0]) {
+                      if (batch && Object.keys(batch).length > 0) {
                         formik.setFieldValue("batch", studentData.batch.id);
                       }
                       // // Get contents of options
-                      // let batchOptions =
-                      //   document.querySelectorAll(".batchOptions");
-                      // // Loop through options
-                      // for (let i = 0; i < batchOptions.length; i++) {
-                      //   if (
-                      //     batchOptions[i].textContent ===
-                      //     studentData.batch.batch
-                      //   ) {
-                      //     console.log("Selecting");
-                      //     batchOptions[i].selected = true;
-                      //   }
-                      // }
+                      let batchOptions =
+                        document.querySelectorAll(".batchOptions");
+                      // Loop through options
+                      for (let i = 0; i < batchOptions.length; i++) {
+                        if (
+                          batchOptions[i].textContent ===
+                          studentData.batch.batch
+                        ) {
+                          batchOptions[i].selected = true;
+                        }
+                      }
                     }, [batch])}
-                    {/* {useEffect(() => {
-                      formik.setFieldValue("batch", studentData.batch.id);
-                      console.log(formik.values.batch);
-                    }, [studentData])} */}
                   </select>
                 </div>
                 <div className="w-100 max-w-2xl md:max-w-md w-full">
@@ -427,12 +421,10 @@ export default function UpdateStudentForm({ studentData }) {
                   </label>
 
                   {useEffect(() => {
-                    console.log(formik.values.batch);
                     if (
                       formik.values.batch &&
                       formik.values.batch !== "DEFAULT"
                     ) {
-                      console.log(formik.values.batch);
                       const subjects = batch[formik.values.batch].subjects;
                       let subjectsAppendedCount = 0;
                       var subjectsDivHorizontal = [];
@@ -477,8 +469,7 @@ export default function UpdateStudentForm({ studentData }) {
                       }
                       setSubjects(subjectsDivHorizontal);
                     }
-                  }, [formik.values.batch, batch])}
-
+                  }, [batch])}
                   {subjects && subjects.length > 0 ? (
                     <div className="input flex-col space-y-4 py-4 h-fit input-bordered">
                       {subjects}
@@ -488,6 +479,13 @@ export default function UpdateStudentForm({ studentData }) {
                       Select Batch to see Subjects
                     </div>
                   )}
+
+                  {/* Marks subjects from DB */}
+                  {useEffect(() => {
+                    if (studentData && studentData.subjects.length > 0) {
+                      formik.setFieldValue("subjects", studentData.subjects);
+                    }
+                  }, [])}
                   {/* <div className="form-control w-5/12">
                         <label className="label cursor-pointer">
                           <span className="label-text">Biology</span>

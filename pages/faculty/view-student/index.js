@@ -35,7 +35,7 @@ export default function ViewStudent() {
   });
   const [notification, setNotification] = useState({
     message: null,
-    type: "",
+    type: null,
   });
   const [validationError, setValidationError] = useState(null);
   const [apiResponse, setApiResponse] = useState(null);

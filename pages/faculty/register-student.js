@@ -31,7 +31,10 @@ export default function RegisterStudent() {
   const [validationError, setValidationError] = useState(null);
   const [selectedJoinDate, setSelectedJoinDate] = useState(null);
   const [selectedDOB, setSelectedDOB] = useState(null);
-  const [notification, setNotification] = useState({ message: null, type: "" });
+  const [notification, setNotification] = useState({
+    message: null,
+    type: null,
+  });
   const [batch, setBatch] = useState({
     Loading: {
       batch: "Loading Batches...",
@@ -110,7 +113,7 @@ export default function RegisterStudent() {
         }
         console.log(err);
       });
-  }, [data, status]);
+  }, []);
 
   return (
     <DashboardContent>
@@ -178,8 +181,8 @@ export default function RegisterStudent() {
               canLogin: Yup.bool().required("Can Login is required"),
             })}
             onSubmit={async (values, { setSubmitting }) => {
-              console.log(values);
               if (submittedData !== values) {
+                console.log(values);
                 // axios post data to /data/students/register
                 axios
                   .post(
@@ -200,6 +203,7 @@ export default function RegisterStudent() {
                         dob: values.dob,
                         blocked: values.active,
                         canLogin: values.canLogin,
+                        school: values.school,
                       },
                     },
                     {
@@ -383,7 +387,6 @@ export default function RegisterStudent() {
                       </label>
 
                       {useEffect(() => {
-                        console.log("H");
                         if (
                           formik.values.batch &&
                           formik.values.batch !== "DEFAULT"

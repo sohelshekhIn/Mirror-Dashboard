@@ -25,17 +25,15 @@ export default function EditStudentDetails({ history }) {
 
   // Read params using next-router
   const router = useRouter();
-  const { id } = router.query;
-  const [studentData, setStudentData] = useState({});
   const [formComp, setFormComp] = useState();
   const [notification, setNotification] = useState({
-    type: "",
-    message: "",
+    type: null,
+    message: null,
   });
 
-  console.log(history);
   // aixos call to get student details
   useEffect(() => {
+    const { id } = router.query;
     axios
       .get(
         `${process.env.NEXT_PUBLIC_STRAPI_API}/info/students/view-one?id=${id}`,
@@ -46,10 +44,8 @@ export default function EditStudentDetails({ history }) {
         }
       )
       .then((res) => {
-        console.log(res.data);
-        console.log(res.data.length);
         //   if res.data is empty
-        if ("sohel" === 0) {
+        if (Object.keys(res.data).length === 0) {
           setNotification({
             type: "error",
             message: "Student not found",
