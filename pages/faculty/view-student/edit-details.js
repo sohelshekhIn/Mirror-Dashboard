@@ -1,6 +1,5 @@
 import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { DashboardContent } from "../../../components/faculty/Navbar";
@@ -8,7 +7,7 @@ import UpdateStudentForm from "../../../components/faculty/UpdateStudent";
 import Loading from "../../../components/utilities/Loading";
 import NotificationAlert from "../../../components/utilities/NotificationAlert";
 
-export default function EditStudentDetails({ history }) {
+export default function EditStudentDetails() {
   // Page Authentication Checker
   const { status, data } = useSession({
     required: true,
@@ -44,6 +43,7 @@ export default function EditStudentDetails({ history }) {
         }
       )
       .then((res) => {
+        console.log(res.data);
         //   if res.data is empty
         if (Object.keys(res.data).length === 0) {
           setNotification({
@@ -69,9 +69,6 @@ export default function EditStudentDetails({ history }) {
 
   return (
     <DashboardContent>
-      <Link href={history}>
-        <a>Back</a>
-      </Link>
       {formComp}
       <NotificationAlert
         type={notification.type}

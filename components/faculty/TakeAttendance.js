@@ -171,7 +171,7 @@ const AttendanceTable = ({ apiData, batch, sessionData }) => {
     }
   };
   return (
-    <div className="flex flex-col mt-10 px-4 py-10 rounded-xl bg-white shadow-xl max-h-[60vh] overflow-y-scroll">
+    <div className="flex flex-col mt-10 px-4 py-10 rounded-xl bg-white shadow-xl">
       <div className="flex flex-row space-x-4 align-bottom">
         <h1 className="font-bold text-3xl">{batch}</h1>
         {attendanceState === null ? (

@@ -39,6 +39,7 @@ export default function ViewStudent() {
   });
   const [validationError, setValidationError] = useState(null);
   const [apiResponse, setApiResponse] = useState(null);
+  const [dropDownStatus, setDropDownStatus] = useState(true);
   var classes = [];
   var batches = [];
   var subjects = [];
@@ -46,8 +47,10 @@ export default function ViewStudent() {
   const router = useRouter();
 
   useEffect(() => {
-    document.getElementById("showFormCheckbox").checked = true;
+    document.getElementById("showFormCheckbox").checked = dropDownStatus;
+  }, [dropDownStatus]);
 
+  useEffect(() => {
     const {
       class: classSelected,
       batch: batchSelected,
@@ -55,7 +58,7 @@ export default function ViewStudent() {
     } = router.query;
 
     if (classSelected) {
-      document.getElementById("showFormCheckbox").checked = false;
+      setDropDownStatus(false);
       let subjectsSelectedArray = [];
       if (subjectsSelected) {
         subjectsSelected.split(",").map((subject) => {
@@ -110,10 +113,10 @@ export default function ViewStudent() {
 
   const toggleShowForm = () => {
     let showFormCheckbox = document.getElementById("showFormCheckbox");
-    if (showFormCheckbox.checked) {
-      showFormCheckbox.checked = false;
+    if (dropDownStatus) {
+      setDropdownStatus(false);
     } else {
-      showFormCheckbox.checked = true;
+      setDropDownStatus(true);
     }
   };
 
@@ -223,7 +226,13 @@ export default function ViewStudent() {
         <div className="flex flex-col">
           <div className="flex flex-col">
             <div className="collapse collapse-arrow">
-              <input type="checkbox" id="showFormCheckbox" />
+              <input
+                onChange={(e) => {
+                  setDropDownStatus(e.target.checked);
+                }}
+                type="checkbox"
+                id="showFormCheckbox"
+              />
               <div className="collapse-title p-0">
                 <div className="flex flex-col">
                   <h1 className="heading1 text-primary">View Student</h1>
@@ -416,11 +425,14 @@ export default function ViewStudent() {
                 studentsData={apiResponse}
               />
             ) : (
-              ""
+              <EmptyMessageSection
+                tableOpen={apiResponse ? true : false}
+                dropDown={dropDownStatus}
+                setDropDownStatus={setDropDownStatus}
+              />
             )}
           </div>
         </div>
-        <div className="data section"></div>
       </div>
       <NotificationAlert
         message={notification.message}
@@ -430,3 +442,36 @@ export default function ViewStudent() {
     </DashboardContent>
   );
 }
+
+const EmptyMessageSection = ({ dropDown, tableOpen, setDropDownStatus }) => {
+  const [compToShow, setCompToShow] = useState(true);
+  useEffect(() => {
+    if (dropDown === false && tableOpen === false) {
+      setCompToShow(true);
+    } else {
+      setCompToShow(false);
+    }
+  }, [dropDown, tableOpen]);
+
+  return (
+    <>
+      {compToShow ? (
+        <div className="my-10 mx-auto space-y-5 flex flex-col items-center">
+          <h1 className="text-secondary text-3xl font-bold">
+            It seems you accidently closed select section!
+          </h1>
+          <button
+            onClick={() => {
+              setDropDownStatus(true);
+            }}
+            className="btn btn-accent"
+          >
+            Open Select Section
+          </button>
+        </div>
+      ) : (
+        ""
+      )}
+    </>
+  );
+};

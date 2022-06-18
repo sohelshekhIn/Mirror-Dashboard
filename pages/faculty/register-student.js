@@ -106,7 +106,7 @@ export default function RegisterStudent() {
         console.log(err);
         if (err.message) {
           setNotification({
-            message: err.status + err.name + err.message + err.details,
+            message: err.message,
             type: "error",
             id: new Date(),
           });
@@ -730,7 +730,11 @@ export default function RegisterStudent() {
               </div> */}
                 </div>
                 <div className="form-control mx-auto py-10 max-w-2xl md:max-w-md w-full">
-                  <button type="submit" className="btn btn-accent">
+                  <button
+                    accessKey="S"
+                    type="submit"
+                    className="btn btn-accent"
+                  >
                     {/* based on submitting  */}
                     {formik.isSubmitting ? "Please wait..." : "Submit"}
                   </button>

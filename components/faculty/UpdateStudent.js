@@ -9,6 +9,7 @@ import Image from "next/image";
 import { calendarPNG } from "../../public/images";
 import axios from "axios";
 import NotificationAlert from "../utilities/NotificationAlert";
+import { useRouter } from "next/router";
 
 export default function UpdateStudentForm({ studentData }) {
   // Page Authentication Checker
@@ -40,6 +41,7 @@ export default function UpdateStudentForm({ studentData }) {
     type: null,
     message: null,
   });
+  const router = useRouter();
 
   useEffect(() => {
     const handleEsc = (event) => {
@@ -174,7 +176,7 @@ export default function UpdateStudentForm({ studentData }) {
           if (submittedData !== values) {
             // axios post data to /data/students/register
             axios
-              .put(
+              .post(
                 process.env.NEXT_PUBLIC_STRAPI_API + "/data/students/update",
                 {
                   data: {
@@ -209,8 +211,9 @@ export default function UpdateStudentForm({ studentData }) {
                 });
                 setSubmitting(false);
                 setSubmittedData(values);
-                // Empty all the fields
-                router.reload();
+                setTimeout(() => {
+                  router.back();
+                }, 3000);
               })
               .catch((err) => {
                 setNotification({
@@ -767,7 +770,7 @@ export default function UpdateStudentForm({ studentData }) {
               </div> */}
             </div>
             <div className="form-control mx-auto py-10 max-w-2xl md:max-w-md w-full">
-              <button type="submit" className="btn btn-accent">
+              <button accessKey="S" type="submit" className="btn btn-accent">
                 {/* based on submitting  */}
                 {formik.isSubmitting ? "Please wait..." : "Submit"}
               </button>
