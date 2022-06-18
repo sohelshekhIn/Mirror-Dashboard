@@ -112,9 +112,8 @@ export default function ViewStudent() {
   }, [data]);
 
   const toggleShowForm = () => {
-    let showFormCheckbox = document.getElementById("showFormCheckbox");
     if (dropDownStatus) {
-      setDropdownStatus(false);
+      setDropDownStatus(false);
     } else {
       setDropDownStatus(true);
     }

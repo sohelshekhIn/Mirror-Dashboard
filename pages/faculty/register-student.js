@@ -477,7 +477,7 @@ export default function RegisterStudent() {
                           className="outline-none bg-transparent"
                         />
                         {useEffect(() => {
-                          if (selectedDOB !== null) {
+                          if (selectedJoinDate !== null) {
                             formik.setFieldValue("joinDate", selectedJoinDate);
                             closeDatePicker();
                           }
