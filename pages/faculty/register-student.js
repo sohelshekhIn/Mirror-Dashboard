@@ -23,7 +23,10 @@ export default function RegisterStudent() {
   if (status === "loading") {
     return <Loading />;
   }
-  if (data.user && data.user.role !== "faculty") {
+  if (
+    (data.user && data.user.role !== "faculty") ||
+    !data.user.facultyRoles.includes(14)
+  ) {
     return <PageNotFound />;
   }
 
@@ -182,7 +185,6 @@ export default function RegisterStudent() {
             })}
             onSubmit={async (values, { setSubmitting }) => {
               if (submittedData !== values) {
-                console.log(values);
                 // axios post data to /data/students/register
                 axios
                   .post(
@@ -221,7 +223,9 @@ export default function RegisterStudent() {
                     setSubmitting(false);
                     setSubmittedData(values);
                     // Empty all the fields
-                    router.reload();
+                    setTimeout(() => {
+                      router.reload();
+                    }, 3000);
                   })
                   .catch((err) => {
                     setNotification({

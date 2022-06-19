@@ -123,7 +123,7 @@ const NotificationAlert = ({ type, message, id }) => {
 
   return (
     <div
-      className={`absolute w-96 transform transition-all ease-in-out duration-1000 right-[50%] translate-x-[50%] lg:translate-x-0 lg:right-14 bottom-24 shadow-lg alert alert-${type} ${animateClass}`}
+      className={` z-[100] absolute w-96 transform transition-all ease-in-out duration-1000 right-[50%] translate-x-[50%] lg:translate-x-0 lg:right-14 bottom-24 shadow-lg alert alert-${type} ${animateClass}`}
     >
       <div>
         {svgElem}

@@ -19,10 +19,12 @@ export default function TakeAttendance() {
   if (status === "loading") {
     return <Loading />;
   }
-  if (data.user && data.user.role !== "faculty") {
+  if (
+    (data.user && data.user.role !== "faculty") ||
+    !data.user.facultyRoles.includes(11)
+  ) {
     return <PageNotFound />;
   }
-
   const [batch, setBatch] = useState(["Loading Batches..."]);
   const [attendanceView, setAttendanceView] = useState(<EmptyMessage />);
   const [notification, setNotification] = useState({
@@ -50,7 +52,7 @@ export default function TakeAttendance() {
           // tempBatch[res.data.data[key].attributes.batch] =
           //   res.data.data[key].attributes.subjects;
         }
-        // Priority Changed to Admiin Panel: Dismissing for now
+        // Priority Changed to Admin Panel: Dismissing for now
         // tempBatch structure:
         // {
         //   "12 NCERT": ["Chemistry", "Physics", "Maths", "Biology"],
@@ -169,12 +171,12 @@ export default function TakeAttendance() {
 
 const EmptyMessage = () => {
   return (
-    <div className="flex flex-col items-center w-96 mt-16 bg-white p-10 rounded-lg shadow-md">
+    <div className="flex flex-col items-center w-96 mt-16 bg-base-100 p-10 rounded-lg ">
       <span className="w-7/12">
         <Image src={search} />
       </span>
-      <span className="text-primary text-2xl font-semibold">
-        Select Batch to conitnue!
+      <span className="text-secondary text-2xl font-bold">
+        Select batch to continue
       </span>
     </div>
   );

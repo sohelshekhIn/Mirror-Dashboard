@@ -6,6 +6,7 @@ import { DashboardContent } from "../../../components/faculty/Navbar";
 import StudentTableView from "../../../components/faculty/StudentTableView";
 import Loading from "../../../components/utilities/Loading";
 import NotificationAlert from "../../../components/utilities/NotificationAlert";
+import PageNotFound from "../../404";
 
 export default function ViewStudent() {
   const { status, data } = useSession({
@@ -17,10 +18,12 @@ export default function ViewStudent() {
   if (status === "loading") {
     return <Loading />;
   }
-  if (data.user && data.user.role !== "faculty") {
+  if (
+    (data.user && data.user.role !== "faculty") ||
+    !data.user.facultyRoles.includes(154)
+  ) {
     return <PageNotFound />;
   }
-
   // == Main ==
 
   const [batch, setBatch] = useState({
@@ -166,7 +169,7 @@ export default function ViewStudent() {
       if (formData.subjects.length > 0) {
         urlQuery += `&subjects=${formData.subjects.join(",")}`;
       }
-      router.push(`/faculty/view-student${urlQuery}`);
+      router.push(`/faculty/view-students${urlQuery}`);
       // Yes
 
       if (
@@ -200,9 +203,7 @@ export default function ViewStudent() {
           }
         )
         .then((res) => {
-          console.log(res.data);
           toggleShowForm();
-          console.log(formData);
           setApiResponse(res.data);
           // setTableView(
           //   <StudentTableView requestData={formData} studentsData={res.data} />
@@ -247,7 +248,7 @@ export default function ViewStudent() {
                     {validationError}
                   </div>
                   <div className="flex flex-col items-start md:flex-row  space-y-5 space-x-0 md:space-y-0 md:space-x-5">
-                    <div className="form-control md:mx-0 w-full max-w-xs">
+                    <div className="form-control md:mx-0 w-full md:max-w-xs max-w-md">
                       <label className="label">
                         <span className="label-text">Select Class</span>
                       </label>
@@ -285,7 +286,7 @@ export default function ViewStudent() {
                         })}
                       </select>
                     </div>
-                    <div className="form-control md:mx-0 w-full max-w-xs">
+                    <div className="form-control md:mx-0 w-full md:max-w-xs max-w-md">
                       <label className="label">
                         <span className="label-text">Select Batch</span>
                       </label>
@@ -422,6 +423,7 @@ export default function ViewStudent() {
               <StudentTableView
                 requestData={formData}
                 studentsData={apiResponse}
+                session={data}
               />
             ) : (
               <EmptyMessageSection

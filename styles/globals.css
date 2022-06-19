@@ -42,6 +42,10 @@
   @apply bg-white font-medium text-secondary;
 }
 
+.batchTableTh {
+  @apply bg-white font-medium text-secondary;
+}
+
 /* Change scroll bar bg color using css */
 ::-webkit-scrollbar {
   @apply w-1.5 bg-transparent;

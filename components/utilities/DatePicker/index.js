@@ -174,7 +174,6 @@ export default function DatePicker({
 
   const onNext = () => {
     if (state.showYearTable === true) {
-      console.log(state.minYear - (state.minYear - 10));
       setState({
         ...state,
         dateObject: state.dateObject.add(

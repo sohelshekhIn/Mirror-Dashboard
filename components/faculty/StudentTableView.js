@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function StudentTableView({ requestData, studentsData }) {
-  console.log(requestData);
+export default function StudentTableView({
+  session,
+  requestData,
+  studentsData,
+}) {
   const [studentTableViewColumns, setStudentTableViewColumns] = useState({
     0: {
       // setting area
@@ -73,26 +76,28 @@ export default function StudentTableView({ requestData, studentsData }) {
       for (let j = 0; j < Object.keys(studentTableViewColumns).length; j++) {
         if (j !== 0) {
           tableStudentData.push(
-            <th className="studentTableTh">
+            <td className="studentTableTh">
               {studentsData[i][studentTableViewColumns[j].fieldName]}
-            </th>
+            </td>
           );
-          if (Object.keys(studentTableViewColumns).length - 1 === j) {
-            tableStudentData.push(
-              <th className="studentTableTh">
-                <Link
-                  href={`/faculty/view-student/edit-details?id=${studentsData[i].UserID}`}
-                >
-                  <a className="btn modal-button">Edit</a>
-                </Link>
-              </th>
-            );
+          if (session.user.facultyRoles.includes(57)) {
+            if (Object.keys(studentTableViewColumns).length - 1 === j) {
+              tableStudentData.push(
+                <td className="studentTableTh">
+                  <Link
+                    href={`/faculty/view-students/edit-details?id=${studentsData[i].UserID}`}
+                  >
+                    <a className="btn modal-button">Edit</a>
+                  </Link>
+                </td>
+              );
+            }
           }
         }
       }
       tableStudentRow.push(
         <tr>
-          <th className="studentTableTh">{count}</th>
+          <td className="studentTableTh">{count}</td>
           {tableStudentData}
         </tr>
       );

@@ -84,8 +84,8 @@ export default function Login({ csrfToken }) {
                 password: values.password,
                 callbackUrl: `${window.location.origin}/dashboard`,
               });
-              console.log(res?.error);
               if (res.error) {
+                console.log(res);
                 setLoginError(res.error);
               } else {
                 NotificationAlert({

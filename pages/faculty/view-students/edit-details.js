@@ -18,7 +18,11 @@ export default function EditStudentDetails() {
   if (status === "loading") {
     return <Loading />;
   }
-  if (data.user && data.user.role !== "faculty") {
+  if (
+    (data.user && data.user.role !== "faculty") ||
+    !data.user.facultyRoles.includes(57)
+  ) {
+    console.log("not");
     return <PageNotFound />;
   }
 
@@ -43,7 +47,6 @@ export default function EditStudentDetails() {
         }
       )
       .then((res) => {
-        console.log(res.data);
         //   if res.data is empty
         if (Object.keys(res.data).length === 0) {
           setNotification({

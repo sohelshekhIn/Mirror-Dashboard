@@ -29,6 +29,12 @@ export default NextAuth({
                   "invalid_credentials"
               ) {
                 throw new Error("Invalid Credentials");
+              } else if (
+                error.response &&
+                error.response.data.error.details.messages.id ===
+                  "account_blocked"
+              ) {
+                throw new Error("Account blocked, please contact admin");
               } else if (error.code) {
                 // Handle all axios errors here
                 if (error.code === "ECONNREFUSED") {
@@ -62,6 +68,8 @@ export default NextAuth({
             email: user.user.email,
             role: user.user.role.type,
             batch: batch,
+            gender: user.user.gender,
+            facultyRoles: user.user.facultyRoles,
           },
         };
       }
@@ -75,6 +83,8 @@ export default NextAuth({
       session.user.email = token.user.email;
       session.user.role = token.user.role;
       session.user.batch = token.user.batch;
+      session.user.gender = token.user.gender;
+      session.user.facultyRoles = token.user.facultyRoles;
       return session;
     },
   },

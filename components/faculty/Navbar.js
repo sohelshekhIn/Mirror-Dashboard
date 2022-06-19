@@ -3,10 +3,11 @@ import Image from "next/image";
 import { logoBlue } from "../../public/images";
 import { signIn, signOut } from "next-auth/react";
 import { maleAvatar, femaleAvatar } from "../../public/images";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function FacultyNavbar({ children, session }) {
   // when #main is clicked, check the checkbox
+  const [avatar, setAvatar] = useState(maleAvatar);
   useEffect(() => {
     let content = document.getElementById("content");
     let menu = document.getElementById("menu-open");
@@ -17,11 +18,40 @@ export default function FacultyNavbar({ children, session }) {
     navLinks.addEventListener("click", () => {
       menu.checked = false;
     });
-    // var avatar = maleAvatar;
-    // if (session.user.gender == "Female") {
-    //   avatar = femaleAvatar;
-    // }
+
+    if (session.user.gender == "Female") {
+      setAvatar(femaleAvatar);
+    }
   }, []);
+
+  const moduleLinks = {
+    0: {
+      moduleId: 11,
+      moduleName: "Take Attendance",
+      moduleLink: "/faculty/attendance",
+    },
+    1: {
+      moduleId: 14,
+      moduleName: "Register Student",
+      moduleLink: "/faculty/register-student",
+    },
+    2: {
+      moduleId: 154,
+      moduleName: "View Students",
+      moduleLink: "/faculty/view-students",
+    },
+    // sub module
+    // {
+    // moduleId: 57,
+    //   moduleLink: "/faculty/view-student/edit-details"
+    // }
+    3: {
+      moduleId: 15,
+      moduleName: "Manage Batches",
+      moduleLink: "/faculty/manage-batches",
+    },
+  };
+
   return (
     <div className="flex flex-col ">
       <div className="navbar bg-white z-50 pt-5 shadow-md fixed top-0 duration-500">
@@ -65,7 +95,7 @@ export default function FacultyNavbar({ children, session }) {
           <div className="dropdown dropdown-end">
             <label tabIndex="0" className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <Image src={maleAvatar} />
+                <Image src={avatar} />
               </div>
             </label>
             <ul
@@ -104,7 +134,25 @@ export default function FacultyNavbar({ children, session }) {
                 <a className="text-secondary">Home</a>
               </Link>
             </li>
-            <li className="navli duration-200">
+            {/* loop throgh moduleLinks */}
+            {Object.keys(moduleLinks).map((key) => {
+              // check if module id is in session.user.facultyRoles
+              if (
+                session.user.facultyRoles.includes(moduleLinks[key].moduleId)
+              ) {
+                return (
+                  <li className="navli duration-200" key={key}>
+                    <Link href={moduleLinks[key].moduleLink}>
+                      <a className="text-secondary">
+                        {moduleLinks[key].moduleName}
+                      </a>
+                    </Link>
+                  </li>
+                );
+              }
+            })}
+
+            {/* <li className="navli duration-200">
               <Link href="/faculty/attendance">
                 <a className="text-secondary">Take Attendance</a>
               </Link>
@@ -118,7 +166,7 @@ export default function FacultyNavbar({ children, session }) {
               <Link href="/faculty/view-student">
                 <a className="text-secondary">View Student</a>
               </Link>
-            </li>
+            </li> */}
           </ul>
         </aside>
 

@@ -3,8 +3,15 @@ import Image from "next/image";
 import { logoBlue } from "../../public/images";
 import { signIn, signOut } from "next-auth/react";
 import { maleAvatar, femaleAvatar } from "../../public/images";
+import { useEffect, useState } from "react";
 
 export default function StudentNavbar({ session }) {
+  const [avatar, setAvatar] = useState(maleAvatar);
+  useEffect(() => {
+    if (session.user.gender == "Female") {
+      setAvatar(femaleAvatar);
+    }
+  }, []);
   return (
     <div className="navbar bg-white z-50 pt-5 shadow-md fixed top-0 duration-500 lg:px-16 xl:px-48 3xl:px-96">
       <div className="navbar-start">
@@ -68,7 +75,7 @@ export default function StudentNavbar({ session }) {
         <div className="dropdown dropdown-end">
           <label tabIndex="0" className="btn btn-ghost btn-circle avatar">
             <div className="w-10 rounded-full">
-              <Image src={maleAvatar} />
+              <Image src={avatar} />
             </div>
           </label>
           <ul
