@@ -340,6 +340,7 @@ export default function ViewBatches() {
                   {/* if id is add then dont show delete button */}
                   {modalFormData.id !== "add" && (
                     <button
+                      tabIndex="-1"
                       onClick={handleDelete}
                       type="button"
                       className="btn btn-ghost text-error"
