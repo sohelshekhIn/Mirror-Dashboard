@@ -21,7 +21,7 @@ export default function TakeAttendance() {
   }
   if (
     (data.user && data.user.role !== "faculty") ||
-    !data.user.facultyRoles.includes(11)
+    !data.user.facultyData["facultyRoles"].includes(11)
   ) {
     return <PageNotFound />;
   }
@@ -47,7 +47,14 @@ export default function TakeAttendance() {
         // let tempBatch = {};
         let tempBatch = [];
         for (let key in res.data.data) {
-          tempBatch.push(res.data.data[key].attributes.batch);
+          if (
+            data.user.facultyData["allowedBatches"].includes(
+              res.data.data[key].attributes.batch
+            ) ||
+            data.user.facultyData["allowedBatches"] === "*"
+          ) {
+            tempBatch.push(res.data.data[key].attributes.batch);
+          }
           //  ==> Temp Batch Object
           // tempBatch[res.data.data[key].attributes.batch] =
           //   res.data.data[key].attributes.subjects;
@@ -112,8 +119,8 @@ export default function TakeAttendance() {
 
   return (
     <DashboardContent>
-      <div className="max-w-xl">
-        <div className="flex flex-col">
+      <div className="flex flex-col lg:flex-row w-full lg:space-x-24">
+        <div className="flex flex-col lg:w-1/2">
           <div className="flex flex-col">
             <h1 className="heading1 text-primary">Take Attendance</h1>
             <span className="underline w-24 my-4"></span>
@@ -157,8 +164,8 @@ export default function TakeAttendance() {
               </button>
             </div>
           </form>
-          {attendanceView}
         </div>
+        <div className="mt-10 lg:mt-0 min-w-fit lg:w-1/2">{attendanceView}</div>
       </div>
       <NotificationAlert
         message={notification.message}

@@ -50,6 +50,16 @@ export default function FacultyNavbar({ children, session }) {
       moduleName: "Manage Batches",
       moduleLink: "/faculty/manage-batches",
     },
+    4: {
+      moduleId: 16,
+      moduleName: "Manage Homeworks",
+      moduleLink: "/faculty/manage-homeworks",
+    },
+    5: {
+      moduleId: 17,
+      moduleName: "Manage Tests",
+      moduleLink: "/faculty/manage-tests",
+    },
   };
 
   return (
@@ -136,9 +146,11 @@ export default function FacultyNavbar({ children, session }) {
             </li>
             {/* loop throgh moduleLinks */}
             {Object.keys(moduleLinks).map((key) => {
-              // check if module id is in session.user.facultyRoles
+              // check if module id is in session.user.facultyData["facultyRoles"]
               if (
-                session.user.facultyRoles.includes(moduleLinks[key].moduleId)
+                session.user.facultyData["facultyRoles"].includes(
+                  moduleLinks[key].moduleId
+                )
               ) {
                 return (
                   <li className="navli duration-200" key={key}>

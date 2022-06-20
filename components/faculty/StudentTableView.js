@@ -80,7 +80,7 @@ export default function StudentTableView({
               {studentsData[i][studentTableViewColumns[j].fieldName]}
             </td>
           );
-          if (session.user.facultyRoles.includes(57)) {
+          if (session.user.facultyData["facultyRoles"].includes(57)) {
             if (Object.keys(studentTableViewColumns).length - 1 === j) {
               tableStudentData.push(
                 <td className="studentTableTh">

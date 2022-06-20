@@ -25,7 +25,7 @@ export default function RegisterStudent() {
   }
   if (
     (data.user && data.user.role !== "faculty") ||
-    !data.user.facultyRoles.includes(14)
+    !data.user.facultyData["facultyRoles"].includes(14)
   ) {
     return <PageNotFound />;
   }

@@ -20,7 +20,7 @@ export default function ViewStudent() {
   }
   if (
     (data.user && data.user.role !== "faculty") ||
-    !data.user.facultyRoles.includes(154)
+    !data.user.facultyData["facultyRoles"].includes(154)
   ) {
     return <PageNotFound />;
   }
@@ -90,10 +90,18 @@ export default function ViewStudent() {
       .then((res) => {
         let tempBatch = {};
         for (let key in res.data.data) {
-          tempBatch[res.data.data[key].id] = {
-            batch: res.data.data[key].attributes.batch,
-            subjects: res.data.data[key].attributes.subjects,
-          };
+          console.log(res.data.data[key]);
+          if (
+            data.user.facultyData["allowedBatches"].includes(
+              res.data.data[key].attributes.batch
+            ) ||
+            data.user.facultyData["allowedBatches"] === "*"
+          ) {
+            tempBatch[res.data.data[key].id] = {
+              batch: res.data.data[key].attributes.batch,
+              subjects: res.data.data[key].attributes.subjects,
+            };
+          }
         }
         // tempBatch structure:
         // {

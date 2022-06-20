@@ -69,7 +69,7 @@ export default NextAuth({
             role: user.user.role.type,
             batch: batch,
             gender: user.user.gender,
-            facultyRoles: user.user.facultyRoles,
+            facultyData: user.user.facultyData,
           },
         };
       }
@@ -84,7 +84,7 @@ export default NextAuth({
       session.user.role = token.user.role;
       session.user.batch = token.user.batch;
       session.user.gender = token.user.gender;
-      session.user.facultyRoles = token.user.facultyRoles;
+      session.user.facultyData = token.user.facultyData;
       return session;
     },
   },
