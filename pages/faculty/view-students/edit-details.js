@@ -20,7 +20,7 @@ export default function EditStudentDetails() {
   }
   if (
     (data.user && data.user.role !== "faculty") ||
-    !data.user.facultyRoles.includes(57)
+    !data.user.facultyData["facultyRoles"].includes(57)
   ) {
     console.log("not");
     return <PageNotFound />;
