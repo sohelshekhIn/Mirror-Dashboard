@@ -41,10 +41,8 @@ export default function FacultyNavbar({ children, session }) {
       moduleLink: "/faculty/view-students",
     },
     // sub module
-    // {
     // moduleId: 57,
     //   moduleLink: "/faculty/view-student/edit-details"
-    // }
     3: {
       moduleId: 15,
       moduleName: "Manage Batches",
@@ -60,6 +58,12 @@ export default function FacultyNavbar({ children, session }) {
       moduleName: "Manage Tests",
       moduleLink: "/faculty/manage-tests",
     },
+    // sub module
+    // moduleId: 18,
+    // moduleLink: "/faculty/manage-tests/new-test"
+    // sub module
+    // moduleId: 19,
+    // moduleLink: "/faculty/manage-tests/edit-details/[id]"
   };
 
   return (

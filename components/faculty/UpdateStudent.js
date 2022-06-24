@@ -438,7 +438,7 @@ export default function UpdateStudentForm({ studentData }) {
                           subjectsAppendedCount % 2 === 0
                         ) {
                           subjectsDivHorizontal.push(
-                            <div className="flex space-x-10">
+                            <div key={i} className="flex space-x-10">
                               {subjectInputGroup}
                             </div>
                           );
@@ -463,7 +463,7 @@ export default function UpdateStudentForm({ studentData }) {
                         );
                         if (subjectsAppendedCount === subjects.length - 1) {
                           subjectsDivHorizontal.push(
-                            <div className="flex space-x-10">
+                            <div key={i} className="flex space-x-10">
                               {subjectInputGroup}
                             </div>
                           );

@@ -119,7 +119,7 @@ export default function TakeAttendance() {
 
   return (
     <DashboardContent>
-      <div className="flex flex-col lg:flex-row w-full lg:space-x-24">
+      <div className="flex flex-col  w-full">
         <div className="flex flex-col lg:w-1/2">
           <div className="flex flex-col">
             <h1 className="heading1 text-primary">Take Attendance</h1>
@@ -165,7 +165,7 @@ export default function TakeAttendance() {
             </div>
           </form>
         </div>
-        <div className="mt-10 lg:mt-0 min-w-fit lg:w-1/2">{attendanceView}</div>
+        <div className="mt-10 min-w-fit lg:w-8/12">{attendanceView}</div>
       </div>
       <NotificationAlert
         message={notification.message}
