@@ -63,7 +63,7 @@ export default function FacultyNavbar({ children, session }) {
     // moduleLink: "/faculty/manage-tests/new-test"
     // sub module
     // moduleId: 19,
-    // moduleLink: "/faculty/manage-tests/edit-details/[id]"
+    // moduleLink: "/faculty/manage-tests/edit-details/[id]" (on Submit)
   };
 
   return (
@@ -145,7 +145,7 @@ export default function FacultyNavbar({ children, session }) {
           >
             <li className="navli duration-200">
               <Link href="/">
-                <a className="text-secondary">Home</a>
+                <a className="text-secondary font-medium">Dashboard</a>
               </Link>
             </li>
             {/* loop throgh moduleLinks */}
@@ -159,7 +159,7 @@ export default function FacultyNavbar({ children, session }) {
                 return (
                   <li className="navli duration-200" key={key}>
                     <Link href={moduleLinks[key].moduleLink}>
-                      <a className="text-secondary">
+                      <a className="text-secondary font-medium">
                         {moduleLinks[key].moduleName}
                       </a>
                     </Link>

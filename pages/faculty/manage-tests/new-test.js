@@ -19,7 +19,8 @@ export default function AddNewTest() {
   }
   if (
     (data.user && data.user.role !== "faculty") ||
-    !data.user.facultyData["facultyRoles"].includes(18)
+    !data.user.facultyData["facultyRoles"].includes(18) ||
+    data.user.facultyData["testsData"].canAdd === false
   ) {
     return <PageNotFound />;
   }
@@ -226,6 +227,7 @@ export default function AddNewTest() {
                     <span className="label-text">Select Class</span>
                   </label>
                   <select
+                    accessKey="Q"
                     id="selectClass"
                     defaultValue="DEFAULT"
                     required
@@ -346,7 +348,7 @@ export default function AddNewTest() {
                 </select>
               </div>
               <div className="flex flex-col w-fit">
-                <button type="submit" className="btn btn-accent">
+                <button accessKey="S" type="submit" className="btn btn-accent">
                   Submit
                 </button>
               </div>

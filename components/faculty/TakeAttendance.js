@@ -3,15 +3,11 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import NotificationAlert from "../utilities/NotificationAlert";
 
-const AttendanceTable = ({ apiData, batch, sessionData }) => {
+const AttendanceTable = ({ apiData, batch, sessionData, setNotification }) => {
   const [attendanceMethod, setAttendanceMethod] = useState(false); //true for marking absents, false for marking presents
   const [studentTable, setStudentTable] = useState([]); //true for student table, false for attendance table
   const [attendanceData, setAttendanceData] = useState([]);
   const [attendanceState, setAttendanceState] = useState({});
-  const [notification, setNotification] = useState({
-    message: null,
-    type: null,
-  });
   const router = useRouter();
 
   useEffect(() => {
@@ -214,10 +210,6 @@ const AttendanceTable = ({ apiData, batch, sessionData }) => {
           </button>
         </div>
       </div>
-      <NotificationAlert
-        message={notification.message}
-        type={notification.type}
-      />
     </div>
   );
 };

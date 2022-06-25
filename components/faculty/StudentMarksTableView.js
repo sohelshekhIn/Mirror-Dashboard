@@ -6,6 +6,7 @@ import { calendarPNG } from "../../public/images";
 import DatePicker from "../utilities/DatePicker";
 
 export default function StudentMarksTableView({
+  editStudentDetails,
   students,
   testDetails,
   setNotification,
@@ -24,6 +25,17 @@ export default function StudentMarksTableView({
     testDate: null,
     marksOutOf: null,
   });
+  const [batchInfoComps, setBatchInfoComps] = useState(null);
+  // if editStudentDetails is true, then the form will be filled with the student's details
+  useEffect(() => {
+    if (editStudentDetails) {
+      setFormData({
+        testTitle: editStudentDetails.data.attributes.data.testTitle,
+        testDate: editStudentDetails.data.attributes.TestId.split("_")[2],
+        marksOutOf: editStudentDetails.data.attributes.TestId.split("_")[3],
+      });
+    }
+  }, [editStudentDetails]);
 
   const handleChange = (e) => {
     setValidatonError(null);
@@ -31,16 +43,10 @@ export default function StudentMarksTableView({
       ...formData,
       [e.target.name]: e.target.value,
     });
-    console.log({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-    console.log(formData);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(submittedData);
     //   map data of input fields to an array
     let data = {};
     //   check is formData is empty
@@ -57,19 +63,44 @@ export default function StudentMarksTableView({
       return;
     }
 
-    for (let i = 0; i < students.length; i++) {
-      let isAbsent = document.getElementById(`isAbsent${i}`).checked;
-      let marks = document.getElementById(`marks${i}`).value;
-      if (marks === "" && isAbsent === false) {
-        setValidatonError(
-          `Please fill Marks or select Absent for ${students[i].name}`
-        );
-        return;
-      } else {
-        if (isAbsent) {
-          data[students[i].UserID] = [students[i].name, false];
+    if (editStudentDetails) {
+      let studentKeys = Object.keys(
+        editStudentDetails.data.attributes.data.tdata
+      );
+
+      for (let i = 0; i < studentKeys.length; i++) {
+        let student =
+          editStudentDetails.data.attributes.data.tdata[studentKeys[i]];
+        let isAbsent = document.getElementById(`isAbsent${i}`).checked;
+        let marks = document.getElementById(`marks${i}`).value;
+        if (marks === "" && isAbsent === false) {
+          setValidatonError(
+            `Please fill Marks or select Absent for ${students[i].name}`
+          );
+          return;
         } else {
-          data[students[i].UserID] = [students[i].name, marks];
+          if (isAbsent) {
+            data[studentKeys[i]] = [student[0], false];
+          } else {
+            data[studentKeys[i]] = [student[0], marks];
+          }
+        }
+      }
+    } else {
+      for (let i = 0; i < students.length; i++) {
+        let isAbsent = document.getElementById(`isAbsent${i}`).checked;
+        let marks = document.getElementById(`marks${i}`).value;
+        if (marks === "" && isAbsent === false) {
+          setValidatonError(
+            `Please fill Marks or select Absent for ${students[i].name}`
+          );
+          return;
+        } else {
+          if (isAbsent) {
+            data[students[i].UserID] = [students[i].name, false];
+          } else {
+            data[students[i].UserID] = [students[i].name, marks];
+          }
         }
       }
     }
@@ -89,46 +120,104 @@ export default function StudentMarksTableView({
 
     if (validationError === null) {
       // join formData to data
-      let processedData = { tdata: { ...data }, testTitle: formData.testTitle };
+      let userDetails = [session.user.id, session.user.name];
+      let processedData = {
+        tdata: { ...data },
+        testTitle: formData.testTitle,
+        addedBy: userDetails,
+      };
 
-      axios
-        .post(
-          process.env.NEXT_PUBLIC_STRAPI_API + "/marks",
-          {
-            data: {
-              TestId: `${testDetails.batch.replace(/\s/g, "")}_${
-                testDetails.subject
-              }_${formData.testDate}_${formData.marksOutOf}_${
-                Math.floor(Math.random() * 9999) + 1000
-              }`,
-              data: processedData,
-            },
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${session.user.accessToken}`,
-            },
-          }
-        )
-        .then((res) => {
-          setSubmittedData([formData, data]);
-          setNotification({
-            type: "success",
-            message: "Test Marks Added Successfully",
-            id: new Date(),
-          });
-          setTimeout(() => {
-            router.back();
-          }, 3000);
-        })
-        .catch((err) => {
-          console.log(err);
+      if (editStudentDetails) {
+        if (session.user.facultyData["testsData"].canEdit) {
+          axios
+            .put(
+              process.env.NEXT_PUBLIC_STRAPI_API +
+                "/marks/" +
+                editStudentDetails.data.id,
+              {
+                data: {
+                  TestId: `${
+                    editStudentDetails.data.attributes.TestId.split("_")[0]
+                  }_${
+                    editStudentDetails.data.attributes.TestId.split("_")[1]
+                  }_${formData.testDate}_${formData.marksOutOf}_${
+                    Math.floor(Math.random() * 9999) + 1000
+                  }`,
+                  data: processedData,
+                },
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${session.user.accessToken}`,
+                },
+              }
+            )
+            .then((res) => {
+              setSubmittedData([formData, data]);
+              setNotification({
+                type: "success",
+                message: "Test Marks Updated Successfully",
+                id: new Date(),
+              });
+              setTimeout(() => {
+                router.back();
+              }, 2000);
+            })
+            .catch((err) => {
+              console.log(err);
+              setNotification({
+                type: "error",
+                message: err.message,
+                id: new Date(),
+              });
+            });
+        } else {
           setNotification({
             type: "error",
-            message: err.message,
+            message: "You are not authorized to edit this test",
             id: new Date(),
           });
-        });
+        }
+      } else {
+        axios
+          .post(
+            process.env.NEXT_PUBLIC_STRAPI_API + "/marks",
+            {
+              data: {
+                TestId: `${testDetails.batch.replace(/\s/g, "")}_${
+                  testDetails.subject
+                }_${formData.testDate}_${formData.marksOutOf}_${
+                  Math.floor(Math.random() * 9999) + 1000
+                }`,
+                data: processedData,
+              },
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${session.user.accessToken}`,
+              },
+            }
+          )
+          .then((res) => {
+            setSubmittedData([formData, data]);
+            setNotification({
+              type: "success",
+              message: "Test Marks Added Successfully",
+              id: new Date(),
+            });
+            setTimeout(() => {
+              router.back();
+            }, 2000);
+          })
+          .catch((err) => {
+            console.log(err);
+            setNotification({
+              type: "error",
+              message: err.message,
+              id: new Date(),
+            });
+          });
+      }
     }
   };
 
@@ -140,7 +229,7 @@ export default function StudentMarksTableView({
 
   useEffect(() => {
     tableData();
-  }, [students]);
+  }, [students, editStudentDetails]);
 
   const tableData = () => {
     if (students && students.length > 0) {
@@ -184,6 +273,57 @@ export default function StudentMarksTableView({
         );
       });
       setTableContentComp(tempTableContentComp);
+    } else if (editStudentDetails) {
+      let tempTableContentComp = [];
+      //   editStudentDetails.data.attributes.data.tdata.map((student, index) => {
+      let studentKeys = Object.keys(
+        editStudentDetails.data.attributes.data.tdata
+      );
+      for (
+        let i = 0;
+        i < Object.keys(editStudentDetails.data.attributes.data.tdata).length;
+        i++
+      ) {
+        let student =
+          editStudentDetails.data.attributes.data.tdata[studentKeys[i]];
+        tempTableContentComp.push(
+          <tr key={i}>
+            <td className="studentTableTh">{i + 1}</td>
+            <td className="studentTableTh">{student[0]}</td>
+            <td className="studentTableTh">
+              <input
+                id={`isAbsent${i}`}
+                onClick={(e) => {
+                  // if is not checked then disable mark input
+                  if (!e.target.checked) {
+                    document.getElementById(`marks${i}`).disabled = false;
+                  } else {
+                    document.getElementById(`marks${i}`).disabled = true;
+                  }
+                }}
+                type="checkbox"
+                onChange={(e) => {
+                  setValidatonError(null);
+                }}
+                className="checkbox"
+              />
+            </td>
+            <td className="studentTableTh">
+              <input
+                name={"je"}
+                id={`marks${i}`}
+                type="number"
+                onChange={() => {
+                  setValidatonError(null);
+                }}
+                placeholder={`Enter Marks for ${student[0]}`}
+                class="input w-full md:w-3/4 max-w-xs"
+              />
+            </td>
+          </tr>
+        );
+      }
+      setTableContentComp(tempTableContentComp);
     }
   };
 
@@ -207,7 +347,8 @@ export default function StudentMarksTableView({
               name="testTitle"
               maxLength="60"
             />
-            <div class="form-control w-full max-w-xl">
+
+            <div class="form-control w-1/2">
               <input
                 type="number"
                 placeholder="Marks Out Of"
@@ -236,7 +377,6 @@ export default function StudentMarksTableView({
                       ...formData,
                       testDate: selectedDate,
                     });
-                    console.log("Date", selectedDate);
                     closeDatePicker();
                   }
                 }, [selectedDate])}
@@ -281,7 +421,31 @@ export default function StudentMarksTableView({
                 </div>
               </div>
             </div>
-            <span className="font-medium max-w-2xl">{testDetails.subject}</span>
+
+            {useEffect(() => {
+              if (editStudentDetails) {
+                let batch =
+                  editStudentDetails.data.attributes.TestId.split("_")[0];
+                if (isNaN(parseInt(batch[1]))) {
+                  batch = batch.slice(0, 1) + " " + batch.slice(1);
+                } else if (isNaN(parseInt(batch[2]))) {
+                  batch = batch.slice(0, 2) + " " + batch.slice(2);
+                }
+                setBatchInfoComps(
+                  <span className="font-medium max-w-2xl">
+                    {batch} (
+                    {editStudentDetails.data.attributes.TestId.split("_")[1]})
+                  </span>
+                );
+              } else {
+                setBatchInfoComps(
+                  <span className="font-medium max-w-2xl">
+                    {testDetails.batch} ({testDetails.subject})
+                  </span>
+                );
+              }
+            }, [editStudentDetails, testDetails])}
+            {batchInfoComps}
           </div>
         </div>
         <div className="flex flex-col overflow-x-auto space-y-10">
@@ -291,16 +455,101 @@ export default function StudentMarksTableView({
                 <th className="studentTableTh">Sr.</th>
                 <th className="studentTableTh">Name</th>
                 <th className="studentTableTh">Absent</th>
-                <th className="studentTableTh">Marks (Out of 100)</th>
+                <th className="studentTableTh">
+                  Marks (Out of {formData.marksOutOf})
+                </th>
               </tr>
             </thead>
-            <tbody>{tableContentComp}</tbody>
+            <tbody>
+              {tableContentComp}
+              {useEffect(() => {
+                if (editStudentDetails) {
+                  let studentKeys = Object.keys(
+                    editStudentDetails.data.attributes.data.tdata
+                  );
+
+                  for (let j = 0; j < studentKeys.length; j++) {
+                    let student =
+                      editStudentDetails.data.attributes.data.tdata[
+                        studentKeys[j]
+                      ];
+                    if (student[1] === false) {
+                      document.getElementById(`isAbsent${j}`)
+                        ? (document.getElementById(
+                            `isAbsent${j}`
+                          ).checked = true)
+                        : "";
+                      document.getElementById(`marks${j}`)
+                        ? (document.getElementById(`marks${j}`).disabled = true)
+                        : "";
+                    } else {
+                      document.getElementById(`marks${j}`)
+                        ? (document.getElementById(`marks${j}`).value =
+                            student[1])
+                        : "";
+                      document.getElementById(`marks${j}`)
+                        ? (document.getElementById(
+                            `marks${j}`
+                          ).disabled = false)
+                        : "";
+                    }
+                  }
+                }
+              }, [tableContentComp])}
+            </tbody>
           </table>
-          <div className="w-full flex justify-end">
-            <button type="submit" className="btn btn-accent">
-              Submit
+        </div>
+        <div className="w-full flex justify-end space-x-5">
+          {editStudentDetails ? (
+            <button
+              tabIndex="-1"
+              type="button"
+              onClick={() => {
+                //   alaert asking if user wants to save the changes
+                if (
+                  session.user.facultyData["testsData"].canEdit &&
+                  window.confirm("Are you sure you want to delete this test?")
+                ) {
+                  axios
+                    .delete(
+                      process.env.NEXT_PUBLIC_STRAPI_API +
+                        "/marks/" +
+                        editStudentDetails.data.id,
+                      {
+                        headers: {
+                          Authorization: `Bearer ${session.user.accessToken}`,
+                        },
+                      }
+                    )
+                    .then((res) => {
+                      setNotification({
+                        type: "success",
+                        message: "Test deleted successfully",
+                        id: new Date(),
+                      });
+                      setTimeout(() => {
+                        router.back();
+                      }, 2000);
+                    })
+                    .catch((err) => {
+                      setNotification({
+                        type: "error",
+                        message: err.message,
+                        id: new Date(),
+                      });
+                    });
+                }
+              }}
+              className="btn btn-ghost text-error bg-transparent"
+            >
+              Delete
             </button>
-          </div>
+          ) : (
+            ""
+          )}
+          <button type="submit" className="btn btn-accent">
+            Submit
+          </button>
         </div>
       </div>
     </form>

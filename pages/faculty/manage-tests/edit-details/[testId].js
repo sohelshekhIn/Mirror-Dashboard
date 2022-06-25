@@ -3,6 +3,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { DashboardContent } from "../../../../components/faculty/Navbar";
+import StudentMarksTableView from "../../../../components/faculty/StudentMarksTableView";
 import Loading from "../../../../components/utilities/Loading";
 import NotificationAlert from "../../../../components/utilities/NotificationAlert";
 import PageNotFound from "../../../404";
@@ -17,10 +18,7 @@ export default function EditTest() {
   if (status === "loading") {
     return <Loading />;
   }
-  if (
-    (data.user && data.user.role !== "faculty") ||
-    !data.user.facultyData["facultyRoles"].includes(19)
-  ) {
+  if (data.user && data.user.role !== "faculty") {
     return <PageNotFound />;
   }
 
@@ -30,6 +28,7 @@ export default function EditTest() {
     type: null,
     message: null,
   });
+  const [tableComp, setTableComp] = useState([]);
 
   useEffect(() => {
     axios
@@ -40,6 +39,13 @@ export default function EditTest() {
       })
       .then((res) => {
         console.log(res.data);
+        setTableComp(
+          <StudentMarksTableView
+            editStudentDetails={res.data}
+            setNotification={setNotification}
+            session={data}
+          />
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -53,6 +59,13 @@ export default function EditTest() {
 
   return (
     <DashboardContent>
+      <span
+        className="py-5 text-secondary cursor-pointer my-5"
+        onClick={router.back}
+      >
+        Go Back
+      </span>
+      <div className="mt-5">{tableComp}</div>
       <NotificationAlert
         type={notification.type}
         message={notification.message}

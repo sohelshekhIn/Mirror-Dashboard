@@ -348,7 +348,13 @@ export default function ViewBatches() {
                   {modalFormData.id !== "add" && (
                     <button
                       tabIndex="-1"
-                      onClick={handleDelete}
+                      onClick={() => {
+                        if (
+                          window.confirm("Are you sure you want to delete?")
+                        ) {
+                          handleDelete();
+                        }
+                      }}
                       type="button"
                       className="btn btn-ghost text-error"
                     >

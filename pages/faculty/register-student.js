@@ -225,7 +225,7 @@ export default function RegisterStudent() {
                     // Empty all the fields
                     setTimeout(() => {
                       router.reload();
-                    }, 3000);
+                    }, 2000);
                   })
                   .catch((err) => {
                     setNotification({

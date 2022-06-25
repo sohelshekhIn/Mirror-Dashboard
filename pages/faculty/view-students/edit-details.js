@@ -57,7 +57,12 @@ export default function EditStudentDetails() {
             <h1 className="font-xl p-3 text-error">No Record Found</h1>
           );
         } else {
-          setFormComp(<UpdateStudentForm studentData={res.data} />);
+          setFormComp(
+            <UpdateStudentForm
+              setNotification={setNotification}
+              studentData={res.data}
+            />
+          );
         }
       })
       .catch((err) => {

@@ -11,7 +11,7 @@ import axios from "axios";
 import NotificationAlert from "../utilities/NotificationAlert";
 import { useRouter } from "next/router";
 
-export default function UpdateStudentForm({ studentData }) {
+export default function UpdateStudentForm({ studentData, setNotification }) {
   // Page Authentication Checker
   const { status, data } = useSession({
     required: true,
@@ -37,10 +37,6 @@ export default function UpdateStudentForm({ studentData }) {
   });
   const [subjects, setSubjects] = useState([]);
   const [submittedData, setSubmittedData] = useState({});
-  const [notification, setNotification] = useState({
-    type: null,
-    message: null,
-  });
   const router = useRouter();
 
   useEffect(() => {
@@ -213,7 +209,7 @@ export default function UpdateStudentForm({ studentData }) {
                 setSubmittedData(values);
                 setTimeout(() => {
                   router.back();
-                }, 3000);
+                }, 2000);
               })
               .catch((err) => {
                 setNotification({
@@ -778,11 +774,6 @@ export default function UpdateStudentForm({ studentData }) {
           </form>
         )}
       </Formik>
-      <NotificationAlert
-        message={notification.message}
-        type={notification.type}
-        id={notification.id}
-      />
     </div>
   );
 }

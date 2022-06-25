@@ -9,7 +9,7 @@ export default NextAuth({
       id: "credentials",
       name: "NextAuthBackendApiMirror",
       credentials: {
-        identifier: { label: "Username", type: "text" },
+        username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {

@@ -104,6 +104,7 @@ export default function TakeAttendance() {
             batch={batch}
             apiData={res.data}
             sessionData={data}
+            setNotification={setNotification}
           />
         );
       })

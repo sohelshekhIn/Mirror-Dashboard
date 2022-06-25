@@ -32,12 +32,21 @@ export default function ManageTests() {
     message: null,
   });
   const [tests, setTests] = useState();
-  const [testCardComp, setTestCardComp] = useState([]);
+  const [testTableRows, setTestTableRows] = useState([]);
 
   useEffect(() => {
+    let testAllowId = data.user.id;
+    if (data.user.facultyData["testsData"].allowed === "*") {
+      testAllowId = "*";
+    }
     axios
-      .get(
-        process.env.NEXT_PUBLIC_STRAPI_API + "/marks?pagination[pageSize]=10",
+      .post(
+        process.env.NEXT_PUBLIC_STRAPI_API + "/info/tests",
+        {
+          data: {
+            id: testAllowId,
+          },
+        },
         {
           headers: {
             Authorization: `Bearer ${data.user.accessToken}`,
@@ -60,46 +69,48 @@ export default function ManageTests() {
   useEffect(() => {
     let testCardComp = [];
     if (tests) {
-      if (tests.data.length === 0) {
-        setTestCardComp(<EmptyMessage />);
+      if (tests.length === 0) {
+        setTestTableRows(<EmptyMessage />);
         return;
       }
 
-      for (let i = 0; i < tests.data.length; i++) {
-        console.log(tests.data[i]);
-        let testTitle = tests.data[i].attributes.data.testTitle;
-        let [batch, subject, date] = tests.data[i].attributes.TestId.split("_");
+      for (let i = 0; i < tests.length; i++) {
+        let testTitle = tests[i].data.testTitle;
+        let [batch, subject, date] = tests[i].TestId.split("_");
         // converts "12NCERT" to "12 NCERT" and "9BVB" to "9 BVB"
         if (isNaN(parseInt(batch[1]))) {
           batch = batch.slice(0, 1) + " " + batch.slice(1);
         } else if (isNaN(parseInt(batch[2]))) {
           batch = batch.slice(0, 2) + " " + batch.slice(2);
         }
+        let addedBy = tests[i].data.addedBy[1];
         testCardComp.push(
-          <div className="flex flex-col max-w-xl">
-            <Link
-              href={`/faculty/manage-tests/edit-details/${tests.data[i].id}`}
-            >
-              <a>
-                <div className="flex flex-col lg:flex-row p-5 py-8 space-y-1 w-full bg-white rounded-xl shadow-xl hover:scale-105">
-                  <div className="flex flex-row lg:flex-col w-full lg:w-2/12 justify-between lg:justify-center">
-                    <p className="text-base">{date}</p>
-                    <p className="text-base">{batch}</p>
-                    <p className="text-base">{subject}</p>
-                  </div>
-                  <div className="divider divider-horizontal"></div>
-                  <div className="flex flex-col w-9/12 justify-center">
-                    <h1 className="font-medium text-secondary text-xl">
-                      {testTitle}
-                    </h1>
-                  </div>
-                </div>
-              </a>
-            </Link>
-          </div>
+          <tr>
+            <td className="studentTableTh">{i + 1}</td>
+            <td className="studentTableTh">{date}</td>
+            <td className="studentTableTh">{batch}</td>
+            <td className="studentTableTh">{subject}</td>
+            <td className="studentTableTh">{testTitle}</td>
+            {data.user.facultyData["testsData"].allowed === "*" ? (
+              <td className="studentTableTh">{addedBy}</td>
+            ) : (
+              ""
+            )}
+            {data.user.facultyData["testsData"].canEdit ? (
+              <td className="studentTableTh">
+                <Link
+                  href={`/faculty/manage-tests/edit-details/${tests[i].id}`}
+                >
+                  <a className="btn btn-modal">Edit</a>
+                </Link>
+              </td>
+            ) : (
+              ""
+            )}
+          </tr>
         );
       }
-      setTestCardComp(testCardComp);
+      setTestTableRows(testCardComp);
     }
   }, [tests]);
 
@@ -110,13 +121,44 @@ export default function ManageTests() {
           <h1 className="heading1 text-primary">Manage Tests</h1>
           <span className="underline w-24 my-4"></span>
         </div>
-        <div className="flex flex-col max-w-xl space-y-5 ">
-          <div className="flex justify-end">
-            <Link href="/faculty/manage-tests/new-test">
-              <a className="btn btn-accent">Add new Test</a>
-            </Link>
+        <div className="flex flex-col max-w-6xl space-y-5 ">
+          {data.user.facultyData["testsData"].canAdd ? (
+            <div className="flex justify-end">
+              <Link href="/faculty/manage-tests/new-test">
+                <a accessKey="A" className="btn btn-accent">
+                  Add new Test
+                </a>
+              </Link>
+            </div>
+          ) : (
+            <div className="flex justify-end"></div>
+          )}
+
+          {/* {testCardComp} */}
+          <div class="overflow-x-auto py-5 px-2 lg:py-8 lg:px-5 rounded-xl shadow-lg bg-white">
+            <table class="table w-full">
+              <thead>
+                <tr>
+                  <td className="studentTableTh">Sr.</td>
+                  <th className="studentTableTh">Date</th>
+                  <th className="studentTableTh">Batch</th>
+                  <th className="studentTableTh">Subject</th>
+                  <th className="studentTableTh">Title</th>
+                  {data.user.facultyData["testsData"].allowed === "*" ? (
+                    <th className="studentTableTh">Added By</th>
+                  ) : (
+                    ""
+                  )}
+                  {data.user.facultyData["testsData"].canEdit ? (
+                    <th className="studentTableTh"></th>
+                  ) : (
+                    ""
+                  )}
+                </tr>
+              </thead>
+              <tbody>{testTableRows}</tbody>
+            </table>
           </div>
-          {testCardComp}
         </div>
       </div>
       <NotificationAlert
@@ -136,7 +178,6 @@ const EmptyMessage = () => {
       </span>
       <span className="text-secondary text-2xl font-bold text-center">
         Add test to view <br />
-        <span className="text-base ">(last 10 tests)</span>
       </span>
     </div>
   );
