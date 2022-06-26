@@ -121,8 +121,49 @@ export default function StudentMarksTableView({
     if (validationError === null) {
       // join formData to data
       let userDetails = [session.user.id, session.user.name];
+
+      // punishment data in format of  object with array [from , to, punishment]
+      let punishmentData = {
+        1: [
+          document.getElementById("lowKey1").value,
+          document.getElementById("highKey1").value,
+          document.getElementById("pKey1").value,
+        ],
+        2: [
+          document.getElementById("lowKey2").value,
+          document.getElementById("highKey2").value,
+          document.getElementById("pKey2").value,
+        ],
+        3: [
+          document.getElementById("lowKey3").value,
+          document.getElementById("highKey3").value,
+          document.getElementById("pKey3").value,
+        ],
+        4: [
+          document.getElementById("lowKey4").value,
+          document.getElementById("highKey4").value,
+          document.getElementById("pKey4").value,
+        ],
+      };
+
+      // if every key value of punishmentData is empty then ask user if they want to conutinue
+      let numberOfEmptyPunishments = 0;
+      Object.keys(punishmentData).map((key) => {
+        if (punishmentData[key][0] === "") {
+          numberOfEmptyPunishments++;
+        }
+      });
+      if (numberOfEmptyPunishments === 3) {
+        if (
+          !window.confirm("Do you want to continue wihtout adding punishments?")
+        ) {
+          return;
+        }
+      }
+
       let processedData = {
         tdata: { ...data },
+        pdata: punishmentData,
         testTitle: formData.testTitle,
         addedBy: userDetails,
       };
@@ -446,6 +487,137 @@ export default function StudentMarksTableView({
               }
             }, [editStudentDetails, testDetails])}
             {batchInfoComps}
+          </div>
+        </div>
+        <div className="flex">
+          <div tabindex="0" class="collapse w-full collapse-arrow">
+            <input type="checkbox" id="showTestPunishment" />
+            <div class="collapse-title text-xl font-medium">
+              Test Punishment(s)
+            </div>
+            <div class="collapse-content my-5 flex flex-col space-y-10">
+              <div className="flex flex-col space-y-10">
+                <div className="flex flex-col px-5 lg:flex-row space-y-5 space-x-0 lg:space-y-0 lg:space-x-10 w-full">
+                  <div className="flex space-x-5 items-center w-6/12 xl:w-4/12 ">
+                    <div class="form-control w-6/12">
+                      <input
+                        type="number"
+                        id="lowKey1"
+                        placeholder="low"
+                        class="input input-bordered w-full max-w-xs"
+                      />
+                    </div>
+                    <p className="">to</p>
+                    <div class="form-control w-6/12">
+                      <input
+                        type="number"
+                        id="highKey1"
+                        placeholder="high"
+                        class="input input-bordered w-full max-w-xs"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-control w-full max-w-3xl">
+                    <input
+                      type="text"
+                      placeholder="Punishment"
+                      id="pKey1"
+                      class="input input-bordered w-full max-w-2xl"
+                    />
+                  </div>
+                </div>
+                <span className="divider divider-vertical"></span>
+                <div className="flex flex-col px-5 lg:flex-row space-y-5 space-x-0 lg:space-y-0 lg:space-x-10 w-full">
+                  <div className="flex space-x-5 items-center w-6/12 xl:w-4/12 ">
+                    <div class="form-control w-6/12">
+                      <input
+                        type="number"
+                        id="lowKey2"
+                        placeholder="low"
+                        class="input input-bordered w-full max-w-xs"
+                      />
+                    </div>
+                    <p className="">to</p>
+                    <div class="form-control w-6/12">
+                      <input
+                        type="number"
+                        id="highKey2"
+                        placeholder="high"
+                        class="input input-bordered w-full max-w-xs"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-control w-full max-w-3xl">
+                    <input
+                      type="text"
+                      id="pKey2"
+                      placeholder="Punishment"
+                      class="input input-bordered w-full max-w-2xl"
+                    />
+                  </div>
+                </div>
+                <span className="divider divider-vertical"></span>
+                <div className="flex flex-col px-5 lg:flex-row space-y-5 space-x-0 lg:space-y-0 lg:space-x-10 w-full">
+                  <div className="flex space-x-5 items-center w-6/12 xl:w-4/12 ">
+                    <div class="form-control w-6/12">
+                      <input
+                        type="number"
+                        placeholder="low"
+                        id="lowKey3"
+                        class="input input-bordered w-full max-w-xs"
+                      />
+                    </div>
+                    <p className="">to</p>
+                    <div class="form-control w-6/12">
+                      <input
+                        type="number"
+                        id="highKey3"
+                        placeholder="high"
+                        class="input input-bordered w-full max-w-xs"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-control w-full max-w-3xl">
+                    <input
+                      type="text"
+                      id="pKey3"
+                      placeholder="Punishment"
+                      class="input input-bordered w-full max-w-2xl"
+                    />
+                  </div>
+                </div>
+                <span className="divider divider-vertical"></span>
+                <div className="flex flex-col px-5 lg:flex-row space-y-5 space-x-0 lg:space-y-0 lg:space-x-10 w-full">
+                  <div className="flex space-x-5 items-center w-6/12 xl:w-4/12 ">
+                    <div class="form-control w-6/12">
+                      <input
+                        id="lowKey4"
+                        type="number"
+                        placeholder="low"
+                        class="input input-bordered w-full max-w-xs"
+                      />
+                    </div>
+                    <p className="">to</p>
+                    <div class="form-control w-6/12">
+                      <input
+                        type="number"
+                        id="highKey4"
+                        placeholder="high"
+                        class="input input-bordered w-full max-w-xs"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-control w-full max-w-3xl">
+                    <input
+                      type="text"
+                      placeholder="Punishment"
+                      id="pKey4"
+                      class="input input-bordered w-full max-w-2xl"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div className="flex flex-col overflow-x-auto space-y-10">
