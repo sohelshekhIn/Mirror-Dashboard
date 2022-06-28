@@ -1,3 +1,5 @@
+import { DashboardContent } from "../../components/faculty/Navbar";
+
 export default function MangeHomework() {
-  return "Managing Homeworks";
+  return <DashboardContent>Manage Homeworks</DashboardContent>;
 }

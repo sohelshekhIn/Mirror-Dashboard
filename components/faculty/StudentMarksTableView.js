@@ -34,16 +34,18 @@ export default function StudentMarksTableView({
         testDate: editStudentDetails.data.attributes.TestId.split("_")[2],
         marksOutOf: editStudentDetails.data.attributes.TestId.split("_")[3],
       });
-      for (
-        let i = 0;
-        i < Object.keys(editStudentDetails.data.attributes.data.pdata).length;
-        i++
-      ) {
-        let punishment = editStudentDetails.data.attributes.data.pdata[i + 1];
-        if (punishment[0] !== "") {
-          document.getElementById(`lowKey${i + 1}`).value = punishment[0];
-          document.getElementById(`highKey${i + 1}`).value = punishment[1];
-          document.getElementById(`pKey${i + 1}`).value = punishment[2];
+      if (editStudentDetails.data.attributes.data.pdata) {
+        for (
+          let i = 0;
+          i < Object.keys(editStudentDetails.data.attributes.data.pdata).length;
+          i++
+        ) {
+          let punishment = editStudentDetails.data.attributes.data.pdata[i + 1];
+          if (punishment[0] !== "") {
+            document.getElementById(`lowKey${i + 1}`).value = punishment[0];
+            document.getElementById(`highKey${i + 1}`).value = punishment[1];
+            document.getElementById(`pKey${i + 1}`).value = punishment[2];
+          }
         }
       }
     }
@@ -87,7 +89,7 @@ export default function StudentMarksTableView({
         let marks = document.getElementById(`marks${i}`).value;
         if (marks === "" && isAbsent === false) {
           setValidatonError(
-            `Please fill Marks or select Absent for ${students[i].name}`
+            `Please fill Marks or select Absent for ${student[0]}`
           );
           return;
         } else {

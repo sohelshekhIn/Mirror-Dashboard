@@ -297,11 +297,11 @@ export default function ViewBatches() {
         <div className="modal-box relative">
           <label
             htmlFor="edit-batch-modal"
-            className="btn btn-sm btn-circle absolute right-2 top-2"
+            className="btn btn-sm btn-circle absolute right-3 top-3"
           >
             ✕
           </label>
-          <div className="flex flex-col ">
+          <div className="flex flex-col mt-5">
             <form>
               <h1 className="text-secondary text-2xl font-bold">
                 {modalFormData.id === "add"
@@ -334,14 +334,15 @@ export default function ViewBatches() {
                       Enter Subjects (separate by comma)
                     </span>
                   </label>
-                  <input
+                  {/* <input
                     type="text"
                     value={modalFormData.subjects.join(", ")}
                     onChange={handleChange}
                     name="subjects"
                     placeholder="Subjects"
                     className="input input-bordered w-full max-w-md"
-                  />
+                  /> */}
+                  <div className="flex flex-col"></div>
                 </div>
                 <div className="flex space-x-5 justify-end pt-5">
                   {/* if id is add then dont show delete button */}
@@ -388,7 +389,6 @@ export default function ViewBatches() {
           {/* add batch button */}
           <button
             onClick={() => {
-              console.log("Yee");
               loadModalData("add");
             }}
             type="button"
