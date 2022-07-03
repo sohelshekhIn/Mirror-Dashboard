@@ -114,20 +114,30 @@ export default function ViewBatches() {
   }, [modalComp]);
 
   const handleChange = (e) => {
-    if (e.target.name === "batchName") {
-      setModalFormData({
-        ...modalFormData,
-        [e.target.name]: e.target.value,
-      });
+    if (e.target.name === "subjects") {
+      // check is subject is already selected
+      if (modalFormData.subjects.includes(e.target.value)) {
+        // remove subject
+        let temp = modalFormData.subjects;
+        temp.splice(temp.indexOf(e.target.value), 1);
+        setModalFormData({ ...modalFormData, subjects: temp });
+      } else {
+        // add subject
+        setModalFormData({
+          ...modalFormData,
+          subjects: [...modalFormData.subjects, e.target.value],
+        });
+      }
     } else {
       setModalFormData({
         ...modalFormData,
-        [e.target.name]: e.target.value.split(", "),
+        [e.target.name]: e.target.value,
       });
     }
   };
 
   const handleSubmit = (e) => {
+    console.log(modalFormData);
     e.preventDefault();
     // if modalFormData is empty show validation error
     if (modalFormData.batchName === "" || modalFormData.subjects.length === 0) {
@@ -246,8 +256,26 @@ export default function ViewBatches() {
       });
   };
 
+  // TO DO:
+  // 1. Add validation for batchName
+  // 2. Add validation for subjects
+  // 3. Edit option not working properly
+
+  // when modal is closed set all subjects to false
+  const handleClose = () => {
+    document.getElementById("maths").checked = false;
+    document.getElementById("physics").checked = false;
+    document.getElementById("chemistry").checked = false;
+    document.getElementById("biology").checked = false;
+    document.getElementById("english").checked = false;
+    document.getElementById("ss").checked = false;
+    document.getElementById("science").checked = false;
+    document.getElementById("subject2").checked = false;
+    document.getElementById("subject3").checked = false;
+  };
+  // }
+
   const loadModalData = (key) => {
-    console.log(key);
     if (key === "add") {
       setModalFormData({
         id: "add",
@@ -256,7 +284,6 @@ export default function ViewBatches() {
         subjects: [],
       });
       renderModal();
-      console.log(modalFormData);
     } else if (key !== null) {
       // axios get batch
       axios
@@ -288,6 +315,29 @@ export default function ViewBatches() {
   useEffect(() => {
     if (modalFormData.id !== null) {
       renderModal();
+      for (let i = 0; i < modalFormData.subjects.length; i++) {
+        if (modalFormData.subjects[i] === "Maths") {
+          document.getElementById("maths").checked = true;
+        } else if (modalFormData.subjects[i] === "Physics") {
+          document.getElementById("physics").checked = true;
+        } else if (modalFormData.subjects[i] === "Chemistry") {
+          document.getElementById("chemistry").checked = true;
+        } else if (modalFormData.subjects[i] === "Biology") {
+          document.getElementById("biology").checked = true;
+        } else if (modalFormData.subjects[i] === "English") {
+          document.getElementById("english").checked = true;
+        } else if (modalFormData.subjects[i] === "Science") {
+          document.getElementById("science").checked = true;
+        } else if (modalFormData.subjects[i] === "EVS") {
+          document.getElementById("evs").checked = true;
+        } else if (modalFormData.subjects[i] === "S.S.") {
+          document.getElementById("ss").checked = true;
+        } else if (modalFormData.subjects[i] === "Subject 2") {
+          document.getElementById("subject2").checked = true;
+        } else if (modalFormData.subjects[i] === "Subject 3") {
+          document.getElementById("subject3").checked = true;
+        }
+      }
     }
   }, [modalFormData]);
 
@@ -330,9 +380,7 @@ export default function ViewBatches() {
                 </div>
                 <div class="form-control w-full">
                   <label class="label">
-                    <span class="label-text">
-                      Enter Subjects (separate by comma)
-                    </span>
+                    <span class="label-text">Select Subjects</span>
                   </label>
                   {/* <input
                     type="text"
@@ -342,7 +390,142 @@ export default function ViewBatches() {
                     placeholder="Subjects"
                     className="input input-bordered w-full max-w-md"
                   /> */}
-                  <div className="flex flex-col"></div>
+                  <div className="flex flex-row mt-5">
+                    {/* 10 checkbox for 10 subjects */}
+                    <div className="flex flex-col space-y-5 w-1/2 px-10">
+                      <div class="form-control">
+                        <label class="label cursor-pointer">
+                          <span class="label-text">Maths</span>
+                          <input
+                            type="checkbox"
+                            id="maths"
+                            onChange={handleChange}
+                            name="subjects"
+                            class="checkbox"
+                            value="Maths"
+                          />
+                        </label>
+                      </div>
+                      <div class="form-control">
+                        <label class="label cursor-pointer">
+                          <span class="label-text">Physics</span>
+                          <input
+                            type="checkbox"
+                            id="physics"
+                            onChange={handleChange}
+                            name="subjects"
+                            class="checkbox"
+                            value="Physics"
+                          />
+                        </label>
+                      </div>
+                      <div class="form-control">
+                        <label class="label cursor-pointer">
+                          <span class="label-text">Chemistry</span>
+                          <input
+                            type="checkbox"
+                            id="chemistry"
+                            onChange={handleChange}
+                            name="subjects"
+                            class="checkbox"
+                            value="Chemistry"
+                          />
+                        </label>
+                      </div>
+                      <div class="form-control">
+                        <label class="label cursor-pointer">
+                          <span class="label-text">Biology</span>
+                          <input
+                            type="checkbox"
+                            id="biology"
+                            onChange={handleChange}
+                            name="subjects"
+                            class="checkbox"
+                          />
+                        </label>
+                      </div>
+                      <div class="form-control">
+                        <label class="label cursor-pointer">
+                          <span class="label-text">English</span>
+                          <input
+                            type="checkbox"
+                            id="english"
+                            onChange={handleChange}
+                            name="subjects"
+                            value="English"
+                            class="checkbox"
+                          />
+                        </label>
+                      </div>
+                    </div>
+                    <div className="flex flex-col space-y-5 w-1/2 px-10">
+                      <div class="form-control">
+                        <label class="label cursor-pointer">
+                          <span class="label-text">Science</span>
+                          <input
+                            type="checkbox"
+                            id="science"
+                            onChange={handleChange}
+                            name="subjects"
+                            value="Science"
+                            class="checkbox"
+                          />
+                        </label>
+                      </div>
+                      <div class="form-control">
+                        <label class="label cursor-pointer">
+                          <span class="label-text">EVS</span>
+                          <input
+                            type="checkbox"
+                            id="evs"
+                            onChange={handleChange}
+                            value="EVS"
+                            name="subjects"
+                            class="checkbox"
+                          />
+                        </label>
+                      </div>
+                      <div class="form-control">
+                        <label class="label cursor-pointer">
+                          <span class="label-text">S.S.</span>
+                          <input
+                            type="checkbox"
+                            id="ss"
+                            onChange={handleChange}
+                            value="S.S."
+                            name="subjects"
+                            class="checkbox"
+                          />
+                        </label>
+                      </div>
+                      <div class="form-control">
+                        <label class="label cursor-pointer">
+                          <span class="label-text">Subject 2 </span>
+                          <input
+                            type="checkbox"
+                            id="subject2"
+                            onChange={handleChange}
+                            value="Subject 2"
+                            name="subjects"
+                            class="checkbox"
+                          />
+                        </label>
+                      </div>
+                      <div class="form-control">
+                        <label class="label cursor-pointer">
+                          <span class="label-text">Subject 3</span>
+                          <input
+                            type="checkbox"
+                            id="subject3"
+                            onChange={handleChange}
+                            value="Subject 3"
+                            name="subjects"
+                            class="checkbox"
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="flex space-x-5 justify-end pt-5">
                   {/* if id is add then dont show delete button */}
@@ -414,7 +597,12 @@ export default function ViewBatches() {
           </div>
         </div>
       </div>
-      <input type="checkbox" id="edit-batch-modal" className="modal-toggle" />
+      <input
+        type="checkbox"
+        onChange={handleClose}
+        id="edit-batch-modal"
+        className="modal-toggle"
+      />
       {modalComp}
       <NotificationAlert
         message={notification.message}

@@ -5,49 +5,38 @@ import { useEffect, useState } from "react";
 import { calendarPNG } from "../../public/images";
 import DatePicker from "../utilities/DatePicker";
 
-export default function StudentMarksTableView({
+export default function StudentSubmissionsTableView({
   editStudentDetails,
   students,
-  testDetails,
+  testDetails: submissionDetails,
   setNotification,
   session,
 }) {
   const [selectedDate, setSelectedDate] = useState(null);
   const [tableContentComp, setTableContentComp] = useState(null);
   const closeDatePicker = () => {
-    document.getElementById("TestDatePickerToggle").checked = false;
+    document.getElementById("SubmissionDatePickerToggle").checked = false;
   };
   const router = useRouter();
   const [submittedData, setSubmittedData] = useState(null);
   const [validationError, setValidatonError] = useState(null);
   const [formData, setFormData] = useState({
-    testTitle: null,
-    testDate: null,
-    marksOutOf: null,
+    submissionTitle: null,
+    submissionDate: null,
+    submissionDetails: null,
   });
   const [batchInfoComps, setBatchInfoComps] = useState(null);
   // if editStudentDetails is true, then the form will be filled with the student's details
   useEffect(() => {
     if (editStudentDetails) {
       setFormData({
-        testTitle: editStudentDetails.data.attributes.data.testTitle,
-        testDate: editStudentDetails.data.attributes.TestId.split("_")[2],
-        marksOutOf: editStudentDetails.data.attributes.TestId.split("_")[3],
+        submissionTitle:
+          editStudentDetails.data.attributes.data.submissionTitle,
+        submissionDate:
+          editStudentDetails.data.attributes.SubmissionId.split("_")[2],
+        submissionDetails:
+          editStudentDetails.data.attributes.data.submissionDetails,
       });
-      if (editStudentDetails.data.attributes.data.pdata) {
-        for (
-          let i = 0;
-          i < Object.keys(editStudentDetails.data.attributes.data.pdata).length;
-          i++
-        ) {
-          let punishment = editStudentDetails.data.attributes.data.pdata[i + 1];
-          if (punishment[0] !== "") {
-            document.getElementById(`lowKey${i + 1}`).value = punishment[0];
-            document.getElementById(`highKey${i + 1}`).value = punishment[1];
-            document.getElementById(`pKey${i + 1}`).value = punishment[2];
-          }
-        }
-      }
     }
   }, [editStudentDetails]);
 
@@ -60,61 +49,49 @@ export default function StudentMarksTableView({
   };
 
   const handleSubmit = (e) => {
+    console.log(formData);
     e.preventDefault();
     //   map data of input fields to an array
     let data = {};
     //   check is formData is empty
-    if (formData.testTitle === null) {
-      setValidatonError("Please fill Test Title");
+    if (formData.submissionTitle === null) {
+      setValidatonError("Please fill Submission Title");
       return;
     }
-    if (formData.testDate === null) {
-      setValidatonError("Please fill Test Date");
-      return;
-    }
-    if (formData.marksOutOf === null) {
-      setValidatonError("Please fill Total Marks (Out Of)");
+    if (formData.submissionDate === null) {
+      setValidatonError("Please fill Submission Date");
       return;
     }
 
     if (editStudentDetails) {
       let studentKeys = Object.keys(
-        editStudentDetails.data.attributes.data.tdata
+        editStudentDetails.data.attributes.data.sdata
       );
 
       for (let i = 0; i < studentKeys.length; i++) {
         let student =
-          editStudentDetails.data.attributes.data.tdata[studentKeys[i]];
-        let isAbsent = document.getElementById(`isAbsent${i}`).checked;
-        let marks = document.getElementById(`marks${i}`).value;
-        if (marks === "" && isAbsent === false) {
-          setValidatonError(
-            `Please fill Marks or select Absent for ${student[0]}`
-          );
-          return;
+          editStudentDetails.data.attributes.data.sdata[studentKeys[i]];
+        let notSubmitted = document.getElementById(`notSubmitted${i}`).checked;
+        let remarks = document.getElementById(`remarks${i}`).value;
+
+        if (notSubmitted) {
+          data[studentKeys[i]] = [student[0], false];
         } else {
-          if (isAbsent) {
-            data[studentKeys[i]] = [student[0], false];
-          } else {
-            data[studentKeys[i]] = [student[0], marks];
-          }
+          remarks === "" ? (remarks = "Submitted") : remarks;
+          data[studentKeys[i]] = [student[0], remarks];
         }
       }
     } else {
       for (let i = 0; i < students.length; i++) {
-        let isAbsent = document.getElementById(`isAbsent${i}`).checked;
-        let marks = document.getElementById(`marks${i}`).value;
-        if (marks === "" && isAbsent === false) {
-          setValidatonError(
-            `Please fill Marks or select Absent for ${students[i].name}`
-          );
-          return;
+        let notSubmitted = document.getElementById(`notSubmitted${i}`).checked;
+
+        let remarks = document.getElementById(`remarks${i}`).value;
+
+        if (notSubmitted) {
+          data[students[i].UserID] = [students[i].name, false];
         } else {
-          if (isAbsent) {
-            data[students[i].UserID] = [students[i].name, false];
-          } else {
-            data[students[i].UserID] = [students[i].name, marks];
-          }
+          remarks === "" ? (remarks = "Submitted") : remarks;
+          data[students[i].UserID] = [students[i].name, remarks];
         }
       }
     }
@@ -136,70 +113,33 @@ export default function StudentMarksTableView({
       // join formData to data
       let userDetails = [session.user.id, session.user.name];
 
-      // punishment data in format of  object with array [from , to, punishment]
-      let punishmentData = {
-        1: [
-          document.getElementById("lowKey1").value,
-          document.getElementById("highKey1").value,
-          document.getElementById("pKey1").value,
-        ],
-        2: [
-          document.getElementById("lowKey2").value,
-          document.getElementById("highKey2").value,
-          document.getElementById("pKey2").value,
-        ],
-        3: [
-          document.getElementById("lowKey3").value,
-          document.getElementById("highKey3").value,
-          document.getElementById("pKey3").value,
-        ],
-        4: [
-          document.getElementById("lowKey4").value,
-          document.getElementById("highKey4").value,
-          document.getElementById("pKey4").value,
-        ],
-      };
-
-      // if every key value of punishmentData is empty then ask user if they want to conutinue
-      let numberOfEmptyPunishments = 0;
-      Object.keys(punishmentData).map((key) => {
-        if (punishmentData[key][0] === "") {
-          numberOfEmptyPunishments++;
-        }
-      });
-
-      if (numberOfEmptyPunishments === 4) {
-        if (
-          !window.confirm("Do you want to continue wihtout adding punishments?")
-        ) {
-          return;
-        }
-      }
-      console.log(numberOfEmptyPunishments);
-      console.log(punishmentData);
       let processedData = {
-        tdata: { ...data },
-        pdata: punishmentData,
-        testTitle: formData.testTitle,
+        sdata: { ...data },
+        submissionTitle: formData.submissionTitle,
+        submissionDetails: formData.submissionDetails,
         addedBy: userDetails,
       };
 
       if (editStudentDetails) {
-        if (session.user.facultyData["facultyRoles"].includes(19)) {
+        if (session.user.facultyData["facultyRoles"].includes(21)) {
           processedData["addedBy"] =
             editStudentDetails.data.attributes.data.addedBy;
           axios
             .put(
               process.env.NEXT_PUBLIC_STRAPI_API +
-                "/marks/" +
+                "/submissions/" +
                 editStudentDetails.data.id,
               {
                 data: {
-                  TestId: `${
-                    editStudentDetails.data.attributes.TestId.split("_")[0]
+                  SubmissionId: `${
+                    editStudentDetails.data.attributes.SubmissionId.split(
+                      "_"
+                    )[0]
                   }_${
-                    editStudentDetails.data.attributes.TestId.split("_")[1]
-                  }_${formData.testDate}_${formData.marksOutOf}_${
+                    editStudentDetails.data.attributes.SubmissionId.split(
+                      "_"
+                    )[1]
+                  }_${formData.submissionDate}_${
                     Math.floor(Math.random() * 9999) + 1000
                   }`,
                   data: processedData,
@@ -215,7 +155,7 @@ export default function StudentMarksTableView({
               setSubmittedData([formData, data]);
               setNotification({
                 type: "success",
-                message: "Test Marks Updated Successfully",
+                message: "Submission Updated Successfully",
                 id: new Date(),
               });
               setTimeout(() => {
@@ -240,12 +180,12 @@ export default function StudentMarksTableView({
       } else {
         axios
           .post(
-            process.env.NEXT_PUBLIC_STRAPI_API + "/marks",
+            process.env.NEXT_PUBLIC_STRAPI_API + "/submissions",
             {
               data: {
-                TestId: `${testDetails.batch.replace(/\s/g, "")}_${
-                  testDetails.subject
-                }_${formData.testDate}_${formData.marksOutOf}_${
+                SubmissionId: `${submissionDetails.batch.replace(/\s/g, "")}_${
+                  submissionDetails.subject
+                }_${formData.submissionDate}_${
                   Math.floor(Math.random() * 9999) + 1000
                 }`,
                 data: processedData,
@@ -261,12 +201,12 @@ export default function StudentMarksTableView({
             setSubmittedData([formData, data]);
             setNotification({
               type: "success",
-              message: "Test Marks Added Successfully",
+              message: "Submission Added Successfully",
               id: new Date(),
             });
-            // setTimeout(() => {
-            //   router.back();
-            // }, 2000);
+            setTimeout(() => {
+              router.back();
+            }, 2000);
           })
           .catch((err) => {
             console.log(err);
@@ -283,7 +223,7 @@ export default function StudentMarksTableView({
   // Data eg to send to server:
   //  BATCH_SUBJECT_TESTDATE_TOTALMARKS_RANDOMUID
   // "12NCERT_MATHS_23/06/2022_30_6241": {
-  //   ST25551: ["Student Name", marks/false]
+  //   ST25551: ["Student Name", remarks/false (not submitted)],
   // },
 
   useEffect(() => {
@@ -300,13 +240,13 @@ export default function StudentMarksTableView({
             <td className="studentTableTh">{student.name}</td>
             <td className="studentTableTh">
               <input
-                id={`isAbsent${index}`}
+                id={`notSubmitted${index}`}
                 onClick={(e) => {
                   // if is not checked then disable mark input
                   if (!e.target.checked) {
-                    document.getElementById(`marks${index}`).disabled = false;
+                    document.getElementById(`remarks${index}`).disabled = false;
                   } else {
-                    document.getElementById(`marks${index}`).disabled = true;
+                    document.getElementById(`remarks${index}`).disabled = true;
                   }
                 }}
                 type="checkbox"
@@ -317,16 +257,25 @@ export default function StudentMarksTableView({
               />
             </td>
             <td className="studentTableTh">
-              <input
+              <textarea
                 name={student.UserID}
-                id={`marks${index}`}
+                class="textarea"
+                id={`remarks${index}`}
+                onChange={() => {
+                  setValidatonError(null);
+                }}
+                placeholder={`Remarks for ${student.name}`}
+              ></textarea>
+              {/* <input
+                name={student.UserID}
+                id={`remarks${index}`}
                 type="number"
                 onChange={() => {
                   setValidatonError(null);
                 }}
-                placeholder={`Marks of ${student.name}`}
+                placeholder={`Enter Marks for ${student.name}`}
                 class="input w-full md:w-3/4 max-w-xs"
-              />
+              /> */}
             </td>
           </tr>
         );
@@ -334,30 +283,30 @@ export default function StudentMarksTableView({
       setTableContentComp(tempTableContentComp);
     } else if (editStudentDetails) {
       let tempTableContentComp = [];
-      //   editStudentDetails.data.attributes.data.tdata.map((student, index) => {
+      //   editStudentDetails.data.attributes.data.sdata.map((student, index) => {
       let studentKeys = Object.keys(
-        editStudentDetails.data.attributes.data.tdata
+        editStudentDetails.data.attributes.data.sdata
       );
       for (
         let i = 0;
-        i < Object.keys(editStudentDetails.data.attributes.data.tdata).length;
+        i < Object.keys(editStudentDetails.data.attributes.data.sdata).length;
         i++
       ) {
         let student =
-          editStudentDetails.data.attributes.data.tdata[studentKeys[i]];
+          editStudentDetails.data.attributes.data.sdata[studentKeys[i]];
         tempTableContentComp.push(
           <tr key={i}>
             <td className="studentTableTh">{i + 1}</td>
             <td className="studentTableTh">{student[0]}</td>
             <td className="studentTableTh">
               <input
-                id={`isAbsent${i}`}
+                id={`notSubmitted${i}`}
                 onClick={(e) => {
                   // if is not checked then disable mark input
                   if (!e.target.checked) {
-                    document.getElementById(`marks${i}`).disabled = false;
+                    document.getElementById(`remarks${i}`).disabled = false;
                   } else {
-                    document.getElementById(`marks${i}`).disabled = true;
+                    document.getElementById(`remarks${i}`).disabled = true;
                   }
                 }}
                 type="checkbox"
@@ -368,16 +317,24 @@ export default function StudentMarksTableView({
               />
             </td>
             <td className="studentTableTh">
-              <input
+              <textarea
+                class="textarea"
+                id={`remarks${i}`}
+                onChange={() => {
+                  setValidatonError(null);
+                }}
+                placeholder={`Remarks for ${student[0]}`}
+              ></textarea>
+              {/* <input
                 name={"je"}
-                id={`marks${i}`}
+                id={`remarks${i}`}
                 type="number"
                 onChange={() => {
                   setValidatonError(null);
                 }}
                 placeholder={`Enter Marks for ${student[0]}`}
                 class="input w-full md:w-3/4 max-w-xs"
-              />
+              /> */}
             </td>
           </tr>
         );
@@ -400,42 +357,30 @@ export default function StudentMarksTableView({
             <input
               type="text"
               onChange={handleChange}
-              value={formData.testTitle}
-              placeholder="Test Title (60 characters max)"
+              value={formData.submissionTitle}
+              placeholder="Submission Title (60 characters max)"
               className="bg-white outline-none h-10 md:h-16 break-words w-full max-w-xl text-secondary font-semibold text-2xl md:text-3xl"
-              name="testTitle"
+              name="submissionTitle"
               maxLength="60"
             />
-
-            <div class="form-control w-1/2">
-              <input
-                type="number"
-                placeholder="Marks Out Of"
-                onChange={handleChange}
-                value={formData.marksOutOf}
-                className="bg-white focus:input input-bordered outline-none w-full max-w-xs text-secondary font-medium"
-                name="marksOutOf"
-                maxLength="999"
-              />
-            </div>
           </div>
           <div className="flex flex-col space-y-4">
             <div className="form-control w-100 max-w-2xl md:max-w-md w-full">
               <div className="flex justify-between">
                 <input
                   type="text"
-                  name="testDate"
-                  value={formData.testDate}
-                  maxLength="10"
+                  name="submissionDate"
+                  value={formData.submissionDate}
                   onChange={handleChange}
-                  placeholder="Test Date (DD/MM/YYYY)"
+                  maxLength="10"
+                  placeholder="Submission Date (DD/MM/YYYY)"
                   className="outline-none focus:input input-bordered font-medium md:w-1/2 lg:w-full bg-transparent focus:input-bordered "
                 />
                 {useEffect(() => {
                   if (selectedDate !== null) {
                     setFormData({
                       ...formData,
-                      testDate: selectedDate,
+                      submissionDate: selectedDate,
                     });
                     closeDatePicker();
                   }
@@ -444,7 +389,7 @@ export default function StudentMarksTableView({
                   type="button"
                   onClick={() => {
                     document.getElementById(
-                      "TestDatePickerToggle"
+                      "SubmissionDatePickerToggle"
                     ).checked = true;
                   }}
                   className="p-2 bg-transparent"
@@ -454,7 +399,7 @@ export default function StudentMarksTableView({
               </div>
               <input
                 type="checkbox"
-                id="TestDatePickerToggle"
+                id="SubmissionDatePickerToggle"
                 className="modal-toggle"
               />
               <div id="modal" className="modal modal-bottom sm:modal-middle">
@@ -470,7 +415,7 @@ export default function StudentMarksTableView({
                       type="button"
                       onClick={() => {
                         document.getElementById(
-                          "TestDatePickerToggle"
+                          "SubmissionDatePickerToggle"
                         ).checked = false;
                       }}
                       className="btn btn-ghost w-full"
@@ -485,7 +430,7 @@ export default function StudentMarksTableView({
             {useEffect(() => {
               if (editStudentDetails) {
                 let batch =
-                  editStudentDetails.data.attributes.TestId.split("_")[0];
+                  editStudentDetails.data.attributes.SubmissionId.split("_")[0];
                 if (isNaN(parseInt(batch[1]))) {
                   batch = batch.slice(0, 1) + " " + batch.slice(1);
                 } else if (isNaN(parseInt(batch[2]))) {
@@ -494,150 +439,34 @@ export default function StudentMarksTableView({
                 setBatchInfoComps(
                   <span className="font-medium max-w-2xl">
                     {batch} (
-                    {editStudentDetails.data.attributes.TestId.split("_")[1]})
+                    {
+                      editStudentDetails.data.attributes.SubmissionId.split(
+                        "_"
+                      )[1]
+                    }
+                    )
                   </span>
                 );
               } else {
                 setBatchInfoComps(
                   <span className="font-medium max-w-2xl">
-                    {testDetails.batch} ({testDetails.subject})
+                    {submissionDetails.batch} ({submissionDetails.subject})
                   </span>
                 );
               }
-            }, [editStudentDetails, testDetails])}
+            }, [editStudentDetails, submissionDetails])}
             {batchInfoComps}
           </div>
         </div>
-        <div className="flex">
-          <div tabindex="0" class="collapse w-full collapse-arrow">
-            <input type="checkbox" id="showTestPunishment" />
-            <div class="collapse-title text-xl font-medium">
-              Test Punishment(s)
-            </div>
-            <div class="collapse-content my-5 flex flex-col space-y-10">
-              <div className="flex flex-col space-y-10">
-                <div className="flex flex-col px-5 lg:flex-row space-y-5 space-x-0 lg:space-y-0 lg:space-x-10 w-full">
-                  <div className="flex space-x-5 items-center w-6/12 xl:w-4/12 ">
-                    <div class="form-control w-6/12">
-                      <input
-                        type="number"
-                        id="lowKey1"
-                        placeholder="low"
-                        class="input input-bordered w-full max-w-xs"
-                      />
-                    </div>
-                    <p className="">to</p>
-                    <div class="form-control w-6/12">
-                      <input
-                        type="number"
-                        id="highKey1"
-                        placeholder="high"
-                        class="input input-bordered w-full max-w-xs"
-                      />
-                    </div>
-                  </div>
-                  <div class="form-control w-full max-w-3xl">
-                    <input
-                      type="text"
-                      placeholder="Punishment"
-                      id="pKey1"
-                      class="input input-bordered w-full max-w-2xl"
-                    />
-                  </div>
-                </div>
-                <span className="divider divider-vertical"></span>
-                <div className="flex flex-col px-5 lg:flex-row space-y-5 space-x-0 lg:space-y-0 lg:space-x-10 w-full">
-                  <div className="flex space-x-5 items-center w-6/12 xl:w-4/12 ">
-                    <div class="form-control w-6/12">
-                      <input
-                        type="number"
-                        id="lowKey2"
-                        placeholder="low"
-                        class="input input-bordered w-full max-w-xs"
-                      />
-                    </div>
-                    <p className="">to</p>
-                    <div class="form-control w-6/12">
-                      <input
-                        type="number"
-                        id="highKey2"
-                        placeholder="high"
-                        class="input input-bordered w-full max-w-xs"
-                      />
-                    </div>
-                  </div>
-                  <div class="form-control w-full max-w-3xl">
-                    <input
-                      type="text"
-                      id="pKey2"
-                      placeholder="Punishment"
-                      class="input input-bordered w-full max-w-2xl"
-                    />
-                  </div>
-                </div>
-                <span className="divider divider-vertical"></span>
-                <div className="flex flex-col px-5 lg:flex-row space-y-5 space-x-0 lg:space-y-0 lg:space-x-10 w-full">
-                  <div className="flex space-x-5 items-center w-6/12 xl:w-4/12 ">
-                    <div class="form-control w-6/12">
-                      <input
-                        type="number"
-                        placeholder="low"
-                        id="lowKey3"
-                        class="input input-bordered w-full max-w-xs"
-                      />
-                    </div>
-                    <p className="">to</p>
-                    <div class="form-control w-6/12">
-                      <input
-                        type="number"
-                        id="highKey3"
-                        placeholder="high"
-                        class="input input-bordered w-full max-w-xs"
-                      />
-                    </div>
-                  </div>
-                  <div class="form-control w-full max-w-3xl">
-                    <input
-                      type="text"
-                      id="pKey3"
-                      placeholder="Punishment"
-                      class="input input-bordered w-full max-w-2xl"
-                    />
-                  </div>
-                </div>
-                <span className="divider divider-vertical"></span>
-                <div className="flex flex-col px-5 lg:flex-row space-y-5 space-x-0 lg:space-y-0 lg:space-x-10 w-full">
-                  <div className="flex space-x-5 items-center w-6/12 xl:w-4/12 ">
-                    <div class="form-control w-6/12">
-                      <input
-                        id="lowKey4"
-                        type="number"
-                        placeholder="low"
-                        class="input input-bordered w-full max-w-xs"
-                      />
-                    </div>
-                    <p className="">to</p>
-                    <div class="form-control w-6/12">
-                      <input
-                        type="number"
-                        id="highKey4"
-                        placeholder="high"
-                        class="input input-bordered w-full max-w-xs"
-                      />
-                    </div>
-                  </div>
-                  <div class="form-control w-full max-w-3xl">
-                    <input
-                      type="text"
-                      placeholder="Punishment"
-                      id="pKey4"
-                      class="input input-bordered w-full max-w-2xl"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="flex flex-col space-y-4">
+          <textarea
+            class="textarea"
+            placeholder="Submission Details"
+            maxLength="500"
+            name="submissionDetails"
+            onChange={handleChange}
+            value={formData.submissionDetails}
+          ></textarea>
         </div>
         <div className="flex flex-col overflow-x-auto space-y-10">
           <table className="table w-full">
@@ -645,10 +474,8 @@ export default function StudentMarksTableView({
               <tr>
                 <th className="studentTableTh">Sr.</th>
                 <th className="studentTableTh">Name</th>
-                <th className="studentTableTh">Absent</th>
-                <th className="studentTableTh">
-                  Marks (Out of {formData.marksOutOf})
-                </th>
+                <th className="studentTableTh">Not Submitted</th>
+                <th className="studentTableTh">Remarks</th>
               </tr>
             </thead>
             <tbody>
@@ -656,31 +483,33 @@ export default function StudentMarksTableView({
               {useEffect(() => {
                 if (editStudentDetails) {
                   let studentKeys = Object.keys(
-                    editStudentDetails.data.attributes.data.tdata
+                    editStudentDetails.data.attributes.data.sdata
                   );
 
                   for (let j = 0; j < studentKeys.length; j++) {
                     let student =
-                      editStudentDetails.data.attributes.data.tdata[
+                      editStudentDetails.data.attributes.data.sdata[
                         studentKeys[j]
                       ];
                     if (student[1] === false) {
-                      document.getElementById(`isAbsent${j}`)
+                      document.getElementById(`notSubmitted${j}`)
                         ? (document.getElementById(
-                            `isAbsent${j}`
+                            `notSubmitted${j}`
                           ).checked = true)
                         : "";
-                      document.getElementById(`marks${j}`)
-                        ? (document.getElementById(`marks${j}`).disabled = true)
+                      document.getElementById(`remarks${j}`)
+                        ? (document.getElementById(
+                            `remarks${j}`
+                          ).disabled = true)
                         : "";
                     } else {
-                      document.getElementById(`marks${j}`)
-                        ? (document.getElementById(`marks${j}`).value =
+                      document.getElementById(`remarks${j}`)
+                        ? (document.getElementById(`remarks${j}`).value =
                             student[1])
                         : "";
-                      document.getElementById(`marks${j}`)
+                      document.getElementById(`remarks${j}`)
                         ? (document.getElementById(
-                            `marks${j}`
+                            `remarks${j}`
                           ).disabled = false)
                         : "";
                     }
@@ -699,12 +528,14 @@ export default function StudentMarksTableView({
                 //   alaert asking if user wants to save the changes
                 if (
                   session.user.facultyData["facultyRoles"].includes(19) &&
-                  window.confirm("Are you sure you want to delete this test?")
+                  window.confirm(
+                    "Are you sure you want to delete this submission?"
+                  )
                 ) {
                   axios
                     .delete(
                       process.env.NEXT_PUBLIC_STRAPI_API +
-                        "/marks/" +
+                        "/submissions/" +
                         editStudentDetails.data.id,
                       {
                         headers: {
@@ -715,7 +546,7 @@ export default function StudentMarksTableView({
                     .then((res) => {
                       setNotification({
                         type: "success",
-                        message: "Test deleted successfully",
+                        message: "Submission deleted successfully",
                         id: new Date(),
                       });
                       setTimeout(() => {

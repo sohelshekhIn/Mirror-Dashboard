@@ -9,7 +9,7 @@ import NotificationAlert from "../../../components/utilities/NotificationAlert";
 import { search } from "../../../public/images";
 import PageNotFound from "../../404";
 
-export default function ManageTests() {
+export default function ManageSubmissions() {
   const { status, data } = useSession({
     required: true,
     onUnauthenticated() {
@@ -19,15 +19,9 @@ export default function ManageTests() {
   if (status === "loading") {
     return <Loading />;
   }
-  {
-    /* 
-Checks if user has permission to view this page
-Refer components > Faculty > Navbar.js > moduleLinks{...}
-*/
-  }
   if (
     (data.user && data.user.role !== "faculty") ||
-    !data.user.facultyData["facultyRoles"].includes(17)
+    !data.user.facultyData["facultyRoles"].includes(16)
   ) {
     return <PageNotFound />;
   }
@@ -37,20 +31,19 @@ Refer components > Faculty > Navbar.js > moduleLinks{...}
     type: null,
     message: null,
   });
-  const [tests, setTests] = useState();
-  const [testTableRows, setTestTableRows] = useState([]);
-
+  const [submissions, setSubmissions] = useState();
+  const [submissionTableRows, setSubmissionTableRows] = useState([]);
   useEffect(() => {
-    let testAllowId = data.user.id;
-    if (data.user.facultyData["testsViewMode"] === "*") {
-      testAllowId = "*";
+    let submissionAllowId = data.user.id;
+    if (data.user.facultyData["submissionsViewMode"] === "*") {
+      submissionAllowId = "*";
     }
     axios
       .post(
-        process.env.NEXT_PUBLIC_STRAPI_API + "/info/tests",
+        process.env.NEXT_PUBLIC_STRAPI_API + "/info/submissions",
         {
           data: {
-            id: testAllowId,
+            id: submissionAllowId,
           },
         },
         {
@@ -60,7 +53,7 @@ Refer components > Faculty > Navbar.js > moduleLinks{...}
         }
       )
       .then((res) => {
-        setTests(res.data);
+        setSubmissions(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -73,43 +66,44 @@ Refer components > Faculty > Navbar.js > moduleLinks{...}
   }, []);
 
   useEffect(() => {
-    let testCardComp = [];
-    if (tests) {
-      if (tests.length === 0) {
-        setTestTableRows(<EmptyMessage />);
+    let submissionCardComp = [];
+    if (submissions) {
+      if (submissions.length === 0) {
+        setSubmissionTableRows(<EmptyMessage />);
         return;
       }
+      console.log(submissions);
 
-      for (let i = 0; i < tests.length; i++) {
-        let testTitle = tests[i].data.testTitle;
-        let [batch, subject, date] = tests[i].TestId.split("_");
+      for (let i = 0; i < submissions.length; i++) {
+        let submissionTitle = submissions[i].data.submissionTitle;
+        let [batch, subject, date] = submissions[i].SubmissionId.split("_");
         // converts "12NCERT" to "12 NCERT" and "9BVB" to "9 BVB"
         if (isNaN(parseInt(batch[1]))) {
           batch = batch.slice(0, 1) + " " + batch.slice(1);
         } else if (isNaN(parseInt(batch[2]))) {
           batch = batch.slice(0, 2) + " " + batch.slice(2);
         }
-        let addedBy = tests[i].data.addedBy[1];
-        testCardComp.push(
+        let addedBy = submissions[i].data.addedBy[1];
+        submissionCardComp.push(
           <tr>
             <td className="studentTableTh">{i + 1}</td>
             <td className="studentTableTh">{date}</td>
             <td className="studentTableTh">{batch}</td>
             <td className="studentTableTh">{subject}</td>
-            <td className="studentTableTh">{testTitle}</td>
-            {data.user.facultyData["testsViewMode"] === "*" ? (
+            <td className="studentTableTh">{submissionTitle}</td>
+            {data.user.facultyData["submissionViewMode"] === "*" ? (
               <td className="studentTableTh">{addedBy}</td>
             ) : (
               ""
             )}
             {/* 
-Checks if user has permission to edit test
+Checks if user has permission to edit submission
 Refer components > Faculty > Navbar.js > moduleLinks{...}
 */}
-            {data.user.facultyData["facultyRoles"].includes(19) ? (
+            {data.user.facultyData["facultyRoles"].includes(21) ? (
               <td className="studentTableTh">
                 <Link
-                  href={`/faculty/manage-tests/edit-details/${tests[i].id}`}
+                  href={`/faculty/manage-submissions/edit-details/${submissions[i].id}`}
                 >
                   <a className="btn btn-modal">Edit</a>
                 </Link>
@@ -120,33 +114,34 @@ Refer components > Faculty > Navbar.js > moduleLinks{...}
           </tr>
         );
       }
-      setTestTableRows(testCardComp);
+      setSubmissionTableRows(submissionCardComp);
     }
-  }, [tests]);
+  }, [submissions]);
 
   return (
     <DashboardContent>
       <div className="flex flex-col">
         <div className="flex flex-col">
-          <h1 className="heading1 text-primary">Manage Tests</h1>
+          <h1 className="heading1 text-primary">Manage Submissions</h1>
           <span className="underline w-24 my-4"></span>
         </div>
         <div className="flex flex-col max-w-6xl space-y-5 ">
           {/* 
-Checks if user has permission to add new test
+Checks if user has permission to add new submissions
 Refer components > Faculty > Navbar.js > moduleLinks{...}
 */}
-          {data.user.facultyData["facultyRoles"].includes(18) ? (
+          {data.user.facultyData["facultyRoles"].includes(20) ? (
             <div className="flex justify-end">
-              <Link href="/faculty/manage-tests/new-test">
+              <Link href="/faculty/manage-submissions/new-submission">
                 <a accessKey="A" className="btn btn-accent">
-                  Add new Test
+                  Add new Submission
                 </a>
               </Link>
             </div>
           ) : (
             <div className="flex justify-end"></div>
           )}
+
           <div class="overflow-x-auto py-5 px-2 lg:py-8 lg:px-5 rounded-xl shadow-lg bg-white">
             <table class="table w-full">
               <thead>
@@ -156,13 +151,13 @@ Refer components > Faculty > Navbar.js > moduleLinks{...}
                   <th className="studentTableTh">Batch</th>
                   <th className="studentTableTh">Subject</th>
                   <th className="studentTableTh">Title</th>
-                  {data.user.facultyData["testsViewMode"] === "*" ? (
+                  {data.user.facultyData["submissionsViewMode"] === "*" ? (
                     <th className="studentTableTh">Added By</th>
                   ) : (
                     ""
                   )}
                   {/* 
-Checks if user has permission to edit test
+Checks if user has permission to add new test
 Refer components > Faculty > Navbar.js > moduleLinks{...}
 */}
                   {data.user.facultyData["facultyRoles"].includes(19) ? (
@@ -172,7 +167,7 @@ Refer components > Faculty > Navbar.js > moduleLinks{...}
                   )}
                 </tr>
               </thead>
-              <tbody>{testTableRows}</tbody>
+              <tbody>{submissionTableRows}</tbody>
             </table>
           </div>
         </div>
@@ -193,7 +188,7 @@ const EmptyMessage = () => {
         <Image src={search} />
       </span>
       <span className="text-secondary text-2xl font-bold text-center">
-        Add test to view <br />
+        Add submission to view <br />
       </span>
     </div>
   );

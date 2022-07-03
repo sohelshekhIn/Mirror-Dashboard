@@ -25,6 +25,7 @@ export default function FacultyNavbar({ children, session }) {
   }, []);
 
   const moduleLinks = {
+    //  3 tabs  / "2 spaces"
     0: {
       moduleId: 11,
       moduleName: "Take Attendance",
@@ -40,9 +41,9 @@ export default function FacultyNavbar({ children, session }) {
       moduleName: "View Students",
       moduleLink: "/faculty/view-students",
     },
-    // sub module
-    // moduleId: 57,
-    //   moduleLink: "/faculty/view-student/edit-details"
+    // sub modules
+    //      moduleId: 57,
+    //      moduleLink: "/faculty/view-student/edit-details"
     3: {
       moduleId: 15,
       moduleName: "Manage Batches",
@@ -50,20 +51,26 @@ export default function FacultyNavbar({ children, session }) {
     },
     4: {
       moduleId: 16,
-      moduleName: "Manage Homeworks",
-      moduleLink: "/faculty/manage-homeworks",
+      moduleName: "Manage Submissions",
+      moduleLink: "/faculty/manage-submissions",
     },
+    // sub module
+    //      moduleId: 20,
+    //      moduleLink: "/faculty/manage-submissions/new-submission"
+
+    //      moduleId: 21,
+    //      moduleLink: "/faculty/manage-submissions/edit-details/[id]"
     5: {
       moduleId: 17,
       moduleName: "Manage Tests",
       moduleLink: "/faculty/manage-tests",
     },
-    // sub module
-    // moduleId: 18,
-    // moduleLink: "/faculty/manage-tests/new-test"
-    // sub module
-    // moduleId: 19,
-    // moduleLink: "/faculty/manage-tests/edit-details/[id]" (on Submit)
+    // sub module:
+    //      moduleId: 18,
+    //      moduleLink: "/faculty/manage-tests/new-test"
+
+    //      moduleId: 19,
+    //      moduleLink: "/faculty/manage-tests/edit-details/[id]" (on Submit)
   };
 
   return (

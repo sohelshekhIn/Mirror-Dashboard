@@ -19,8 +19,7 @@ export default function AddNewTest() {
   }
   if (
     (data.user && data.user.role !== "faculty") ||
-    !data.user.facultyData["facultyRoles"].includes(18) ||
-    data.user.facultyData["testsData"].canAdd === false
+    !data.user.facultyData["facultyRoles"].includes(18)
   ) {
     return <PageNotFound />;
   }
