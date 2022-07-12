@@ -1,6 +1,11 @@
 import Link from "next/link";
-import { useState, useEffect, useMemo } from "react";
-import { useTable, useSortBy } from "react-table";
+import { useState, useEffect, useMemo, useImperativeHandle } from "react";
+import {
+  useTable,
+  useSortBy,
+  useGlobalFilter,
+  usePagination,
+} from "react-table";
 import { dropDown } from "../../public/images";
 
 export default function ViewStudentTable({ metaInfo, studentsData }) {
@@ -96,16 +101,30 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
   const columns = useMemo(() => tableColumns, []);
   const data = useMemo(() => studentsData, [metaInfo, studentsData]);
 
-  const tableInstance = useTable(
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    page,
+    prepareRow,
+    state,
+    nextPage,
+    previousPage,
+    canNextPage,
+    canPreviousPage,
+    pageOptions,
+    setGlobalFilter,
+  } = useTable(
     {
       columns,
       data,
     },
-    useSortBy
+    useGlobalFilter,
+    useSortBy,
+    usePagination
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    tableInstance;
+  const { globalFilter, pageIndex } = state;
 
   useEffect(() => {
     // If subjects are selected, then render element to show subjects selected
@@ -162,6 +181,17 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
           {subjectList}
         </div>
       </div>
+      <div className="flex flex-row justify-end w-100 mt-10">
+        <div className="w-4/12 px-3">
+          <input
+            placeholder="Search..."
+            className="input w-full max-w-lg"
+            type="text"
+            value={globalFilter || ""}
+            onChange={(e) => setGlobalFilter(e.target.value)}
+          />
+        </div>
+      </div>
       <div className="flex flex-col space-y-5">
         <div className="overflow-x-auto mt-14">
           <table className="table w-full" {...getTableProps()}>
@@ -183,7 +213,6 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
                               alt="Sort in Descending Order"
                             />
                           ) : (
-                            // : svg caret icon
                             <img
                               src={dropDown.src}
                               className="transform ml-2 rotate-180 w-4 m-0"
@@ -200,7 +229,7 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
               ))}
             </thead>
             <tbody {...getTableBodyProps()}>
-              {rows.map((row) => {
+              {page.map((row) => {
                 prepareRow(row);
                 return (
                   <tr {...row.getRowProps()}>
@@ -216,6 +245,29 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
               })}
             </tbody>
           </table>
+          {/* buttons to navigate page */}
+          <div className="flex justify-between mt-10 mb-5">
+            <button
+              className="btn btn-sm btn-ghost"
+              onClick={() => previousPage()}
+              disabled={!canPreviousPage}
+            >
+              <img src={dropDown.src} className="transform rotate-90 w-6" />
+            </button>
+            <span>
+              Page{" "}
+              <strong>
+                {pageIndex + 1} of {pageOptions.length}
+              </strong>
+            </span>
+            <button
+              className="btn btn-sm btn-ghost"
+              onClick={() => nextPage()}
+              disabled={!canNextPage}
+            >
+              <img src={dropDown.src} className="transform -rotate-90 w-6" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
