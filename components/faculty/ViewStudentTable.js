@@ -80,7 +80,7 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
   ];
 
   const columns = useMemo(() => tableColumns, []);
-  const data = useMemo(() => studentsData, []);
+  const data = useMemo(() => studentsData, [metaInfo, studentsData]);
 
   const tableInstance = useTable(
     {
@@ -155,7 +155,7 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
               {headerGroups.map((headerGroup) => (
                 <tr {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column) => (
-                    <th
+                    <td
                       className="studentTableTh"
                       {...column.getHeaderProps(column.getSortByToggleProps())}
                     >
@@ -180,7 +180,7 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
                           ""
                         )}
                       </span>
-                    </th>
+                    </td>
                   ))}
                 </tr>
               ))}
