@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useState, useEffect, useMemo } from "react";
 import { useTable, useSortBy } from "react-table";
 import { dropDown } from "../../public/images";
@@ -75,6 +76,19 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
             return subject;
           })
           .join(", ");
+      },
+    },
+    {
+      Header: "",
+      accessor: "UserID",
+      Cell: ({ row }) => {
+        return (
+          <Link
+            href={`/faculty/view-students/edit-details?id=${row.original.UserID}`}
+          >
+            <a className="btn modal-button">Edit</a>
+          </Link>
+        );
       },
     },
   ];
