@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { DashboardContent } from "../../../components/faculty/Navbar";
 import StudentTableView from "../../../components/faculty/StudentTableView";
+import ViewStudentTable from "../../../components/faculty/ViewStudentTable";
 import Loading from "../../../components/utilities/Loading";
 import NotificationAlert from "../../../components/utilities/NotificationAlert";
 import PageNotFound from "../../404";
@@ -120,7 +121,7 @@ export default function ViewStudent() {
         });
         console.log(err);
       });
-  }, [data]);
+  }, []);
 
   const toggleShowForm = () => {
     if (dropDownStatus) {
@@ -262,6 +263,7 @@ export default function ViewStudent() {
                       </label>
                       <select
                         id="selectBatch"
+                        accessKey="Q"
                         defaultValue="DEFAULT"
                         required
                         name="class"
@@ -417,7 +419,11 @@ export default function ViewStudent() {
                     )}
                   </div>
                   <div className="flex flex-col w-fit">
-                    <button type="submit" className="btn btn-accent">
+                    <button
+                      accessKey="S"
+                      type="submit"
+                      className="btn btn-accent"
+                    >
                       Submit
                     </button>
                   </div>
@@ -428,10 +434,14 @@ export default function ViewStudent() {
           {/* <div className="flex flex-col">{tableView}</div> */}
           <div className="flex flex-col">
             {apiResponse ? (
-              <StudentTableView
-                requestData={formData}
+              // <StudentTableView
+              //   requestData={formData}
+              //   studentsData={apiResponse}
+              //   session={data}
+              // />
+              <ViewStudentTable
+                metaInfo={formData}
                 studentsData={apiResponse}
-                session={data}
               />
             ) : (
               <EmptyMessageSection

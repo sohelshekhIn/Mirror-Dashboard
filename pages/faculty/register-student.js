@@ -143,7 +143,10 @@ export default function RegisterStudent() {
               fatherMobile: "",
               motherMobile: "",
               msgMobile: "",
-              active: true,
+              // false here denoted it is not blocked, true means blocked
+              // by default no account is blocked
+              // active resembles blocked status in the db
+              active: false,
               canLogin: true,
             }}
             validationSchema={Yup.object({
@@ -638,6 +641,7 @@ export default function RegisterStudent() {
                         onBlur={formik.handleBlur}
                         value={formik.values.fatherMobile}
                         name="fatherMobile"
+                        maxLength="10"
                         aria-label="Enter Father Mobile No."
                         placeholder="Enter Father Mobile No."
                         className="input input-bordered w-full max-w-full"
@@ -664,6 +668,7 @@ export default function RegisterStudent() {
                         onBlur={formik.handleBlur}
                         value={formik.values.motherMobile}
                         name="motherMobile"
+                        maxLength="10"
                         aria-label="Enter Mother Mobile No."
                         placeholder="Enter Mother Mobile No."
                         className="input input-bordered w-full max-w-full"
@@ -679,6 +684,7 @@ export default function RegisterStudent() {
                         onBlur={formik.handleBlur}
                         value={formik.values.msgMobile}
                         name="msgMobile"
+                        maxLength="10"
                         aria-label="Enter Message Mobile No."
                         placeholder="Enter Message Mobile No."
                         className="input input-bordered w-full max-w-full"

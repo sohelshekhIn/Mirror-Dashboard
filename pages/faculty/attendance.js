@@ -77,7 +77,7 @@ export default function TakeAttendance() {
         });
         console.log(err);
       });
-  }, [data]);
+  }, []);
 
   const handleLoadStudents = (e) => {
     e.preventDefault();
@@ -137,10 +137,11 @@ export default function TakeAttendance() {
               <select
                 id="selectBatch"
                 defaultValue="DEFAULT"
+                accessKey="Q"
                 required
                 className="select select-bordered"
               >
-                <option value="DEFAULT" disabled>
+                <option accessKey="Q" value="DEFAULT" disabled>
                   Select Batch
                 </option>
                 {batch.map((batch) => {
@@ -160,7 +161,7 @@ export default function TakeAttendance() {
               </select>
             </div>
             <div className="form-control w-full md:w-36 mx-auto md:mx-5 max-w-xs flex justify-end my-5 md:my-0 ">
-              <button type="submit" className="btn btn-accent">
+              <button type="submit" accessKey="S" className="btn btn-accent">
                 Proceed
               </button>
             </div>

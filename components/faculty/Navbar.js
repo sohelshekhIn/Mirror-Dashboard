@@ -71,6 +71,21 @@ export default function FacultyNavbar({ children, session }) {
 
     //      moduleId: 19,
     //      moduleLink: "/faculty/manage-tests/edit-details/[id]" (on Submit)
+    6: {
+      moduleId: 22,
+      moduleName: "Register Faculty",
+      moduleLink: "/faculty/register-faculty",
+    },
+    7: {
+      moduleId: 23,
+      moduleName: "View Faculty",
+      moduleLink: "/faculty/view-faculty",
+    },
+    8: {
+      moduleId: 22,
+      moduleName: "Table Demo",
+      moduleLink: "/faculty/table-demo",
+    },
   };
 
   return (

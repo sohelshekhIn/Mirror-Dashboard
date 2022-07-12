@@ -127,6 +127,7 @@ export default function Login({ csrfToken }) {
                   </label>
                   <Field
                     type="text"
+                    accessKey="Q"
                     name="username"
                     aria-label="Enter your Username here"
                     aria-required="true"
