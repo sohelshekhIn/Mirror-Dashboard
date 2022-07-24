@@ -9,6 +9,7 @@ import search from "./search.svg";
 import calendarPNG from "./calendar.png";
 import editPNG from "./edit.png";
 import dropDown from "./dropdown.png";
+import dragNDrop from "./drag-and-drop.png";
 
 export {
   logo,
@@ -22,4 +23,5 @@ export {
   calendarPNG,
   editPNG,
   dropDown,
+  dragNDrop,
 };

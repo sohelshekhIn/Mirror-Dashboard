@@ -19,8 +19,11 @@ export default function StudentDashboard() {
   }
   return (
     <DashboardContent>
-      <div className="font-bold text-primary text-3xl">
-        Hello, {data.user.name.split(" ")[0]}
+      <div className="flex flex-col">
+        <h1 className="heading1 text-primary">
+          Hello, {data.user.name.split(" ")[0]}
+        </h1>
+        <span className="underline w-24 my-4"></span>
       </div>
       <Link href="/faculty/attendance">Attendance</Link>
     </DashboardContent>

@@ -83,8 +83,8 @@ export default function FacultyNavbar({ children, session }) {
     },
     8: {
       moduleId: 22,
-      moduleName: "Table Demo",
-      moduleLink: "/faculty/table-demo",
+      moduleName: "Shortcuts",
+      moduleLink: "/faculty/shortcuts",
     },
   };
 

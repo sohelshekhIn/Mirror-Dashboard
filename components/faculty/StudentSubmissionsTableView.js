@@ -8,7 +8,7 @@ import DatePicker from "../utilities/DatePicker";
 export default function StudentSubmissionsTableView({
   editStudentDetails,
   students,
-  testDetails: submissionDetails,
+  submissionDetails,
   setNotification,
   session,
 }) {
@@ -448,6 +448,7 @@ export default function StudentSubmissionsTableView({
                   </span>
                 );
               } else {
+                console.log(submissionDetails);
                 setBatchInfoComps(
                   <span className="font-medium max-w-2xl">
                     {submissionDetails.batch} ({submissionDetails.subject})

@@ -124,7 +124,7 @@ const AttendanceTable = ({ apiData, batch, sessionData, setNotification }) => {
             message: "Attendance updated successfully",
             type: "success",
           });
-          router.reload();
+          setTimeout(() => router.reload(), 2000);
         })
         .catch((err) => {
           console.log(err);

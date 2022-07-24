@@ -35,8 +35,9 @@ export default function EditStudentDetails() {
   });
 
   // aixos call to get student details
+  const { id } = router.query;
   useEffect(() => {
-    const { id } = router.query;
+    console.log(id);
     axios
       .get(
         `${process.env.NEXT_PUBLIC_STRAPI_API}/info/students/view-one?id=${id}`,
@@ -73,7 +74,7 @@ export default function EditStudentDetails() {
           id: new Date(),
         });
       });
-  }, []);
+  }, [id]);
 
   return (
     <DashboardContent>

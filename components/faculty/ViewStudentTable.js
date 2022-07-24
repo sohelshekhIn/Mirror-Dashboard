@@ -1,16 +1,17 @@
 import Link from "next/link";
-import { useState, useEffect, useMemo, useImperativeHandle } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   useTable,
   useSortBy,
   useGlobalFilter,
   usePagination,
 } from "react-table";
-import { dropDown } from "../../public/images";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { dropDown, dragNDrop } from "../../public/images";
 
 export default function ViewStudentTable({ metaInfo, studentsData }) {
-  console.log(metaInfo);
-  console.log(studentsData);
+  // console.log(metaInfo);
+  // console.log(studentsData);
 
   const [subjectList, setSubjectList] = useState([]);
 
@@ -31,10 +32,14 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
     {
       Header: "Father Mobile",
       accessor: "fatherMobile",
+      // return a tag to call to the number
+      Cell: ({ value }) => <a href={`tel:${value}`}>{value}</a>,
     },
     {
       Header: "Mother Mobile",
       accessor: "motherMobile",
+      //  return a tag to call to the number
+      Cell: ({ value }) => <a href={`tel:${value}`}>{value}</a>,
     },
     {
       Header: "Date of Birth",
@@ -71,6 +76,7 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
     {
       Header: "msgMobile",
       accessor: "msgMobile",
+      Cell: ({ value }) => <a href={`tel:${value}`}>{value}</a>,
     },
     {
       Header: "Subjects",
@@ -84,7 +90,7 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
       },
     },
     {
-      Header: "",
+      Header: "Action",
       accessor: "UserID",
       Cell: ({ row }) => {
         return (
@@ -114,10 +120,25 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
     canPreviousPage,
     pageOptions,
     setGlobalFilter,
+    allColumns,
   } = useTable(
     {
       columns,
       data,
+      initialState: {
+        pageSize: 10,
+        hiddenColumns: [
+          "motherName",
+          "canLogin",
+          "blocked",
+          "msgMobile",
+          "joinDate",
+          "dob",
+          "school",
+          "motherMobile",
+          "subjects",
+        ],
+      },
     },
     useGlobalFilter,
     useSortBy,
@@ -140,6 +161,34 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
     setSubjectList(tempSubjectList);
   }, [metaInfo, studentsData]);
 
+  const [menuData, setMenuData] = useState([
+    {
+      name: "Edit",
+    },
+    {
+      name: "Delete",
+    },
+    {
+      name: "Block",
+    },
+  ]);
+
+  let i = 0;
+  // const handleDragEnd = (results) => {
+  //   let tempMenuData = [...menuData];
+  //   let selectedRow = tempMenuData.splice(results.source.index, 1);
+  //   tempMenuData.splice(results.destination.index, 0, selectedRow[0]);
+
+  //   let temp = [{ name: "Block" }, { name: "Delete" }, { name: "Edit" }];
+  //   // let temp = tempMenuData;
+  //   setMenuData(temp);
+  //   // based on each name in object in array, set name to setMenuData
+  //   // tempMenuData.map((menu) => {
+  //   //   if (menu.name === "Edit") {
+
+  //   //   } else if (menu.name === "Delete") {
+  // };
+
   return (
     <div className="flex flex-col mt-10 px-4 py-10 rounded-xl bg-white shadow-xl">
       <div className="flex flex-col space-y-3">
@@ -160,20 +209,22 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
               </span>
             </label>
             <ul
-              tabindex="0"
+              tabIndex="0"
               className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
             >
-              <li>
-                <div className="w-full">
-                  <label className="label cursor-pointer w-full flex justify-between">
-                    <span className="label-text">Compact View</span>
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </div>
-              </li>
-              <li>
-                <a>Item 2</a>
-              </li>
+              {allColumns.map((column) => (
+                <label
+                  key={column.id}
+                  className="label w-full flex justify-between"
+                >
+                  <span className="label-text">{column.Header}</span>
+                  <input
+                    type="checkbox"
+                    className="checkbox"
+                    {...column.getToggleHiddenProps()}
+                  />
+                </label>
+              ))}
             </ul>
           </div>
         </div>
@@ -187,6 +238,7 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
             placeholder="Search..."
             className="input w-full max-w-lg"
             type="text"
+            accessKey="W"
             value={globalFilter || ""}
             onChange={(e) => setGlobalFilter(e.target.value)}
           />
@@ -245,29 +297,29 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
               })}
             </tbody>
           </table>
-          {/* buttons to navigate page */}
-          <div className="flex justify-between mt-10 mb-5">
-            <button
-              className="btn btn-sm btn-ghost"
-              onClick={() => previousPage()}
-              disabled={!canPreviousPage}
-            >
-              <img src={dropDown.src} className="transform rotate-90 w-6" />
-            </button>
-            <span>
-              Page{" "}
-              <strong>
-                {pageIndex + 1} of {pageOptions.length}
-              </strong>
-            </span>
-            <button
-              className="btn btn-sm btn-ghost"
-              onClick={() => nextPage()}
-              disabled={!canNextPage}
-            >
-              <img src={dropDown.src} className="transform -rotate-90 w-6" />
-            </button>
-          </div>
+        </div>
+        {/* buttons to navigate page */}
+        <div className="flex justify-between mt-10 mb-5">
+          <button
+            className="btn btn-sm btn-ghost"
+            onClick={() => previousPage()}
+            disabled={!canPreviousPage}
+          >
+            <img src={dropDown.src} className="transform rotate-90 w-6" />
+          </button>
+          <span>
+            Page{" "}
+            <strong>
+              {pageIndex + 1} of {pageOptions.length}
+            </strong>
+          </span>
+          <button
+            className="btn btn-sm btn-ghost"
+            onClick={() => nextPage()}
+            disabled={!canNextPage}
+          >
+            <img src={dropDown.src} className="transform -rotate-90 w-6" />
+          </button>
         </div>
       </div>
     </div>

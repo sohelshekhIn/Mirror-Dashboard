@@ -8,7 +8,6 @@ import DatePicker from "../utilities/DatePicker";
 import Image from "next/image";
 import { calendarPNG } from "../../public/images";
 import axios from "axios";
-import NotificationAlert from "../utilities/NotificationAlert";
 import { useRouter } from "next/router";
 
 export default function UpdateStudentForm({ studentData, setNotification }) {
@@ -96,7 +95,6 @@ export default function UpdateStudentForm({ studentData, setNotification }) {
         // }
         setBatch(tempBatch);
       })
-
       .catch((err) => {
         console.log(err);
         if (err.message) {
@@ -109,6 +107,7 @@ export default function UpdateStudentForm({ studentData, setNotification }) {
         console.log(err);
       });
   }, []);
+
   return (
     <div className="flex flex-col">
       <div className="text-red-400 font-semibold text-md text-center rounded p-2">
@@ -128,7 +127,7 @@ export default function UpdateStudentForm({ studentData, setNotification }) {
           fatherMobile: studentData.fatherMobile,
           motherMobile: studentData.motherMobile,
           msgMobile: studentData.msgMobile,
-          active: studentData.blocked,
+          active: !studentData.blocked,
           canLogin: studentData.canLogin,
         }}
         validationSchema={Yup.object({
@@ -420,6 +419,10 @@ export default function UpdateStudentForm({ studentData, setNotification }) {
                   </label>
 
                   {useEffect(() => {
+                    // if batch.Loading is true then show loading
+                    if (batch.Loading) {
+                      return <Loading />;
+                    }
                     if (
                       formik.values.batch &&
                       formik.values.batch !== "DEFAULT"
@@ -459,7 +462,7 @@ export default function UpdateStudentForm({ studentData, setNotification }) {
                         );
                         if (subjectsAppendedCount === subjects.length - 1) {
                           subjectsDivHorizontal.push(
-                            <div key={i} className="flex space-x-10">
+                            <div key={i + 1} className="flex space-x-10">
                               {subjectInputGroup}
                             </div>
                           );
@@ -468,7 +471,7 @@ export default function UpdateStudentForm({ studentData, setNotification }) {
                       }
                       setSubjects(subjectsDivHorizontal);
                     }
-                  }, [batch])}
+                  }, [formik.values.batch, batch])}
                   {subjects && subjects.length > 0 ? (
                     <div className="input flex-col space-y-4 py-4 h-fit input-bordered">
                       {subjects}
