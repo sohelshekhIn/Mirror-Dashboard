@@ -6,14 +6,15 @@ import {
   useGlobalFilter,
   usePagination,
 } from "react-table";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { dropDown, dragNDrop } from "../../public/images";
+
+import { dropDown } from "../../public/images";
 
 export default function ViewStudentTable({ metaInfo, studentsData }) {
   // console.log(metaInfo);
   // console.log(studentsData);
 
   const [subjectList, setSubjectList] = useState([]);
+  // const [pageSize, setPageSize] = useState(10);
 
   // table columns
   const tableColumns = [
@@ -121,6 +122,7 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
     pageOptions,
     setGlobalFilter,
     allColumns,
+    setPageSize,
   } = useTable(
     {
       columns,
@@ -145,8 +147,8 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
     usePagination
   );
 
-  const { globalFilter, pageIndex } = state;
-
+  const { globalFilter, pageIndex, pageSize } = state;
+  console.log(pageSize);
   useEffect(() => {
     // If subjects are selected, then render element to show subjects selected
     let tempSubjectList = [];
@@ -173,7 +175,7 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
     },
   ]);
 
-  let i = 0;
+  // let i = 0;
   // const handleDragEnd = (results) => {
   //   let tempMenuData = [...menuData];
   //   let selectedRow = tempMenuData.splice(results.source.index, 1);
@@ -299,27 +301,47 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
           </table>
         </div>
         {/* buttons to navigate page */}
-        <div className="flex justify-between mt-10 mb-5">
-          <button
-            className="btn btn-sm btn-ghost"
-            onClick={() => previousPage()}
-            disabled={!canPreviousPage}
-          >
-            <img src={dropDown.src} className="transform rotate-90 w-6" />
-          </button>
-          <span>
-            Page{" "}
-            <strong>
-              {pageIndex + 1} of {pageOptions.length}
-            </strong>
-          </span>
-          <button
-            className="btn btn-sm btn-ghost"
-            onClick={() => nextPage()}
-            disabled={!canNextPage}
-          >
-            <img src={dropDown.src} className="transform -rotate-90 w-6" />
-          </button>
+        <div className="flex mt-10 mb-5 justify-between">
+          {/* dropdown to select number of entries per page */}
+          <div className="flex flex-row">
+            <div className="flex items-center w-full space-x-3">
+              <select
+                className="input w-sm max-w-sm"
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                }}
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+              <p>Entries per page</p>
+            </div>
+          </div>
+          <div className="flex space-x-5 justify-between items-center">
+            <button
+              className="btn btn-sm btn-ghost bg-transparent"
+              onClick={() => previousPage()}
+              disabled={!canPreviousPage}
+            >
+              <img src={dropDown.src} className="transform rotate-90 w-6" />
+            </button>
+            <span>
+              <strong>
+                {pageIndex + 1}/{pageOptions.length}
+              </strong>
+            </span>
+            <button
+              className="btn btn-sm btn-ghost bg-transparent"
+              onClick={() => nextPage()}
+              disabled={!canNextPage}
+            >
+              <img src={dropDown.src} className="transform -rotate-90 w-6" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
+import { getLocationOrigin } from "next/dist/shared/lib/utils";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { DashboardContent } from "../../../../components/faculty/Navbar";
@@ -29,7 +30,7 @@ export default function EditTest() {
     message: null,
   });
   const [tableComp, setTableComp] = useState([]);
-
+  console.log(submissionId);
   useEffect(() => {
     axios
       .get(
@@ -58,7 +59,7 @@ export default function EditTest() {
           id: new Date(),
         });
       });
-  }, []);
+  }, [submissionId]);
 
   return (
     <DashboardContent>
