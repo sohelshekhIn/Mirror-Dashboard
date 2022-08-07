@@ -127,7 +127,7 @@ export default function UpdateStudentForm({ studentData, setNotification }) {
           fatherMobile: studentData.fatherMobile,
           motherMobile: studentData.motherMobile,
           msgMobile: studentData.msgMobile,
-          active: !studentData.blocked,
+          active: studentData.blocked,
           canLogin: studentData.canLogin,
         }}
         validationSchema={Yup.object({
@@ -365,7 +365,10 @@ export default function UpdateStudentForm({ studentData, setNotification }) {
                     <span className="label-text">Batch</span>
                   </label>
                   <select
-                    onChange={formik.handleChange}
+                    onChange={(e) => {
+                      formik.handleChange(e);
+                      formik.setFieldValue("subjects", []);
+                    }}
                     onBlur={formik.handleBlur}
                     value={formik.values.batch}
                     id="batch"

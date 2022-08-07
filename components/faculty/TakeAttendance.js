@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import NotificationAlert from "../utilities/NotificationAlert";
 
 const AttendanceTable = ({ apiData, batch, sessionData, setNotification }) => {
   const [attendanceMethod, setAttendanceMethod] = useState(false); //true for marking absents, false for marking presents
@@ -38,6 +37,13 @@ const AttendanceTable = ({ apiData, batch, sessionData, setNotification }) => {
 
   // on load of page, check if attendance has been taken for the batch
   useEffect(() => {
+    // get all checkbox with attendance class
+    let checkboxes = document.getElementsByClassName("attendance");
+    // uncheck all checkboxes
+    for (let i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].checked = false;
+    }
+
     axios
       .get(
         process.env.NEXT_PUBLIC_STRAPI_API +
@@ -73,13 +79,35 @@ const AttendanceTable = ({ apiData, batch, sessionData, setNotification }) => {
     document.getElementById("attendanceMethod").checked =
       attendanceData.attendanceMethod;
 
-    for (let key in attendanceData.data) {
-      document.getElementById(attendanceData.data[key]).checked = true;
+    // if attendanceMethod is true then generate present students
+    if (attendanceData.attendanceMethod) {
+      let presentStudents = [];
+      // attendanceData here holds the students who are absent
+
+      // get present students from apiData - attendanceData
+      for (let key in apiData) {
+        if (!attendanceData.data.includes(apiData[key].UserID)) {
+          presentStudents.push(apiData[key]);
+        }
+      }
+      console.log(presentStudents);
+      for (let key in presentStudents) {
+        document.getElementById(presentStudents[key].UserID).checked = true;
+      }
+    } else {
+      for (let key in attendanceData.data) {
+        document.getElementById(attendanceData.data[key]).checked = true;
+      }
     }
   };
 
   const handleAttendanceMethod = () => {
     setAttendanceMethod(!attendanceMethod);
+    // invert all checkboxes with class attendance
+    let checkboxes = document.getElementsByClassName("attendance");
+    for (let i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].checked = !checkboxes[i].checked;
+    }
   };
 
   let tempAttendanceData = [];
@@ -98,6 +126,17 @@ const AttendanceTable = ({ apiData, batch, sessionData, setNotification }) => {
     let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
     let yyyy = today.getFullYear();
     today = dd + "/" + mm + "/" + yyyy;
+    let apiAttendanceData = attendanceData;
+
+    if (attendanceMethod) {
+      let absentStudents = [];
+      for (let key in apiData) {
+        if (!apiAttendanceData.includes(apiData[key].UserID)) {
+          absentStudents.push(apiData[key].UserID);
+        }
+      }
+      apiAttendanceData = absentStudents;
+    }
 
     // if attendance has been taken, update the attendance
     if (attendanceState) {
@@ -110,7 +149,7 @@ const AttendanceTable = ({ apiData, batch, sessionData, setNotification }) => {
             data: {
               AttendanceId: batch.replace(/\s/g, "") + "_" + today,
               attendanceMethod: attendanceMethod,
-              data: attendanceData,
+              data: apiAttendanceData,
             },
           },
           {
@@ -141,7 +180,7 @@ const AttendanceTable = ({ apiData, batch, sessionData, setNotification }) => {
             data: {
               AttendanceId: batch.replace(/\s/g, "") + "_" + today,
               attendanceMethod: attendanceMethod,
-              data: attendanceData,
+              data: apiAttendanceData,
             },
           },
           {

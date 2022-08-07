@@ -61,16 +61,6 @@ export default function RegisterStudent() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (selectedJoinDate != null) {
-  //     document.getElementById("joinDatePickerInput").value = selectedJoinDate;
-  //   }
-  //   if (selectedDOB != null) {
-  //     document.getElementById("dobDatePickerInput").value = selectedDOB;
-  //   }
-  //   closeDatePicker();
-  // }, [selectedJoinDate, selectedDOB]);
-
   const closeDatePicker = () => {
     document.getElementById("joinDatePickerToggle").checked = false;
     document.getElementById("dobDatePickerToggle").checked = false;
@@ -398,6 +388,8 @@ export default function RegisterStudent() {
                           formik.values.batch &&
                           formik.values.batch !== "DEFAULT"
                         ) {
+                          // clear the subjects array in formik.values
+                          formik.setFieldValue("subjects", []);
                           const subjects = batch[formik.values.batch].subjects;
                           let subjectsAppendedCount = 0;
                           var subjectsDivHorizontal = [];
@@ -455,18 +447,6 @@ export default function RegisterStudent() {
                           Select Batch to see Subjects
                         </div>
                       )}
-                      {/* <div className="form-control w-5/12">
-                        <label className="label cursor-pointer">
-                          <span className="label-text">Biology</span>
-                          <Field
-                            name="subjects"
-                            type="checkbox"
-                            id="checkbox"
-                            value="Biology"
-                            className="checkbox"
-                          />
-                        </label>
-                      </div> */}
                     </div>
                     <div className="form-control w-100 max-w-2xl md:max-w-md w-full">
                       <label className="label">

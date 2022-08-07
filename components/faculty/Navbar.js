@@ -24,19 +24,27 @@ export default function FacultyNavbar({ children, session }) {
     }
   }, []);
 
-  const moduleLinks = {
+  const moduleLinks = [
     //  3 tabs  / "2 spaces"
-    0: {
+    {
       moduleId: 11,
       moduleName: "Take Attendance",
       moduleLink: "/faculty/attendance",
     },
-    1: {
+    {
+      moduleId: 12,
+      moduleName: "Verify Attendance",
+      moduleLink: "/faculty/attendance/verify-attendance",
+    },
+    // sub module
+    //    moduleId: 13,
+    //    moduleLink: "/faculty/attendance/verify-attendance/verify",
+    {
       moduleId: 14,
       moduleName: "Register Student",
       moduleLink: "/faculty/register-student",
     },
-    2: {
+    {
       moduleId: 154,
       moduleName: "View Students",
       moduleLink: "/faculty/view-students",
@@ -44,12 +52,12 @@ export default function FacultyNavbar({ children, session }) {
     // sub modules
     //      moduleId: 57,
     //      moduleLink: "/faculty/view-student/edit-details"
-    3: {
+    {
       moduleId: 15,
       moduleName: "Manage Batches",
       moduleLink: "/faculty/manage-batches",
     },
-    4: {
+    {
       moduleId: 16,
       moduleName: "Manage Submissions",
       moduleLink: "/faculty/manage-submissions",
@@ -60,7 +68,7 @@ export default function FacultyNavbar({ children, session }) {
 
     //      moduleId: 21,
     //      moduleLink: "/faculty/manage-submissions/edit-details/[id]"
-    5: {
+    {
       moduleId: 17,
       moduleName: "Manage Tests",
       moduleLink: "/faculty/manage-tests",
@@ -71,22 +79,22 @@ export default function FacultyNavbar({ children, session }) {
 
     //      moduleId: 19,
     //      moduleLink: "/faculty/manage-tests/edit-details/[id]" (on Submit)
-    6: {
+    {
       moduleId: 22,
       moduleName: "Register Faculty",
       moduleLink: "/faculty/register-faculty",
     },
-    7: {
+    {
       moduleId: 23,
       moduleName: "View Faculty",
       moduleLink: "/faculty/view-faculty",
     },
-    8: {
+    {
       moduleId: 22,
       moduleName: "Shortcuts",
       moduleLink: "/faculty/shortcuts",
     },
-  };
+  ];
 
   return (
     <div className="flex flex-col ">
@@ -206,6 +214,10 @@ export default function FacultyNavbar({ children, session }) {
               </Link>
             </li> */}
           </ul>
+          <p className="p-5 text-gray-400 font-semibold text-xs">
+            Designed and Developed by <br />
+            Sohel Shekh
+          </p>
         </aside>
 
         <main

@@ -175,21 +175,11 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
     },
   ]);
 
-  // let i = 0;
-  // const handleDragEnd = (results) => {
-  //   let tempMenuData = [...menuData];
-  //   let selectedRow = tempMenuData.splice(results.source.index, 1);
-  //   tempMenuData.splice(results.destination.index, 0, selectedRow[0]);
-
-  //   let temp = [{ name: "Block" }, { name: "Delete" }, { name: "Edit" }];
-  //   // let temp = tempMenuData;
-  //   setMenuData(temp);
-  //   // based on each name in object in array, set name to setMenuData
-  //   // tempMenuData.map((menu) => {
-  //   //   if (menu.name === "Edit") {
-
-  //   //   } else if (menu.name === "Delete") {
-  // };
+  // Menu Road Map
+  // Menu will will contain the following options
+  // 1. Add and remove row - followed by a dialog box with checkboxs
+  // 2. Print
+  // 3. Export
 
   return (
     <div className="flex flex-col mt-10 px-4 py-10 rounded-xl bg-white shadow-xl">
@@ -235,7 +225,7 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
         </div>
       </div>
       <div className="flex flex-row justify-end w-100 mt-10">
-        <div className="w-4/12 px-3">
+        <div className="w-full md:w-4/12 px-3">
           <input
             placeholder="Search..."
             className="input w-full max-w-lg"

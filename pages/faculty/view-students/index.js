@@ -3,7 +3,6 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { DashboardContent } from "../../../components/faculty/Navbar";
-import StudentTableView from "../../../components/faculty/StudentTableView";
 import ViewStudentTable from "../../../components/faculty/ViewStudentTable";
 import Loading from "../../../components/utilities/Loading";
 import NotificationAlert from "../../../components/utilities/NotificationAlert";
@@ -273,12 +272,11 @@ export default function ViewStudent() {
                       >
                         <option value="DEFAULT">Select Class</option>
                         {/* Options for class 1 to 12 */}
-                        {}
                         {Object.keys(batch).map((key) => {
                           if (key === "Loading Batches...") {
                             return (
                               <option disabled value="Loading">
-                                "Loading Batches..."
+                                Loading Batches...
                               </option>
                             );
                           }
@@ -286,14 +284,16 @@ export default function ViewStudent() {
                           // remove duplicates form an array
                         })}
                         {(classes = [...new Set(classes)])}
-                        {/* map through classes */}
-                        {classes.map((classNo) => {
-                          return (
-                            <option key={classNo} value={classNo}>
-                              {classNo}
-                            </option>
-                          );
-                        })}
+                        {
+                          // map through classes
+                          classes.map((classNo) => {
+                            return (
+                              <option key={classNo} value={classNo}>
+                                {classNo}
+                              </option>
+                            );
+                          })
+                        }
                       </select>
                     </div>
                     <div className="form-control md:mx-0 w-full md:max-w-xs max-w-md">
