@@ -325,7 +325,7 @@ export default function StudentMarksTableView({
                   setValidatonError(null);
                 }}
                 placeholder={`Marks of ${student.name}`}
-                class="input w-full md:w-3/4 max-w-xs"
+                className="input w-full md:w-3/4 max-w-xs"
               />
             </td>
           </tr>
@@ -376,7 +376,7 @@ export default function StudentMarksTableView({
                   setValidatonError(null);
                 }}
                 placeholder={`Enter Marks for ${student[0]}`}
-                class="input w-full md:w-3/4 max-w-xs"
+                className="input w-full md:w-3/4 max-w-xs"
               />
             </td>
           </tr>
@@ -396,7 +396,7 @@ export default function StudentMarksTableView({
           </div>
         )}
         <div className="flex flex-col xl:flex-row xl:space-x-5 xl:space-y-0 space-y-4 md:space-y-2 justify-between">
-          <div class="form-control w-full max-w-xl flex flex-col space-y-8 md:space-y-2">
+          <div className="form-control w-full max-w-xl flex flex-col space-y-8 md:space-y-2">
             <input
               type="text"
               onChange={handleChange}
@@ -407,7 +407,7 @@ export default function StudentMarksTableView({
               maxLength="60"
             />
 
-            <div class="form-control w-1/2">
+            <div className="form-control w-1/2">
               <input
                 type="number"
                 placeholder="Marks Out Of"
@@ -509,129 +509,129 @@ export default function StudentMarksTableView({
           </div>
         </div>
         <div className="flex">
-          <div tabindex="0" class="collapse w-full collapse-arrow">
+          <div tabindex="0" className="collapse w-full collapse-arrow">
             <input type="checkbox" id="showTestPunishment" />
-            <div class="collapse-title text-xl font-medium">
+            <div className="collapse-title text-xl font-medium">
               Test Punishment(s)
             </div>
-            <div class="collapse-content my-5 flex flex-col space-y-10">
+            <div className="collapse-content my-5 flex flex-col space-y-10">
               <div className="flex flex-col space-y-10">
                 <div className="flex flex-col px-5 lg:flex-row space-y-5 space-x-0 lg:space-y-0 lg:space-x-10 w-full">
                   <div className="flex space-x-5 items-center w-6/12 xl:w-4/12 ">
-                    <div class="form-control w-6/12">
+                    <div className="form-control w-6/12">
                       <input
                         type="number"
                         id="lowKey1"
                         placeholder="low"
-                        class="input input-bordered w-full max-w-xs"
+                        className="input input-bordered w-full max-w-xs"
                       />
                     </div>
                     <p className="">to</p>
-                    <div class="form-control w-6/12">
+                    <div className="form-control w-6/12">
                       <input
                         type="number"
                         id="highKey1"
                         placeholder="high"
-                        class="input input-bordered w-full max-w-xs"
+                        className="input input-bordered w-full max-w-xs"
                       />
                     </div>
                   </div>
-                  <div class="form-control w-full max-w-3xl">
+                  <div className="form-control w-full max-w-3xl">
                     <input
                       type="text"
                       placeholder="Punishment"
                       id="pKey1"
-                      class="input input-bordered w-full max-w-2xl"
+                      className="input input-bordered w-full max-w-2xl"
                     />
                   </div>
                 </div>
                 <span className="divider divider-vertical"></span>
                 <div className="flex flex-col px-5 lg:flex-row space-y-5 space-x-0 lg:space-y-0 lg:space-x-10 w-full">
                   <div className="flex space-x-5 items-center w-6/12 xl:w-4/12 ">
-                    <div class="form-control w-6/12">
+                    <div className="form-control w-6/12">
                       <input
                         type="number"
                         id="lowKey2"
                         placeholder="low"
-                        class="input input-bordered w-full max-w-xs"
+                        className="input input-bordered w-full max-w-xs"
                       />
                     </div>
                     <p className="">to</p>
-                    <div class="form-control w-6/12">
+                    <div className="form-control w-6/12">
                       <input
                         type="number"
                         id="highKey2"
                         placeholder="high"
-                        class="input input-bordered w-full max-w-xs"
+                        className="input input-bordered w-full max-w-xs"
                       />
                     </div>
                   </div>
-                  <div class="form-control w-full max-w-3xl">
+                  <div className="form-control w-full max-w-3xl">
                     <input
                       type="text"
                       id="pKey2"
                       placeholder="Punishment"
-                      class="input input-bordered w-full max-w-2xl"
+                      className="input input-bordered w-full max-w-2xl"
                     />
                   </div>
                 </div>
                 <span className="divider divider-vertical"></span>
                 <div className="flex flex-col px-5 lg:flex-row space-y-5 space-x-0 lg:space-y-0 lg:space-x-10 w-full">
                   <div className="flex space-x-5 items-center w-6/12 xl:w-4/12 ">
-                    <div class="form-control w-6/12">
+                    <div className="form-control w-6/12">
                       <input
                         type="number"
                         placeholder="low"
                         id="lowKey3"
-                        class="input input-bordered w-full max-w-xs"
+                        className="input input-bordered w-full max-w-xs"
                       />
                     </div>
                     <p className="">to</p>
-                    <div class="form-control w-6/12">
+                    <div className="form-control w-6/12">
                       <input
                         type="number"
                         id="highKey3"
                         placeholder="high"
-                        class="input input-bordered w-full max-w-xs"
+                        className="input input-bordered w-full max-w-xs"
                       />
                     </div>
                   </div>
-                  <div class="form-control w-full max-w-3xl">
+                  <div className="form-control w-full max-w-3xl">
                     <input
                       type="text"
                       id="pKey3"
                       placeholder="Punishment"
-                      class="input input-bordered w-full max-w-2xl"
+                      className="input input-bordered w-full max-w-2xl"
                     />
                   </div>
                 </div>
                 <span className="divider divider-vertical"></span>
                 <div className="flex flex-col px-5 lg:flex-row space-y-5 space-x-0 lg:space-y-0 lg:space-x-10 w-full">
                   <div className="flex space-x-5 items-center w-6/12 xl:w-4/12 ">
-                    <div class="form-control w-6/12">
+                    <div className="form-control w-6/12">
                       <input
                         id="lowKey4"
                         type="number"
                         placeholder="low"
-                        class="input input-bordered w-full max-w-xs"
+                        className="input input-bordered w-full max-w-xs"
                       />
                     </div>
                     <p className="">to</p>
-                    <div class="form-control w-6/12">
+                    <div className="form-control w-6/12">
                       <input
                         type="number"
                         id="highKey4"
                         placeholder="high"
-                        class="input input-bordered w-full max-w-xs"
+                        className="input input-bordered w-full max-w-xs"
                       />
                     </div>
                   </div>
-                  <div class="form-control w-full max-w-3xl">
+                  <div className="form-control w-full max-w-3xl">
                     <input
                       type="text"
                       placeholder="Punishment"
                       id="pKey4"
-                      class="input input-bordered w-full max-w-2xl"
+                      className="input input-bordered w-full max-w-2xl"
                     />
                   </div>
                 </div>

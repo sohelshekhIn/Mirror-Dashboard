@@ -259,7 +259,7 @@ export default function StudentSubmissionsTableView({
             <td className="studentTableTh">
               <textarea
                 name={student.UserID}
-                class="textarea"
+                className="textarea"
                 id={`remarks${index}`}
                 onChange={() => {
                   setValidatonError(null);
@@ -274,7 +274,7 @@ export default function StudentSubmissionsTableView({
                   setValidatonError(null);
                 }}
                 placeholder={`Enter Marks for ${student.name}`}
-                class="input w-full md:w-3/4 max-w-xs"
+                className="input w-full md:w-3/4 max-w-xs"
               /> */}
             </td>
           </tr>
@@ -318,7 +318,7 @@ export default function StudentSubmissionsTableView({
             </td>
             <td className="studentTableTh">
               <textarea
-                class="textarea"
+                className="textarea"
                 id={`remarks${i}`}
                 onChange={() => {
                   setValidatonError(null);
@@ -333,7 +333,7 @@ export default function StudentSubmissionsTableView({
                   setValidatonError(null);
                 }}
                 placeholder={`Enter Marks for ${student[0]}`}
-                class="input w-full md:w-3/4 max-w-xs"
+                className="input w-full md:w-3/4 max-w-xs"
               /> */}
             </td>
           </tr>
@@ -353,7 +353,7 @@ export default function StudentSubmissionsTableView({
           </div>
         )}
         <div className="flex flex-col xl:flex-row xl:space-x-5 xl:space-y-0 space-y-4 md:space-y-2 justify-between">
-          <div class="form-control w-full max-w-xl flex flex-col space-y-8 md:space-y-2">
+          <div className="form-control w-full max-w-xl flex flex-col space-y-8 md:space-y-2">
             <input
               type="text"
               onChange={handleChange}
@@ -461,7 +461,7 @@ export default function StudentSubmissionsTableView({
         </div>
         <div className="flex flex-col space-y-4">
           <textarea
-            class="textarea"
+            className="textarea"
             placeholder="Submission Details"
             maxLength="500"
             name="submissionDetails"

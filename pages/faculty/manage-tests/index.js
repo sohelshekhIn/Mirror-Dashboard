@@ -147,8 +147,8 @@ Refer components > Faculty > Navbar.js > moduleLinks{...}
           ) : (
             <div className="flex justify-end"></div>
           )}
-          <div class="overflow-x-auto py-5 px-2 lg:py-8 lg:px-5 rounded-xl shadow-lg bg-white">
-            <table class="table w-full">
+          <div className="overflow-x-auto py-5 px-2 lg:py-8 lg:px-5 rounded-xl shadow-lg bg-white">
+            <table className="table w-full">
               <thead>
                 <tr>
                   <td className="studentTableTh">Sr.</td>

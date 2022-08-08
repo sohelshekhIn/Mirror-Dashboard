@@ -19,6 +19,10 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
   // table columns
   const tableColumns = [
     {
+      Header: "User Id",
+      accessor: "UserID",
+    },
+    {
       Header: "Name",
       accessor: "name",
     },
@@ -92,7 +96,7 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
     },
     {
       Header: "Action",
-      accessor: "UserID",
+      accessor: "action",
       Cell: ({ row }) => {
         return (
           <Link
@@ -105,6 +109,7 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
     },
   ];
 
+  console.log(studentsData);
   const columns = useMemo(() => tableColumns, []);
   const data = useMemo(() => studentsData, [metaInfo, studentsData]);
 

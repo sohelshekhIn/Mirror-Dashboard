@@ -365,9 +365,9 @@ export default function ViewBatches() {
                 </div>
               )}
               <div className="flex flex-col space-y-5 mt-5">
-                <div class="form-control w-full">
-                  <label class="label">
-                    <span class="label-text">Enter Batch Name</span>
+                <div className="form-control w-full">
+                  <label className="label">
+                    <span className="label-text">Enter Batch Name</span>
                   </label>
                   <input
                     type="text"
@@ -378,9 +378,9 @@ export default function ViewBatches() {
                     className="input input-bordered w-full max-w-md"
                   />
                 </div>
-                <div class="form-control w-full">
-                  <label class="label">
-                    <span class="label-text">Select Subjects</span>
+                <div className="form-control w-full">
+                  <label className="label">
+                    <span className="label-text">Select Subjects</span>
                   </label>
                   {/* <input
                     type="text"
@@ -393,134 +393,134 @@ export default function ViewBatches() {
                   <div className="flex flex-row mt-5">
                     {/* 10 checkbox for 10 subjects */}
                     <div className="flex flex-col space-y-5 w-1/2 px-10">
-                      <div class="form-control">
-                        <label class="label cursor-pointer">
-                          <span class="label-text">Maths</span>
+                      <div className="form-control">
+                        <label className="label cursor-pointer">
+                          <span className="label-text">Maths</span>
                           <input
                             type="checkbox"
                             id="maths"
                             onChange={handleChange}
                             name="subjects"
-                            class="checkbox"
+                            className="checkbox"
                             value="Maths"
                           />
                         </label>
                       </div>
-                      <div class="form-control">
-                        <label class="label cursor-pointer">
-                          <span class="label-text">Physics</span>
+                      <div className="form-control">
+                        <label className="label cursor-pointer">
+                          <span className="label-text">Physics</span>
                           <input
                             type="checkbox"
                             id="physics"
                             onChange={handleChange}
                             name="subjects"
-                            class="checkbox"
+                            className="checkbox"
                             value="Physics"
                           />
                         </label>
                       </div>
-                      <div class="form-control">
-                        <label class="label cursor-pointer">
-                          <span class="label-text">Chemistry</span>
+                      <div className="form-control">
+                        <label className="label cursor-pointer">
+                          <span className="label-text">Chemistry</span>
                           <input
                             type="checkbox"
                             id="chemistry"
                             onChange={handleChange}
                             name="subjects"
-                            class="checkbox"
+                            className="checkbox"
                             value="Chemistry"
                           />
                         </label>
                       </div>
-                      <div class="form-control">
-                        <label class="label cursor-pointer">
-                          <span class="label-text">Biology</span>
+                      <div className="form-control">
+                        <label className="label cursor-pointer">
+                          <span className="label-text">Biology</span>
                           <input
                             type="checkbox"
                             id="biology"
                             onChange={handleChange}
                             name="subjects"
-                            class="checkbox"
+                            className="checkbox"
                           />
                         </label>
                       </div>
-                      <div class="form-control">
-                        <label class="label cursor-pointer">
-                          <span class="label-text">English</span>
+                      <div className="form-control">
+                        <label className="label cursor-pointer">
+                          <span className="label-text">English</span>
                           <input
                             type="checkbox"
                             id="english"
                             onChange={handleChange}
                             name="subjects"
                             value="English"
-                            class="checkbox"
+                            className="checkbox"
                           />
                         </label>
                       </div>
                     </div>
                     <div className="flex flex-col space-y-5 w-1/2 px-10">
-                      <div class="form-control">
-                        <label class="label cursor-pointer">
-                          <span class="label-text">Science</span>
+                      <div className="form-control">
+                        <label className="label cursor-pointer">
+                          <span className="label-text">Science</span>
                           <input
                             type="checkbox"
                             id="science"
                             onChange={handleChange}
                             name="subjects"
                             value="Science"
-                            class="checkbox"
+                            className="checkbox"
                           />
                         </label>
                       </div>
-                      <div class="form-control">
-                        <label class="label cursor-pointer">
-                          <span class="label-text">EVS</span>
+                      <div className="form-control">
+                        <label className="label cursor-pointer">
+                          <span className="label-text">EVS</span>
                           <input
                             type="checkbox"
                             id="evs"
                             onChange={handleChange}
                             value="EVS"
                             name="subjects"
-                            class="checkbox"
+                            className="checkbox"
                           />
                         </label>
                       </div>
-                      <div class="form-control">
-                        <label class="label cursor-pointer">
-                          <span class="label-text">S.S.</span>
+                      <div className="form-control">
+                        <label className="label cursor-pointer">
+                          <span className="label-text">S.S.</span>
                           <input
                             type="checkbox"
                             id="ss"
                             onChange={handleChange}
                             value="S.S."
                             name="subjects"
-                            class="checkbox"
+                            className="checkbox"
                           />
                         </label>
                       </div>
-                      <div class="form-control">
-                        <label class="label cursor-pointer">
-                          <span class="label-text">Subject 2 </span>
+                      <div className="form-control">
+                        <label className="label cursor-pointer">
+                          <span className="label-text">Subject 2 </span>
                           <input
                             type="checkbox"
                             id="subject2"
                             onChange={handleChange}
                             value="Subject 2"
                             name="subjects"
-                            class="checkbox"
+                            className="checkbox"
                           />
                         </label>
                       </div>
-                      <div class="form-control">
-                        <label class="label cursor-pointer">
-                          <span class="label-text">Subject 3</span>
+                      <div className="form-control">
+                        <label className="label cursor-pointer">
+                          <span className="label-text">Subject 3</span>
                           <input
                             type="checkbox"
                             id="subject3"
                             onChange={handleChange}
                             value="Subject 3"
                             name="subjects"
-                            class="checkbox"
+                            className="checkbox"
                           />
                         </label>
                       </div>

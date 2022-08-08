@@ -7,8 +7,9 @@ import NotificationAlert from "../../../components/utilities/NotificationAlert";
 import axios from "axios";
 import { useTable } from "react-table";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
-export default function VerifyAttendance() {
+export default function VerifyBatchForAttendace() {
   const { status, data } = useSession({
     required: true,
     onUnauthenticated() {
@@ -25,47 +26,90 @@ export default function VerifyAttendance() {
     return <PageNotFound />;
   }
 
-  // === Main Data === //
+  const router = useRouter();
   const [apiData, setApiData] = useState([]);
   const [notification, setNotification] = useState({
     message: null,
     type: null,
   });
 
+  const { id } = router.query;
+  useEffect(() => {
+    if (id !== undefined) {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_STRAPI_API}/info/attendance/verify-batch?id=${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${data.user.accessToken}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          setApiData(res.data[0].studentData);
+        })
+        .catch((err) => {
+          console.log(err);
+          setNotification({
+            message: `${err.name}: ${err.message}`,
+            type: "error",
+            id: new Date(),
+          });
+        });
+    }
+  }, [id]);
+
   const tableColumns = [
     {
       Header: "Sr.",
       id: "id",
-      width: 50,
       Cell: ({ row }) => row.index + 1,
     },
     {
-      Header: "Batch",
-      accessor: "attributes.AttendanceId",
-      width: 80,
+      Header: "Name",
+      id: "studentName",
+      accessor: "name",
+    },
+    {
+      Header: "Mother Name",
+      id: "motherName",
+      accessor: "motherName",
+    },
+    {
+      Header: "Mother Mobile",
+      id: "motherMobile",
+      accessor: "motherMobile",
       Cell: ({ value }) => {
-        let batch = value.split("_")[0];
-        if (parseInt(batch).toString().length == 1) {
-          console.log("One");
-          batch = batch.slice(0, 1) + " " + batch.slice(1);
-        } else {
-          batch = batch.slice(0, 2) + " " + batch.slice(2);
-        }
-        return batch;
+        return (
+          <a href={`tel:${value}`}>
+            <span>{value}</span>
+          </a>
+        );
       },
     },
     {
-      Header: "Action",
-      id: "actionBtn",
-      accessor: "attributes.AttendanceId",
-      width: 100,
+      Header: "Message Mobile",
+      id: "messageMobile",
+      accessor: "msgMobile",
       Cell: ({ value }) => {
         return (
-          <Link
-            href={"/faculty/attendance/verify-batch-attendance?id=" + value}
-          >
-            <a className="btn btn-accent my-5`">Verify</a>
-          </Link>
+          <a href={`tel:${value}`}>
+            <span>{value}</span>
+          </a>
+        );
+      },
+    },
+    {
+      Header: "Reason",
+      id: "reason",
+      accessor: "name",
+      Cell: ({ value }) => {
+        return (
+          <textarea
+            className="textarea"
+            placeholder={`Reason for ${value.split(" ")[0]}'s absent`}
+          ></textarea>
         );
       },
     },
@@ -75,60 +119,25 @@ export default function VerifyAttendance() {
   const tableData = useMemo(() => apiData, [apiData]);
 
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } =
-    useTable({
-      columns,
-      data: tableData,
-    });
-
-  useEffect(() => {
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, "0");
-    let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    let yyyy = today.getFullYear();
-    today = dd + "/" + mm + "/" + yyyy;
-
-    axios
-      .get(
-        process.env.NEXT_PUBLIC_STRAPI_API +
-          `/attendances?filters[AttendanceId][$contains]=${today}&filters[data][$notNull]=true&filters[reasonData][$null]=true`,
-        {
-          headers: {
-            Authorization: `Bearer ${data.user.accessToken}`,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data.data);
-        setApiData(res.data.data);
-      })
-      .catch((err) => {
-        setNotification({
-          message: err.message,
-          type: "error",
-          id: new Date(),
-        });
-        console.log(err);
-      });
-  }, []);
+    useTable({ columns, data: tableData });
 
   return (
     <DashboardContent>
       <div className="flex flex-col  w-full">
-        <div className="flex flex-col lg:w-8/12">
+        <div className="flex flex-col w-full">
           <div className="flex flex-col">
             <h1 className="heading1 text-primary">Verify Attendance</h1>
             <span className="underline w-24 my-4"></span>
           </div>
-          <div className="py-5 px-2 lg:py-8 lg:px-5 mt-10 rounded-xl shadow-lg bg-white">
+          <div className="py-5 px-2 lg:py-8 mt-10 lg:px-5 rounded-xl shadow-lg bg-white">
             <div className="overflow-x-auto">
-              <table {...getTableProps()} className="w-full">
+              <table {...getTableProps()} className="table w-full">
                 <thead>
                   {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                       {headerGroup.headers.map((column) => (
                         <td
                           {...column.getHeaderProps()}
-                          width={column.width}
                           className="studentTableTh"
                         >
                           {column.render("Header")}
@@ -157,6 +166,21 @@ export default function VerifyAttendance() {
                   })}
                 </tbody>
               </table>
+            </div>
+            <div className="w-full mt-10 flex justify-end">
+              {/* submit button */}
+              <button
+                className="btn btn-accent w-max-xs"
+                onClick={() => {
+                  setNotification({
+                    message: "Attendance Verified Successfully",
+                    type: "success",
+                    id: new Date(),
+                  });
+                }}
+              >
+                Save
+              </button>
             </div>
           </div>
         </div>

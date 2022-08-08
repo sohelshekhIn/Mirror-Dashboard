@@ -215,7 +215,7 @@ Refer components > Faculty > Navbar.js > moduleLinks{...}
           ) : (
             <div className="flex justify-end"></div>
           )}
-          <div class="py-5 px-2 lg:py-8 lg:px-5 rounded-xl shadow-lg bg-white">
+          <div className="py-5 px-2 lg:py-8 lg:px-5 rounded-xl shadow-lg bg-white">
             <div className="flex flex-row justify-end w-100 my-10">
               <div className="w-4/12 px-3">
                 <input
@@ -229,7 +229,7 @@ Refer components > Faculty > Navbar.js > moduleLinks{...}
               </div>
             </div>
             <div className="overflow-x-auto">
-              <table class="table w-full" {...getTableProps}>
+              <table className="table w-full" {...getTableProps}>
                 <thead>
                   {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
