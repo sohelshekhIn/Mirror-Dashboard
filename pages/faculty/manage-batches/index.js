@@ -1,9 +1,9 @@
 import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { DashboardContent } from "../../components/faculty/Navbar";
-import Loading from "../../components/utilities/Loading";
-import NotificationAlert from "../../components/utilities/NotificationAlert";
+import { DashboardContent } from "../../../components/faculty/Navbar";
+import Loading from "../../../components/utilities/Loading";
+import NotificationAlert from "../../../components/utilities/NotificationAlert";
 
 export default function ViewBatches() {
   const { status, data } = useSession({
@@ -549,6 +549,7 @@ export default function ViewBatches() {
                   <button
                     onClick={handleSubmit}
                     type="submit"
+                    accessKey="S"
                     className="btn btn-accent"
                   >
                     Save Batch

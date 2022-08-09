@@ -296,6 +296,7 @@ export default function RegisterStudent() {
                       </label>
                       <Field
                         type="text"
+                        accessKey="Q"
                         name="name"
                         placeholder="Enter Student Name"
                         className="input input-bordered w-full max-w-full"
