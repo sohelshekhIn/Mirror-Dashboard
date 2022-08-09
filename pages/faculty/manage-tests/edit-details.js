@@ -40,7 +40,6 @@ export default function EditTest() {
           },
         })
         .then((res) => {
-          console.log(res.data);
           setTableComp(
             <StudentMarksTableView
               editStudentDetails={res.data}

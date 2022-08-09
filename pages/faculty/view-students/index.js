@@ -90,7 +90,6 @@ export default function ViewStudent() {
       .then((res) => {
         let tempBatch = {};
         for (let key in res.data.data) {
-          console.log(res.data.data[key]);
           if (
             data.user.facultyData["allowedBatches"].includes(
               res.data.data[key].attributes.batch

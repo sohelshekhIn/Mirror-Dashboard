@@ -129,7 +129,6 @@ export default function AddNewTest() {
       return;
     }
     setValidationError(null);
-    console.log(formData);
     axios
       .post(
         process.env.NEXT_PUBLIC_STRAPI_API + "/data/students/view",
@@ -201,7 +200,6 @@ export default function AddNewTest() {
         [e.target.name]: e.target.value,
       });
     }
-    console.log(formData);
   };
 
   return (

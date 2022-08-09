@@ -46,7 +46,6 @@ export default function VerifyAttendance() {
       Cell: ({ value }) => {
         let batch = value.split("_")[0];
         if (parseInt(batch).toString().length == 1) {
-          console.log("One");
           batch = batch.slice(0, 1) + " " + batch.slice(1);
         } else {
           batch = batch.slice(0, 2) + " " + batch.slice(2);
@@ -73,7 +72,6 @@ export default function VerifyAttendance() {
       accessor: "id",
       width: 100,
       Cell: ({ value }) => {
-        console.log(value);
         return (
           <Link
             href={"/faculty/attendance/verify-batch-attendance?id=" + value}
@@ -112,7 +110,6 @@ export default function VerifyAttendance() {
         }
       )
       .then((res) => {
-        console.log(res.data.data);
         setApiData(res.data.data);
       })
       .catch((err) => {

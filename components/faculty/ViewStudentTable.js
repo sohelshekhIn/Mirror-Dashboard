@@ -10,11 +10,7 @@ import {
 import { dropDown } from "../../public/images";
 
 export default function ViewStudentTable({ metaInfo, studentsData }) {
-  // console.log(metaInfo);
-  // console.log(studentsData);
-
   const [subjectList, setSubjectList] = useState([]);
-  // const [pageSize, setPageSize] = useState(10);
 
   // table columns
   const tableColumns = [
@@ -109,7 +105,6 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
     },
   ];
 
-  console.log(studentsData);
   const columns = useMemo(() => tableColumns, []);
   const data = useMemo(() => studentsData, [metaInfo, studentsData]);
 
@@ -153,7 +148,6 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
   );
 
   const { globalFilter, pageIndex, pageSize } = state;
-  console.log(pageSize);
   useEffect(() => {
     // If subjects are selected, then render element to show subjects selected
     let tempSubjectList = [];

@@ -62,7 +62,6 @@ export default function ManageSubmissions() {
       )
       .then((res) => {
         setSubmissions(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -163,7 +162,6 @@ export default function ManageSubmissions() {
     : null && data.user.facultyData["facultyRoles"].includes(21)
     ? columnsToHide.push("action")
     : null;
-  console.log(columnsToHide);
   const {
     getTableProps,
     getTableBodyProps,

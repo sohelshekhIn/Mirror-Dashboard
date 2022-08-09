@@ -46,7 +46,6 @@ export default function VerifyBatchForAttendace() {
           }
         )
         .then((res) => {
-          console.log(res.data);
           setApiData(res.data);
           setTableApiData(res.data.studentData);
           // if reasonDataStatus != not_verified then show reasonData in their specific text area

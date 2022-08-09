@@ -175,8 +175,7 @@ export default function StudentMarksTableView({
           return;
         }
       }
-      console.log(numberOfEmptyPunishments);
-      console.log(punishmentData);
+
       let processedData = {
         tdata: { ...data },
         pdata: punishmentData,

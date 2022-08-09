@@ -90,7 +90,6 @@ const AttendanceTable = ({ apiData, batch, sessionData, setNotification }) => {
           presentStudents.push(apiData[key]);
         }
       }
-      console.log(presentStudents);
       for (let key in presentStudents) {
         document.getElementById(presentStudents[key].UserID).checked = true;
       }
@@ -145,6 +144,8 @@ const AttendanceTable = ({ apiData, batch, sessionData, setNotification }) => {
               AttendanceId: batch.replace(/\s/g, "") + "_" + today,
               attendanceMethod: attendanceMethod,
               data: apiAttendanceData,
+              reasonDataStatus: "pending",
+              reasonData: null,
             },
           },
           {

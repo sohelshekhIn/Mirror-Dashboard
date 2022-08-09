@@ -49,7 +49,6 @@ export default function StudentSubmissionsTableView({
   };
 
   const handleSubmit = (e) => {
-    console.log(formData);
     e.preventDefault();
     //   map data of input fields to an array
     let data = {};
@@ -448,7 +447,6 @@ export default function StudentSubmissionsTableView({
                   </span>
                 );
               } else {
-                console.log(submissionDetails);
                 setBatchInfoComps(
                   <span className="font-medium max-w-2xl">
                     {submissionDetails.batch} ({submissionDetails.subject})
