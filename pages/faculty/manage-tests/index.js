@@ -109,7 +109,7 @@ Refer components > Faculty > Navbar.js > moduleLinks{...}
             {data.user.facultyData["facultyRoles"].includes(19) ? (
               <td className="studentTableTh">
                 <Link
-                  href={`/faculty/manage-tests/edit-details/${tests[i].id}`}
+                  href={`/faculty/manage-tests/edit-details?id=${tests[i].id}`}
                 >
                   <a className="btn btn-modal">Edit</a>
                 </Link>

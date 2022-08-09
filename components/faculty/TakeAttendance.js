@@ -103,11 +103,6 @@ const AttendanceTable = ({ apiData, batch, sessionData, setNotification }) => {
 
   const handleAttendanceMethod = () => {
     setAttendanceMethod(!attendanceMethod);
-    // invert all checkboxes with class attendance
-    let checkboxes = document.getElementsByClassName("attendance");
-    for (let i = 0; i < checkboxes.length; i++) {
-      checkboxes[i].checked = !checkboxes[i].checked;
-    }
   };
 
   let tempAttendanceData = [];

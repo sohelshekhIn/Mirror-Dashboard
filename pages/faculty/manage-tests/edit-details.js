@@ -1,13 +1,13 @@
 import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
-import { getLocationOrigin } from "next/dist/shared/lib/utils";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { DashboardContent } from "../../../../components/faculty/Navbar";
-import StudentSubmissionsTableView from "../../../../components/faculty/StudentSubmissionsTableView";
-import Loading from "../../../../components/utilities/Loading";
-import NotificationAlert from "../../../../components/utilities/NotificationAlert";
-import PageNotFound from "../../../404";
+import { DashboardContent } from "../../../components/faculty/Navbar";
+
+import StudentMarksTableView from "../../../components/faculty/StudentMarksTableView";
+import Loading from "../../../components/utilities/Loading";
+import NotificationAlert from "../../../components/utilities/NotificationAlert";
+import PageNotFound from "../../404";
 
 export default function EditTest() {
   const { status, data } = useSession({
@@ -24,42 +24,41 @@ export default function EditTest() {
   }
 
   const router = useRouter();
-  const { submissionId } = router.query;
+  const { id } = router.query;
   const [notification, setNotification] = useState({
     type: null,
     message: null,
   });
   const [tableComp, setTableComp] = useState([]);
-  console.log(submissionId);
+
   useEffect(() => {
-    axios
-      .get(
-        process.env.NEXT_PUBLIC_STRAPI_API + "/submissions/" + submissionId,
-        {
+    if (id !== undefined) {
+      axios
+        .get(process.env.NEXT_PUBLIC_STRAPI_API + "/marks/" + id, {
           headers: {
             Authorization: `Bearer ${data.user.accessToken}`,
           },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        setTableComp(
-          <StudentSubmissionsTableView
-            editStudentDetails={res.data}
-            setNotification={setNotification}
-            session={data}
-          />
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-        setNotification({
-          type: "error",
-          message: err.message,
-          id: new Date(),
+        })
+        .then((res) => {
+          console.log(res.data);
+          setTableComp(
+            <StudentMarksTableView
+              editStudentDetails={res.data}
+              setNotification={setNotification}
+              session={data}
+            />
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+          setNotification({
+            type: "error",
+            message: err.message,
+            id: new Date(),
+          });
         });
-      });
-  }, [submissionId]);
+    }
+  }, [id]);
 
   return (
     <DashboardContent>

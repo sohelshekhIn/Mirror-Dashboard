@@ -6,7 +6,6 @@ import { useEffect, useMemo, useState } from "react";
 import NotificationAlert from "../../../components/utilities/NotificationAlert";
 import axios from "axios";
 import { useTable } from "react-table";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 export default function VerifyBatchForAttendace() {
@@ -28,6 +27,7 @@ export default function VerifyBatchForAttendace() {
 
   const router = useRouter();
   const [apiData, setApiData] = useState([]);
+  const [tableApiData, setTableApiData] = useState([]);
   const [notification, setNotification] = useState({
     message: null,
     type: null,
@@ -47,18 +47,92 @@ export default function VerifyBatchForAttendace() {
         )
         .then((res) => {
           console.log(res.data);
-          setApiData(res.data[0].studentData);
+          setApiData(res.data);
+          setTableApiData(res.data.studentData);
+          // if reasonDataStatus != not_verified then show reasonData in their specific text area
+          if (res.data.reasonDataStatus !== "not_verified") {
+            // for every key in reasonDataStatus, set the value of the key in the text area
+            for (let key in res.data.reasonData) {
+              document.getElementById(`reason_${key}`).value =
+                res.data.reasonData[key];
+            }
+          }
         })
         .catch((err) => {
           console.log(err);
           setNotification({
-            message: `${err.name}: ${err.message}`,
+            message: `${err.message}`,
             type: "error",
             id: new Date(),
           });
         });
     }
   }, [id]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let reasonData = {};
+    let reasonStatus = "not_verified";
+    apiData.data.forEach((UserID) => {
+      let reasonText = document.getElementById(`reason_${UserID}`).value;
+      if (reasonText === "") {
+        reasonStatus = "pending";
+      } else {
+        reasonStatus = "verified";
+      }
+      reasonData[UserID] = reasonText;
+    });
+    // if value of all keys in reasonData is empty, then set reasonStatus to pending
+    let keys = Object.keys(reasonData);
+    let allEmpty = true;
+    for (let i = 0; i < keys.length; i++) {
+      if (reasonData[keys[i]] !== "") {
+        allEmpty = false;
+      }
+    }
+    if (allEmpty) {
+      setNotification({
+        message: "Cannot submit empty reason(s)",
+        type: "error",
+        id: new Date(),
+      });
+      return;
+    }
+
+    axios
+      .put(
+        process.env.NEXT_PUBLIC_STRAPI_API + "/attendances/" + id,
+        {
+          data: {
+            reasonDataStatus: reasonStatus,
+            reasonData: reasonData,
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${data.user.accessToken}`,
+          },
+        }
+      )
+      .then((res) => {
+        setNotification({
+          message: "Attendance verified successfully",
+          type: "success",
+          id: new Date(),
+        });
+        setTimeout(() => {
+          router.back();
+        }, 2000);
+      })
+      .catch((err) => {
+        console.log(err);
+        setNotification({
+          message: `${err.message}`,
+          type: "error",
+          id: new Date(),
+        });
+      });
+  };
 
   const tableColumns = [
     {
@@ -82,7 +156,7 @@ export default function VerifyBatchForAttendace() {
       accessor: "motherMobile",
       Cell: ({ value }) => {
         return (
-          <a href={`tel:${value}`}>
+          <a tabIndex="-1" href={`tel:${value}`}>
             <span>{value}</span>
           </a>
         );
@@ -94,7 +168,7 @@ export default function VerifyBatchForAttendace() {
       accessor: "msgMobile",
       Cell: ({ value }) => {
         return (
-          <a href={`tel:${value}`}>
+          <a tabIndex="-1" href={`tel:${value}`}>
             <span>{value}</span>
           </a>
         );
@@ -104,11 +178,14 @@ export default function VerifyBatchForAttendace() {
       Header: "Reason",
       id: "reason",
       accessor: "name",
-      Cell: ({ value }) => {
+      Cell: ({ value, row }) => {
         return (
           <textarea
-            className="textarea"
-            placeholder={`Reason for ${value.split(" ")[0]}'s absent`}
+            // if row index is zero than add accesskey to textarea
+            {...(row.index === 0 ? { accessKey: "Q" } : {})}
+            id={`reason_${row.original.UserID}`}
+            className="textarea reason"
+            placeholder={`Reason why ${value.split(" ")[0]}'s absent`}
           ></textarea>
         );
       },
@@ -116,8 +193,7 @@ export default function VerifyBatchForAttendace() {
   ];
 
   const columns = useMemo(() => tableColumns, []);
-  const tableData = useMemo(() => apiData, [apiData]);
-
+  const tableData = useMemo(() => tableApiData, [tableApiData]);
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } =
     useTable({ columns, data: tableData });
 
@@ -170,14 +246,9 @@ export default function VerifyBatchForAttendace() {
             <div className="w-full mt-10 flex justify-end">
               {/* submit button */}
               <button
+                accessKey="S"
                 className="btn btn-accent w-max-xs"
-                onClick={() => {
-                  setNotification({
-                    message: "Attendance Verified Successfully",
-                    type: "success",
-                    id: new Date(),
-                  });
-                }}
+                onClick={handleSubmit}
               >
                 Save
               </button>

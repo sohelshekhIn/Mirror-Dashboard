@@ -55,16 +55,30 @@ export default function VerifyAttendance() {
       },
     },
     {
+      Header: "Status",
+      accessor: "attributes.reasonDataStatus",
+      Cell: ({ value }) => {
+        if (value == "verified") {
+          return <div className="badge badge-success p-3">Verified</div>;
+        } else if (value == "pending") {
+          return <div className="badge badge-warning p-3">Pending</div>;
+        } else {
+          return <div className="badge badge-error p-3">Not Verified</div>;
+        }
+      },
+    },
+    {
       Header: "Action",
       id: "actionBtn",
-      accessor: "attributes.AttendanceId",
+      accessor: "id",
       width: 100,
       Cell: ({ value }) => {
+        console.log(value);
         return (
           <Link
             href={"/faculty/attendance/verify-batch-attendance?id=" + value}
           >
-            <a className="btn btn-accent my-5`">Verify</a>
+            <a className="btn btn-modal">Verify</a>
           </Link>
         );
       },
@@ -90,7 +104,7 @@ export default function VerifyAttendance() {
     axios
       .get(
         process.env.NEXT_PUBLIC_STRAPI_API +
-          `/attendances?filters[AttendanceId][$contains]=${today}&filters[data][$notNull]=true&filters[reasonData][$null]=true`,
+          `/attendances?filters[AttendanceId][$contains]=${today}&filters[data][$notNull]=true`,
         {
           headers: {
             Authorization: `Bearer ${data.user.accessToken}`,
@@ -121,7 +135,7 @@ export default function VerifyAttendance() {
           </div>
           <div className="py-5 px-2 lg:py-8 lg:px-5 mt-10 rounded-xl shadow-lg bg-white">
             <div className="overflow-x-auto">
-              <table {...getTableProps()} className="w-full">
+              <table {...getTableProps()} className="table w-full">
                 <thead>
                   {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>

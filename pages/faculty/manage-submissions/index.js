@@ -121,7 +121,7 @@ export default function ManageSubmissions() {
       accessor: "id",
       Cell: ({ value }) => {
         return (
-          <Link href={`/faculty/manage-submissions/edit-details/${value}`}>
+          <Link href={`/faculty/manage-submissions/edit-details?id=${value}`}>
             <a className="btn modal-button">Edit</a>
           </Link>
         );
