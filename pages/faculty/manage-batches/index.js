@@ -582,7 +582,9 @@ export default function ViewBatches() {
                       tabIndex="-1"
                       onClick={() => {
                         if (
-                          window.confirm("Are you sure you want to delete?")
+                          window.confirm(
+                            "Are you sure you want to delete the batch? \nDeleting the batch will also delete all the students in the batch."
+                          )
                         ) {
                           handleDelete();
                         }

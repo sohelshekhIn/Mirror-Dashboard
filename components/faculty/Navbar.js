@@ -98,8 +98,8 @@ export default function FacultyNavbar({ children, session }) {
 
   return (
     <div className="flex flex-col ">
-      <div className="navbar bg-white z-50 pt-5 shadow-md fixed top-0 duration-500">
-        <div className="navbar-start">
+      <div className="navbar bg-white lg:justify-between z-50 pt-5 shadow-md fixed top-0 duration-500">
+        <div className="navbar-start lg:hidden">
           <div className="dropdown">
             <label
               tabIndex="1"
