@@ -430,14 +430,8 @@ export default function ViewStudent() {
               </div>
             </div>
           </div>
-          {/* <div className="flex flex-col">{tableView}</div> */}
           <div className="flex flex-col">
             {apiResponse ? (
-              // <StudentTableView
-              //   requestData={formData}
-              //   studentsData={apiResponse}
-              //   session={data}
-              // />
               <ViewStudentTable
                 metaInfo={formData}
                 studentsData={apiResponse}
