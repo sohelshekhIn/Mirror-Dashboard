@@ -1,9 +1,16 @@
 import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { DashboardContent } from "../../../components/faculty/Navbar";
 import Loading from "../../../components/utilities/Loading";
+import {
+  useTable,
+  useSortBy,
+  useGlobalFilter,
+  usePagination,
+} from "react-table";
 import NotificationAlert from "../../../components/utilities/NotificationAlert";
+import { dropDown } from "../../../public/images";
 
 export default function ViewBatches() {
   const { status, data } = useSession({
@@ -30,10 +37,107 @@ export default function ViewBatches() {
   const [validationError, setValidationError] = useState(null);
   const [tableBatchData, setTableBatchData] = useState();
   const [modalComp, setModalComp] = useState([]);
+  const [apiData, setApiData] = useState([]);
   const [modalFormData, setModalFormData] = useState({
     batchName: "",
     subjects: [],
   });
+
+  useEffect(() => {
+    console.log(modalFormData);
+  });
+
+  const tableColumns = [
+    {
+      Header: "Sr.",
+      id: "id",
+      Cell: ({ row }) => row.index + 1,
+    },
+    {
+      Header: "Class",
+      id: "class",
+      accessor: "attributes.batch",
+      Cell: ({ value }) => {
+        let batch = value.split("_")[0];
+        if (parseInt(batch).toString().length == 1) {
+          batch = batch.slice(0, 1) + " " + batch.slice(1);
+        } else {
+          batch = batch.slice(0, 2) + " " + batch.slice(2);
+        }
+        return batch.split(" ")[0];
+      },
+    },
+    {
+      Header: "Batch",
+      accessor: "attributes.batch",
+      Cell: ({ value }) => {
+        let batch = value.split("_")[0];
+        if (parseInt(batch).toString().length == 1) {
+          batch = batch.slice(0, 1) + " " + batch.slice(1);
+        } else {
+          batch = batch.slice(0, 2) + " " + batch.slice(2);
+        }
+        return batch.split(" ")[2];
+      },
+    },
+    {
+      Header: "Subjects",
+      id: "subjects",
+      accessor: "attributes.subjects",
+      Cell: ({ value }) => {
+        return value.join(", ");
+      },
+    },
+    {
+      Header: "Action",
+      id: "actionBtn",
+      accessor: "id",
+      Cell: ({ value }) => {
+        return (
+          <label
+            onClick={() => {
+              loadModalData(value);
+            }}
+            className="btn btn-modal"
+            htmlFor="edit-batch-modal"
+          >
+            Edit
+          </label>
+        );
+      },
+    },
+  ];
+
+  const columns = useMemo(() => tableColumns, []);
+  const tableData = useMemo(() => apiData, [apiData]);
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    page,
+    state,
+    previousPage,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    setGlobalFilter,
+    setPageSize,
+    nextPage,
+  } = useTable(
+    {
+      columns,
+      data: tableData,
+      initialState: {
+        pageSize: 20,
+      },
+    },
+    useGlobalFilter,
+    useSortBy,
+    usePagination
+  );
+
+  const { globalFilter, pageIndex, pageSize } = state;
 
   useEffect(() => {
     setValidationError(null);
@@ -49,58 +153,8 @@ export default function ViewBatches() {
           }
         )
         .then((res) => {
-          let tempBatch = {};
-          for (let key in res.data.data) {
-            if (
-              data.user.facultyData["allowedBatches"].includes(
-                res.data.data[key].attributes.batch
-              ) ||
-              data.user.facultyData["allowedBatches"] === "*"
-            ) {
-              tempBatch[res.data.data[key].id] = {
-                batch: res.data.data[key].attributes.batch,
-                subjects: res.data.data[key].attributes.subjects,
-              };
-            }
-          }
-          // tempBatch structure:
-          // {
-          //   id: {
-          //        batch: "12 NCERT"
-          //        subjects: ["Chemistry", "Physics", "Maths", "Biology"],
-          // }
-          // }
-          let tempTableData = [];
-          let count = 1;
-          for (let key in tempBatch) {
-            tempTableData.push(
-              <tr>
-                <td className="batchTableTh">{count}</td>
-                <td className="batchTableTh">
-                  {tempBatch[key].batch.split(" ")[0]}
-                </td>
-                <td className="batchTableTh">
-                  {tempBatch[key].batch.split(" ")[1]}
-                </td>
-                <td className="batchTableTh">
-                  {tempBatch[key].subjects.join(", ")}
-                </td>
-
-                <td className="batchTableTh">
-                  <button
-                    onClick={() => {
-                      loadModalData(key);
-                    }}
-                    className="btn btn-modal"
-                  >
-                    <label htmlFor="edit-batch-modal">Edit</label>
-                  </button>
-                </td>
-              </tr>
-            );
-            count++;
-          }
-          setTableBatchData(tempTableData);
+          setApiData(res.data.data);
+          console.log(res.data.data);
         })
         .catch((err) => {
           setNotification({
@@ -371,6 +425,7 @@ export default function ViewBatches() {
                   </label>
                   <input
                     type="text"
+                    accessKey="Q"
                     value={modalFormData.batchName}
                     onChange={handleChange}
                     name="batchName"
@@ -382,14 +437,6 @@ export default function ViewBatches() {
                   <label className="label">
                     <span className="label-text">Select Subjects</span>
                   </label>
-                  {/* <input
-                    type="text"
-                    value={modalFormData.subjects.join(", ")}
-                    onChange={handleChange}
-                    name="subjects"
-                    placeholder="Subjects"
-                    className="input input-bordered w-full max-w-md"
-                  /> */}
                   <div className="flex flex-row mt-5">
                     {/* 10 checkbox for 10 subjects */}
                     <div className="flex flex-col space-y-5 w-1/2 px-10">
@@ -441,6 +488,7 @@ export default function ViewBatches() {
                             onChange={handleChange}
                             name="subjects"
                             className="checkbox"
+                            value="Biology"
                           />
                         </label>
                       </div>
@@ -571,30 +619,130 @@ export default function ViewBatches() {
         </div>
         <div className="flex justify-end">
           {/* add batch button */}
-          <button
+          <label
             onClick={() => {
               loadModalData("add");
             }}
             type="button"
             className="btn btn-accent"
+            htmlFor="edit-batch-modal"
+            accessKey="A"
           >
-            <label htmlFor="edit-batch-modal">Add Batch</label>
-          </button>
+            Add Batch
+          </label>
         </div>
         <div className="flex flex-col px-4 py-10 mt-10 bg-white rounded-xl shadow-xl">
+          <div className="flex flex-row justify-end w-100 my-10">
+            <div className="sm:w-full md:w-7/12 lg:w-4/12 px-3">
+              <input
+                placeholder="Search..."
+                className="input w-full max-w-lg"
+                type="text"
+                accessKey="W"
+                value={globalFilter || ""}
+                onChange={(e) => setGlobalFilter(e.target.value)}
+              />
+            </div>
+          </div>
           <div className="flex flex-col overflow-x-auto">
-            <table className="table w-full">
+            <table {...getTableProps} className="table w-full">
               <thead>
-                <tr>
-                  <th className="batchTableTh">Sr.</th>
-                  <th className="batchTableTh">Class</th>
-                  <th className="batchTableTh">Batch</th>
-                  <th className="batchTableTh">Subjects</th>
-                  <th className="batchTableTh"></th>
-                </tr>
+                {headerGroups.map((headerGroup) => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column) => (
+                      <td
+                        {...column.getHeaderProps(
+                          column.getSortByToggleProps()
+                        )}
+                        className="studentTableTh"
+                      >
+                        <span className="flex">
+                          {column.render("Header")}
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <img
+                                src={dropDown.src}
+                                className="ml-2 w-4 m-0"
+                                alt="Sort in Descending Order"
+                              />
+                            ) : (
+                              <img
+                                src={dropDown.src}
+                                className="transform ml-2 rotate-180 w-4 m-0"
+                                alt="Sort in Ascending Order"
+                              />
+                            )
+                          ) : (
+                            ""
+                          )}
+                        </span>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
               </thead>
-              <tbody>{tableBatchData}</tbody>
+              <tbody {...getTableBodyProps()}>
+                {page.map((row) => {
+                  prepareRow(row);
+                  return (
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map((cell) => {
+                        return (
+                          <td
+                            {...cell.getCellProps()}
+                            className="studentTableTh"
+                          >
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+              </tbody>
             </table>
+          </div>
+          <div className="flex mt-10 mb-5 justify-between">
+            {/* dropdown to select number of entries per page */}
+            <div className="flex flex-row">
+              <div className="flex items-center w-full space-x-3">
+                <select
+                  className="input w-sm max-w-sm"
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                  }}
+                >
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+                <p>Entries per page</p>
+              </div>
+            </div>
+            <div className="flex space-x-5 justify-between items-center">
+              <button
+                className="btn btn-sm btn-ghost bg-transparent"
+                onClick={() => previousPage()}
+                disabled={!canPreviousPage}
+              >
+                <img src={dropDown.src} className="transform rotate-90 w-6" />
+              </button>
+              <span>
+                <strong>
+                  {pageIndex + 1}/{pageOptions.length}
+                </strong>
+              </span>
+              <button
+                className="btn btn-sm btn-ghost bg-transparent"
+                onClick={() => nextPage()}
+                disabled={!canNextPage}
+              >
+                <img src={dropDown.src} className="transform -rotate-90 w-6" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

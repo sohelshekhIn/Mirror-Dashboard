@@ -15,6 +15,13 @@ export default function ViewStudentTable({ metaInfo, studentsData }) {
   // table columns
   const tableColumns = [
     {
+      Header: "Sr.",
+      id: "id",
+      Cell: ({ row }) => {
+        return row.index + 1;
+      },
+    },
+    {
       Header: "User Id",
       accessor: "UserID",
     },

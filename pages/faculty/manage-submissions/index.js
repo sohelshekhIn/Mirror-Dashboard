@@ -13,7 +13,6 @@ import { DashboardContent } from "../../../components/faculty/Navbar";
 import Loading from "../../../components/utilities/Loading";
 import NotificationAlert from "../../../components/utilities/NotificationAlert";
 import { search, dropDown } from "../../../public/images";
-
 import PageNotFound from "../../404";
 
 export default function ManageSubmissions() {
@@ -39,7 +38,6 @@ export default function ManageSubmissions() {
     message: null,
   });
   const [submissions, setSubmissions] = useState([]);
-  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     let submissionAllowId = data.user.id;
@@ -174,12 +172,14 @@ export default function ManageSubmissions() {
     canPreviousPage,
     pageOptions,
     setGlobalFilter,
+    setPageSize,
+    nextPage,
   } = useTable(
     {
       columns,
       data: tableData,
       initialState: {
-        pageSize: pageSize,
+        pageSize: 10,
         hiddenColumns: columnsToHide,
       },
     },
@@ -188,7 +188,7 @@ export default function ManageSubmissions() {
     usePagination
   );
 
-  const { globalFilter, pageIndex } = state;
+  const { globalFilter, pageIndex, pageSize } = state;
 
   return (
     <DashboardContent>

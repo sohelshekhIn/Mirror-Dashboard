@@ -8,7 +8,7 @@ export default function TableDemo() {
         <span className="underline w-24 my-4"></span>
       </div>
 
-      <div className="flex flex-row flex-wrap px-10 lg:p-0 justify-center lg:justify-start space-y-5 space-x-2 lg:space-y-0 lg:space-x-5 w-full mt-10">
+      <div className="flex flex-row flex-wrap px-10 lg:p-0 justify-center lg:justify-start space-y-5 space-x-2 lg:space-y-5 2xl:space-y-0 lg:space-x-5 w-full mt-10">
         <div className="bg-white rounded-xl shadow-lg p-8 space-y-5 w-full lg:w-auto">
           <code className=" bg-gray-400 text-white font-bold p-4 rounded-lg shadow-xl">
             Alt + Q
@@ -26,6 +26,12 @@ export default function TableDemo() {
             Alt + W
           </code>
           <p>To search in a table</p>
+        </div>
+        <div className="bg-white rounded-xl shadow-lg p-8 space-y-5 w-full lg:w-auto">
+          <code className=" bg-gray-400 text-white font-bold p-4 rounded-lg shadow-xl">
+            Alt + A
+          </code>
+          <p>To add new entry (where possible)</p>
         </div>
       </div>
     </DashboardContent>

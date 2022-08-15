@@ -233,7 +233,7 @@ export default function FacultyNavbar({ children, session }) {
 
 export function DashboardContent({ children }) {
   return (
-    <div className="m-5 my-32 md:m-16 md:my-32 lg:m-24 lg:my-40 h-100">
+    <div className="m-5 my-32 md:m-16 md:my-32 lg:m-24 lg:ml-44 lg:my-40 h-100">
       {children}
     </div>
   );
