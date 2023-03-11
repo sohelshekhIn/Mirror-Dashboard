@@ -166,7 +166,7 @@ export default function FacultyNavbar({ children, session }) {
         <input type="checkbox" id="menu-open" className="hidden" />
         <aside
           id="sidebar"
-          className="fixed bg-white h-full md:h-screen z-40 text-secondary shadow-md md:w-64 w-3/4 space-y-6 pt-6 px-0 top-0 left-0 transform md:relative md:translate-x-0 transition duration-200 ease-in-out md:flex md:flex-col"
+          className="fixed bg-white h-full md:h-screen z-40 text-neutral shadow-md md:w-64 w-3/4 space-y-6 pt-6 px-0 top-0 left-0 transform md:relative md:translate-x-0 transition duration-200 ease-in-out md:flex md:flex-col"
         >
           <ul
             tabIndex="0"
@@ -175,7 +175,7 @@ export default function FacultyNavbar({ children, session }) {
           >
             <li className="navli duration-200">
               <Link href="/">
-                <a className="text-secondary font-medium">Dashboard</a>
+                <a className="text-neutral font-medium">Dashboard</a>
               </Link>
             </li>
             {/* loop throgh moduleLinks */}
@@ -189,7 +189,7 @@ export default function FacultyNavbar({ children, session }) {
                 return (
                   <li className="navli duration-200" key={key}>
                     <Link href={moduleLinks[key].moduleLink}>
-                      <a className="text-secondary font-medium">
+                      <a className="text-neutral font-medium">
                         {moduleLinks[key].moduleName}
                       </a>
                     </Link>
@@ -200,17 +200,17 @@ export default function FacultyNavbar({ children, session }) {
 
             {/* <li className="navli duration-200">
               <Link href="/faculty/attendance">
-                <a className="text-secondary">Take Attendance</a>
+                <a className="text-neutral">Take Attendance</a>
               </Link>
             </li>
             <li className="navli duration-200">
               <Link href="/faculty/register-student">
-                <a className="text-secondary">Register Student</a>
+                <a className="text-neutral">Register Student</a>
               </Link>
             </li>
             <li className="navli duration-200">
               <Link href="/faculty/view-student">
-                <a className="text-secondary">View Student</a>
+                <a className="text-neutral">View Student</a>
               </Link>
             </li> */}
           </ul>
@@ -224,7 +224,7 @@ export default function FacultyNavbar({ children, session }) {
           id="content"
           className="w-screen h-screen flex-1 overflow-y-scroll"
         >
-          <div className="max-w-7xl h-100 mt-24 mb-24">{children} </div>
+          <div className="max-w-8xl h-100 mt-24 mb-24">{children} </div>
         </main>
       </div>
     </div>
@@ -233,7 +233,7 @@ export default function FacultyNavbar({ children, session }) {
 
 export function DashboardContent({ children }) {
   return (
-    <div className="m-5 my-32 md:m-16 md:my-32 lg:m-24 lg:ml-44 lg:my-40 h-100">
+    <div className="m-5 my-32 md:m-16 md:my-32 lg:m-16 lg:ml-16 lg:my-40 h-100">
       {children}
     </div>
   );

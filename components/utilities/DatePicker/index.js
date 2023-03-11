@@ -384,7 +384,7 @@ export default function DatePicker({
           className={"datepicker-nav-span" + prevBtnStatus}
         >
           <svg
-            className={"mx-auto fill-secondary rotate-180 " + prevBtnStatus}
+            className={"mx-auto fill-neutral rotate-180 " + prevBtnStatus}
             version="1.0"
             xmlns="http://www.w3.org/2000/svg"
             width="12.000000pt"
@@ -413,7 +413,7 @@ export default function DatePicker({
           className={"datepicker-nav-span " + nextBtnStatus}
         >
           <svg
-            className={"mx-auto fill-secondary " + nextBtnStatus}
+            className={"mx-auto fill-neutral " + nextBtnStatus}
             version="1.0"
             xmlns="http://www.w3.org/2000/svg"
             width="12.000000pt"

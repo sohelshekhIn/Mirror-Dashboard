@@ -187,7 +187,7 @@ Refer components > Faculty > Navbar.js > moduleLinks{...}
           {data.user.facultyData["facultyRoles"].includes(18) ? (
             <div className="flex justify-end">
               <Link href="/faculty/manage-tests/new-test">
-                <a accessKey="A" className="btn btn-accent">
+                <a accessKey="A" className="btn btn-secondary">
                   Add new Test
                 </a>
               </Link>
@@ -329,7 +329,7 @@ const EmptyMessage = () => {
       <span className="w-7/12">
         <Image src={search} />
       </span>
-      <span className="text-secondary text-2xl font-bold text-center">
+      <span className="text-neutral text-2xl font-bold text-center">
         Add test to view <br />
       </span>
     </div>

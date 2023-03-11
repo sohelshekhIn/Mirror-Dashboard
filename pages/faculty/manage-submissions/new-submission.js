@@ -282,7 +282,16 @@ export default function AddNewTest() {
                     )}
                     {/* Key is the Batch Name i.e. 12 NCERT */}
                     {Object.keys(batch).map((key) => {
-                      if (batch[key].batch.includes(formData.class)) {
+                      let tempBatch = batch[key].batch.split("_")[0];
+                      if (parseInt(tempBatch).toString().length == 1) {
+                        tempBatch =
+                          tempBatch.slice(0, 1) + " " + tempBatch.slice(1);
+                      } else {
+                        tempBatch =
+                          tempBatch.slice(0, 2) + " " + tempBatch.slice(2);
+                      }
+                      tempBatch.split(" ")[0];
+                      if (tempBatch.split(" ")[0] === formData.class) {
                         batches.push(key);
                         return (
                           <option
@@ -345,7 +354,11 @@ export default function AddNewTest() {
                 </select>
               </div>
               <div className="flex flex-col w-fit">
-                <button accessKey="S" type="submit" className="btn btn-accent">
+                <button
+                  accessKey="S"
+                  type="submit"
+                  className="btn btn-secondary"
+                >
                   Submit
                 </button>
               </div>

@@ -342,7 +342,7 @@ export default function Calendar({ className, apiResponse, minYear, maxYear }) {
           className={"calendar-nav-span" + prevBtnStatus}
         >
           <svg
-            className={"mx-auto fill-secondary rotate-180 " + prevBtnStatus}
+            className={"mx-auto fill-neutral rotate-180 " + prevBtnStatus}
             version="1.0"
             xmlns="http://www.w3.org/2000/svg"
             width="12.000000pt"
@@ -385,7 +385,7 @@ export default function Calendar({ className, apiResponse, minYear, maxYear }) {
           className={"calendar-nav-span " + nextBtnStatus}
         >
           <svg
-            className={"mx-auto fill-secondary " + nextBtnStatus}
+            className={"mx-auto fill-neutral " + nextBtnStatus}
             version="1.0"
             xmlns="http://www.w3.org/2000/svg"
             width="12.000000pt"
@@ -425,7 +425,7 @@ export default function Calendar({ className, apiResponse, minYear, maxYear }) {
         <div className="xs:w-full xs:mx-auto xs:mt-5 lg:mt-0">
           <div className="flex lg:w-full mx-5 xs:justify-center justify-start">
             <Link href="/student/attendance">
-              <a className="btn btn-accent">See More</a>
+              <a className="btn btn-secondary">See More</a>
             </Link>
           </div>
         </div>

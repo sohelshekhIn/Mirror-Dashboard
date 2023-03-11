@@ -319,7 +319,16 @@ export default function ViewStudent() {
                         )}
                         {/* Key is the Batch Name i.e. 12 NCERT */}
                         {Object.keys(batch).map((key) => {
-                          if (batch[key].batch.includes(formData.class)) {
+                          let tempBatch = batch[key].batch.split("_")[0];
+                          if (parseInt(tempBatch).toString().length == 1) {
+                            tempBatch =
+                              tempBatch.slice(0, 1) + " " + tempBatch.slice(1);
+                          } else {
+                            tempBatch =
+                              tempBatch.slice(0, 2) + " " + tempBatch.slice(2);
+                          }
+                          tempBatch.split(" ")[0];
+                          if (tempBatch.split(" ")[0] === formData.class) {
                             batches.push(key);
                             return (
                               <option
@@ -421,7 +430,7 @@ export default function ViewStudent() {
                     <button
                       accessKey="S"
                       type="submit"
-                      className="btn btn-accent"
+                      className="btn btn-secondary"
                     >
                       Submit
                     </button>
@@ -469,14 +478,14 @@ const EmptyMessageSection = ({ dropDown, tableOpen, setDropDownStatus }) => {
     <>
       {compToShow ? (
         <div className="my-10 mx-auto space-y-5 flex flex-col items-center">
-          <h1 className="text-secondary text-3xl font-bold">
+          <h1 className="text-neutral text-3xl font-bold">
             It seems you accidently closed select section!
           </h1>
           <button
             onClick={() => {
               setDropDownStatus(true);
             }}
-            className="btn btn-accent"
+            className="btn btn-secondary"
           >
             Open Select Section
           </button>

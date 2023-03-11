@@ -35,11 +35,12 @@ export default function ViewBatches() {
     message: null,
   });
   const [validationError, setValidationError] = useState(null);
-  const [tableBatchData, setTableBatchData] = useState();
   const [modalComp, setModalComp] = useState([]);
   const [apiData, setApiData] = useState([]);
   const [modalFormData, setModalFormData] = useState({
     batchName: "",
+    batchTimingFrom: "",
+    batchTimingTo: "",
     subjects: [],
   });
 
@@ -78,6 +79,28 @@ export default function ViewBatches() {
           batch = batch.slice(0, 2) + " " + batch.slice(2);
         }
         return batch.split(" ")[2];
+      },
+    },
+    {
+      Header: "Timing",
+      accessor: "attributes.timings",
+      Cell: ({ value }) => {
+        // Check if value is not null
+        if (value) {
+          let from = value[0].split(":");
+          let to = value[1].split(":");
+          if (from[0] > 12) {
+            from[0] = from[0] - 12;
+            from = from.join(":");
+          }
+          if (to[0] > 12) {
+            to[0] = to[0] - 12;
+            to = to.join(":");
+          }
+          return from + " - " + to;
+        } else {
+          return "Not Set";
+        }
       },
     },
     {
@@ -145,7 +168,7 @@ export default function ViewBatches() {
       axios
         .get(
           process.env.NEXT_PUBLIC_STRAPI_API +
-            "/batches?fields[0]=batch&fields[1]=subjects",
+            "/batches?fields[0]=batch&fields[1]=subjects&fields[2]=timings",
           {
             headers: {
               Authorization: `Bearer ${data.user.accessToken}`,
@@ -207,6 +230,10 @@ export default function ViewBatches() {
             data: {
               batch: modalFormData.batchName,
               subjects: modalFormData.subjects,
+              timings: [
+                modalFormData.batchTimingFrom,
+                modalFormData.batchTimingTo,
+              ],
             },
           },
           {
@@ -240,6 +267,10 @@ export default function ViewBatches() {
             data: {
               batch: modalFormData.batchName,
               subjects: modalFormData.subjects,
+              timings: [
+                modalFormData.batchTimingFrom,
+                modalFormData.batchTimingTo,
+              ],
             },
           },
           {
@@ -322,6 +353,7 @@ export default function ViewBatches() {
     document.getElementById("chemistry").checked = false;
     document.getElementById("biology").checked = false;
     document.getElementById("english").checked = false;
+    document.getElementById("evs").checked = false;
     document.getElementById("ss").checked = false;
     document.getElementById("science").checked = false;
     document.getElementById("subject2").checked = false;
@@ -347,12 +379,21 @@ export default function ViewBatches() {
           },
         })
         .then((res) => {
+          let tempBatchTimingFrom = "";
+          let tempBatchTimingTo = "";
+          if (res.data.data.attributes.timings != null) {
+            tempBatchTimingFrom = res.data.data.attributes.timings[0];
+            tempBatchTimingTo = res.data.data.attributes.timings[1];
+          }
           setModalFormData({
             id: res.data.data.id,
             class: res.data.data.attributes.batch,
             batchName: res.data.data.attributes.batch,
             subjects: res.data.data.attributes.subjects,
+            batchTimingFrom: tempBatchTimingFrom,
+            batchTimingTo: tempBatchTimingTo,
           });
+
           renderModal();
         })
         .catch((err) => {
@@ -407,7 +448,7 @@ export default function ViewBatches() {
           </label>
           <div className="flex flex-col mt-5">
             <form>
-              <h1 className="text-secondary text-2xl font-bold">
+              <h1 className="text-neutral text-2xl font-bold">
                 {modalFormData.id === "add"
                   ? "Add Batch"
                   : `Edit Batch (${modalFormData.class})`}
@@ -421,7 +462,7 @@ export default function ViewBatches() {
               <div className="flex flex-col space-y-5 mt-5">
                 <div className="form-control w-full">
                   <label className="label">
-                    <span className="label-text">Enter Batch Name</span>
+                    <span className="label-text">Enter batch name</span>
                   </label>
                   <input
                     type="text"
@@ -432,6 +473,37 @@ export default function ViewBatches() {
                     placeholder="Batch Name"
                     className="input input-bordered w-full max-w-md"
                   />
+                </div>
+                <div>
+                  <span className="label-text">Enter batch timing</span>
+                  <div className="flex m-0 space-x-2">
+                    <div className="form-control w-full">
+                      <label className="label">
+                        <span className="label-text">From</span>
+                      </label>
+                      <input
+                        type="time"
+                        value={modalFormData.batchTimingFrom}
+                        onChange={handleChange}
+                        name="batchTimingFrom"
+                        placeholder="From"
+                        className="input input-bordered w-full max-w-md"
+                      />
+                    </div>
+                    <div className="form-control w-full">
+                      <label className="label">
+                        <span className="label-text">To</span>
+                      </label>
+                      <input
+                        type="time"
+                        value={modalFormData.batchTimingTo}
+                        onChange={handleChange}
+                        name="batchTimingTo"
+                        placeholder="To"
+                        className="input input-bordered w-full max-w-md"
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div className="form-control w-full">
                   <label className="label">
@@ -600,7 +672,7 @@ export default function ViewBatches() {
                     onClick={handleSubmit}
                     type="submit"
                     accessKey="S"
-                    className="btn btn-accent"
+                    className="btn btn-secondary"
                   >
                     Save Batch
                   </button>
@@ -626,7 +698,7 @@ export default function ViewBatches() {
               loadModalData("add");
             }}
             type="button"
-            className="btn btn-accent"
+            className="btn btn-secondary"
             htmlFor="edit-batch-modal"
             accessKey="A"
           >

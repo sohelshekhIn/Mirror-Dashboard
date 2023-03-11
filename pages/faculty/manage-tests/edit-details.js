@@ -62,7 +62,7 @@ export default function EditTest() {
   return (
     <DashboardContent>
       <span
-        className="py-5 text-secondary cursor-pointer my-5"
+        className="py-5 text-neutral cursor-pointer my-5"
         onClick={router.back}
       >
         Go Back

@@ -40,7 +40,7 @@ export default function TestResults() {
   }, []);
   return (
     <div className="flex flex-col mx-auto w-96 lg:w-6/12 lg:mx-0">
-      <h1 className="sm:m-5  xs:mt-10 p-5 mb-0 pb-0 font-semibold text-secondary text-2xl">
+      <h1 className="sm:m-5  xs:mt-10 p-5 mb-0 pb-0 font-semibold text-neutral text-2xl">
         Test Results
       </h1>
       <div className="bg-white rounded-lg p-5 mt-5 sm:m-5 w-full shadow-xl">
@@ -53,7 +53,7 @@ export default function TestResults() {
         {resultComps}
         <div className="w-full mt-8 flex justify-center">
           <Link href="/student/homework">
-            <a className="btn btn-accent">See more</a>
+            <a className="btn btn-secondary">See more</a>
           </Link>
         </div>
       </div>

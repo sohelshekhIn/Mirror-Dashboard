@@ -115,13 +115,16 @@ export default function VerifyBatchForAttendace() {
       )
       .then((res) => {
         setNotification({
-          message: "Attendance verified successfully",
-          type: "success",
+          message:
+            reasonStatus == "verified"
+              ? "Attendance verified successfully"
+              : "Saved, SMS pending. Complete all verification to send SMS",
+          type: reasonStatus == "verified" ? "success" : "warning",
           id: new Date(),
         });
         setTimeout(() => {
           router.back();
-        }, 2000);
+        }, 3000);
       })
       .catch((err) => {
         console.log(err);
@@ -246,7 +249,7 @@ export default function VerifyBatchForAttendace() {
               {/* submit button */}
               <button
                 accessKey="S"
-                className="btn btn-accent w-max-xs"
+                className="btn btn-secondary w-max-xs"
                 onClick={handleSubmit}
               >
                 Save

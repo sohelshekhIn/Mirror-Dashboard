@@ -34,9 +34,9 @@ table.datepicker-month tbody tr > * {
 
 table.datepicker-day tbody tr > *,
 table.datepicker-month tbody tr > * {
-  @apply text-secondary cursor-pointer relative text-sm;
+  @apply text-neutral cursor-pointer relative text-sm;
   @apply hover:text-gray-400 after:hover:backdrop-brightness-95;
-  @apply after:p-0 after:absolute after:w-10 after:h-10 after:border-2 after:border-transparent after:top-[50%] after:left-[50%] after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:text-accent;
+  @apply after:p-0 after:absolute after:w-10 after:h-10 after:border-2 after:border-transparent after:top-[50%] after:left-[50%] after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:text-secondary;
 }
 
 table.datepicker-day tbody tr > * > span,

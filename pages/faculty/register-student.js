@@ -724,7 +724,7 @@ export default function RegisterStudent() {
                   <button
                     accessKey="S"
                     type="submit"
-                    className="btn btn-accent"
+                    className="btn btn-secondary"
                   >
                     {/* based on submitting  */}
                     {formik.isSubmitting ? "Please wait..." : "Submit"}

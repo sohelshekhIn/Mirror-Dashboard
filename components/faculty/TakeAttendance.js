@@ -239,7 +239,7 @@ const AttendanceTable = ({ apiData, batch, sessionData, setNotification }) => {
           </button>
           <button
             onClick={handleAttendanceSubmission}
-            className="btn btn-accent"
+            className="btn btn-secondary"
           >
             Submit
           </button>

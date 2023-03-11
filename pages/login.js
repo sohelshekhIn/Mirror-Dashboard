@@ -16,6 +16,10 @@ export default function Login({ csrfToken }) {
 
   useState(() => {
     if (typeof window === "undefined") return null;
+    // if crsf token is null then throw No Internet Error
+    if (csrfToken === null) {
+      setLoginError("Internal Server Error (token not found)");
+    }
   });
 
   // How to check if user is logged in?
@@ -61,7 +65,7 @@ export default function Login({ csrfToken }) {
         <div className="bg-base-100 shadow-2xl p-10 xs:w-11/12 sm:w-8/12 md:w-5/12 lg:w-4/12 2xl:w-3/12 mx-auto">
           <div className="flex flex-col py-5">
             <h1 className="text-primary text-3xl font-bold uppercase">Login</h1>
-            <span className="bg-accent h-1 w-5/12"></span>
+            <span className="bg-secondary h-1 w-5/12"></span>
           </div>
           <Formik
             initialValues={{
@@ -77,6 +81,12 @@ export default function Login({ csrfToken }) {
                 .min(3, "Password must be at least 3 characters"),
             })}
             onSubmit={async (values, { setSubmitting }) => {
+              if (csrfToken === null) {
+                setLoginError(
+                  "Internal Server Error, Please try again later [token not found]"
+                );
+                return;
+              }
               setLoginError(null);
               const res = await signIn("credentials", {
                 redirect: false,
@@ -167,8 +177,8 @@ export default function Login({ csrfToken }) {
                   accessKey="S"
                   type="submit"
                   className={
-                    "btn btn-accent my-4 mt-8 " +
-                    (validationError !== null
+                    "btn btn-secondary my-4 mt-8 " +
+                    (validationError !== null || csrfToken === null
                       ? "opacity-50 disabled cursor-not-allowed"
                       : "")
                   }
@@ -188,7 +198,7 @@ export default function Login({ csrfToken }) {
 export async function getServerSideProps(context) {
   return {
     props: {
-      csrfToken: await getCsrfToken(context),
+      csrfToken: (await getCsrfToken(context)) || null,
     },
   };
 }

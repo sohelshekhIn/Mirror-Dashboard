@@ -28,9 +28,12 @@ module.exports = {
       {
         mytheme: {
           primary: "#17429F",
-          secondary: "#1d1d29",
-          accent: "#FF9D00",
-          neutral: "#191D24",
+          neutral: "#1d1d29",
+          secondary: "#FF9D00",
+          accent: "#E5E7EB",
+          // sedcondary: "#1d1d29",
+          // acccent: "#FF9D00",
+          // necutral: "#191D24",
           "base-100": "#fafbfa",
           info: "#00b1fd",
           success: "#24e170",

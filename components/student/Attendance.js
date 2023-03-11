@@ -62,7 +62,7 @@ export default function Attendance() {
   return (
     <div className="flex flex-col mx-auto lg:mx-0 xs:w-full sm:w-11/12 md:w-8/12 lg:w-7/12">
       <div className="transform">
-        <h1 className="m-5 p-5 mb-0 pb-0 font-semibold text-secondary text-2xl">
+        <h1 className="m-5 p-5 mb-0 pb-0 font-semibold text-neutral text-2xl">
           Attendance
         </h1>
         {loadCalendar}

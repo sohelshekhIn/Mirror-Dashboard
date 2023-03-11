@@ -401,7 +401,7 @@ export default function StudentMarksTableView({
               onChange={handleChange}
               value={formData.testTitle}
               placeholder="Test Title (60 characters max)"
-              className="bg-white outline-none h-10 md:h-16 break-words w-full max-w-xl text-secondary font-semibold text-2xl md:text-3xl"
+              className="bg-white outline-none h-10 md:h-16 break-words w-full max-w-xl text-neutral font-semibold text-2xl md:text-3xl"
               name="testTitle"
               maxLength="60"
             />
@@ -412,7 +412,7 @@ export default function StudentMarksTableView({
                 placeholder="Marks Out Of"
                 onChange={handleChange}
                 value={formData.marksOutOf}
-                className="bg-white focus:input input-bordered outline-none w-full max-w-xs text-secondary font-medium"
+                className="bg-white focus:input input-bordered outline-none w-full max-w-xs text-neutral font-medium"
                 name="marksOutOf"
                 maxLength="999"
               />
@@ -737,7 +737,7 @@ export default function StudentMarksTableView({
           ) : (
             ""
           )}
-          <button type="submit" className="btn btn-accent">
+          <button type="submit" className="btn btn-secondary">
             Submit
           </button>
         </div>

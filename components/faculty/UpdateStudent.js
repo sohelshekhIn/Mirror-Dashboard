@@ -772,7 +772,7 @@ export default function UpdateStudentForm({ studentData, setNotification }) {
               </div> */}
             </div>
             <div className="form-control mx-auto py-10 max-w-2xl md:max-w-md w-full">
-              <button accessKey="S" type="submit" className="btn btn-accent">
+              <button accessKey="S" type="submit" className="btn btn-secondary">
                 {/* based on submitting  */}
                 {formik.isSubmitting ? "Please wait..." : "Submit"}
               </button>

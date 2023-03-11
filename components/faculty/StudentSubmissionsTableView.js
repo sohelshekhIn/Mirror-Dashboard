@@ -358,7 +358,7 @@ export default function StudentSubmissionsTableView({
               onChange={handleChange}
               value={formData.submissionTitle}
               placeholder="Submission Title (60 characters max)"
-              className="bg-white outline-none h-10 md:h-16 break-words w-full max-w-xl text-secondary font-semibold text-2xl md:text-3xl"
+              className="bg-white outline-none h-10 md:h-16 break-words w-full max-w-xl text-neutral font-semibold text-2xl md:text-3xl"
               name="submissionTitle"
               maxLength="60"
             />
@@ -568,7 +568,7 @@ export default function StudentSubmissionsTableView({
           ) : (
             ""
           )}
-          <button type="submit" className="btn btn-accent">
+          <button type="submit" className="btn btn-secondary">
             Submit
           </button>
         </div>

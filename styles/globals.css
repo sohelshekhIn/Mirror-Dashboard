@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .underline {
-  @apply bg-accent h-1;
+  @apply bg-secondary h-1;
 }
 
 .heading1 {
@@ -39,11 +39,11 @@
 }
 
 .studentTableTh {
-  @apply bg-white font-medium text-secondary;
+  @apply bg-white font-medium text-neutral;
 }
 
 .batchTableTh {
-  @apply bg-white font-medium text-secondary;
+  @apply bg-white font-medium text-neutral;
 }
 
 /* Change scroll bar bg color using css */
@@ -56,7 +56,7 @@
 
 /* change scrollbar thumb color */
 ::-webkit-scrollbar-thumb {
-  @apply bg-accent rounded-xl;
+  @apply bg-secondary rounded-xl;
 }
 
 .seperatingDots {

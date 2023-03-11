@@ -66,13 +66,13 @@ export default function Homework() {
 
   return (
     <div className="flex flex-col xs:mt-5 sm:mt-0 mx-auto w-96 lg:mx-0 lg:w-5/12 lg:h-[50vh]">
-      <h1 className="sm:m-5 p-5 mb-0 pb-0 font-semibold text-secondary text-2xl">
+      <h1 className="sm:m-5 p-5 mb-0 pb-0 font-semibold text-neutral text-2xl">
         Homeworks
       </h1>
       {homeworkComps}
       <div className="w-full mt-8 flex justify-center">
         <Link href="/student/homework">
-          <a className="btn btn-accent">See more</a>
+          <a className="btn btn-secondary">See more</a>
         </Link>
       </div>
     </div>
