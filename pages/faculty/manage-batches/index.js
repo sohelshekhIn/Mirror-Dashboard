@@ -97,6 +97,11 @@ export default function ViewBatches() {
             to[0] = to[0] - 12;
             to = to.join(":");
           }
+          if (from[0] == 12) {
+            from[0] == 12;
+            from = from.join(":");
+          }
+
           return from + " - " + to;
         } else {
           return "Not Set";
@@ -286,6 +291,7 @@ export default function ViewBatches() {
             type: "success",
             id: new Date(),
           });
+          handleClose();
           setModalComp([]);
         })
         .catch((err) => {
@@ -347,17 +353,18 @@ export default function ViewBatches() {
   // 3. Edit option not working properly
 
   // when modal is closed set all subjects to false
-  const handleClose = () => {
-    document.getElementById("maths").checked = false;
-    document.getElementById("physics").checked = false;
-    document.getElementById("chemistry").checked = false;
-    document.getElementById("biology").checked = false;
-    document.getElementById("english").checked = false;
-    document.getElementById("evs").checked = false;
-    document.getElementById("ss").checked = false;
-    document.getElementById("science").checked = false;
-    document.getElementById("subject2").checked = false;
-    document.getElementById("subject3").checked = false;
+  const handleClose = (e) => {
+    if (e.target.checked === false) {
+      console.log("All checkboxes set to false");
+      // get all checkboxes with name subjects
+      let checkboxes = document.getElementsByName("subjects");
+      console.log(checkboxes);
+      // loop through all checkboxes and set them to false
+      for (let i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].checked = false;
+        console.log(checkboxes[i].checked);
+      }
+    }
   };
   // }
 
