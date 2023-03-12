@@ -33,6 +33,7 @@ export default function TakeAttendance() {
     batch: null,
     class: null,
   });
+  const [currentBatches, setCurrentBatches] = useState([]);
 
   const [attendanceView, setAttendanceView] = useState(<EmptyMessage />);
   const [notification, setNotification] = useState({
@@ -85,9 +86,6 @@ export default function TakeAttendance() {
         setBatch(tempBatch);
       })
       .catch((err) => {
-        // if (err.code && err.code === "ERR_BAD_REQUEST") {
-
-        // }
         setNotification({
           message: err.message,
           type: "error",
@@ -121,9 +119,7 @@ export default function TakeAttendance() {
         setAttendanceView(<EmptyMessage />);
         return;
       }
-      console.log(formData.batch, batch);
     } else {
-      console.log(batch);
       setFormData({ class: batch.split(" ")[0], batch });
     }
     // Get students of batch for attendance
@@ -169,7 +165,7 @@ export default function TakeAttendance() {
   };
 
   const checkForCurrentBatch = () => {
-    console.log(batchResponseData);
+    let tempCurrentBatches = [];
     // for every batch in batchResponseData get timings and check if current time is between start and end time
     for (let key in batchResponseData) {
       let batch = batchResponseData[key].attributes;
@@ -180,7 +176,6 @@ export default function TakeAttendance() {
       if (currentTimeMin.toString().length === 1) {
         currentTimeMin = currentTimeMin.toString().replace("0", "");
       }
-      console.log(batch.batch, timings, currentTimeHr, currentTimeMin);
       // check if current time is between start and end time
       if (timings != null && currentTimeHr >= timings[0].split(":")[0]) {
         if (
@@ -188,13 +183,25 @@ export default function TakeAttendance() {
             currentTimeMin < timings[1].split(":")[1]) ||
           currentTimeHr < timings[1].split(":")[0]
         ) {
-          console.log(batchResponseData[key].attributes.batch);
+          tempCurrentBatches.push({
+            batch: batchResponseData[key].attributes.batch,
+            timing: timings,
+          });
         }
       }
     }
+    setCurrentBatches(tempCurrentBatches);
   };
 
-  checkForCurrentBatch();
+  useEffect(() => {
+    if (batchResponseData.length !== 0) {
+      checkForCurrentBatch();
+      setInterval(() => {
+        checkForCurrentBatch();
+      }, 300000);
+    }
+  }, [batchResponseData]);
+
   return (
     <DashboardContent>
       <div className="flex flex-col lg:justify-between lg:flex-row space-x-0 space-y-5 lg:space-y-0 lg:space-x-5">
@@ -305,61 +312,42 @@ export default function TakeAttendance() {
           </div>
           <div className="mt-10 min-w-fit lg:w-full">{attendanceView}</div>
         </div>
-        <div className="p-4 mt-36 w-full lg:w-5/12 xl:w-4/12 2xl:w-3/12">
-          <h3 className="text-lg font-semibold">Pending Attendance</h3>
+        <div className="mt-36 w-full lg:w-5/12 xl:w-4/12 2xl:w-3/12">
+          <div className="flex flex-col">
+            <h1 className="heading1 text-primary">Pending Attendence</h1>
+            <span className="underline w-24 my-4"></span>
+          </div>
           <div className="bg-white font-medium p-4 my-4 rounded-xl shadow-md flex flex-col divide-y duration-75">
-            <button
-              onClick={() => {
-                handleLoadStudents(null, "reminder", "12 NCERT");
-              }}
-              className="cursor-pointer w-full flex justify-around p-3 py-4 hover:bg-accent rounded-md"
-            >
-              <div className="w-full">
-                <p>12 NCERT</p>
-              </div>
-              <div className="w-full">
-                <p>3:00 to 4:00</p>
-              </div>
-            </button>
-            <button
-              onClick={() => {
-                handleLoadStudents(null, "reminder", "8 GSEB");
-              }}
-              className="w-full flex justify-around p-3 py-4 hover:bg-accent rounded-md "
-            >
-              <div className="w-full">
-                <p>8 GSEB</p>
-              </div>
-              <div className="w-full">
-                <p>3:00 to 4:00</p>
-              </div>
-            </button>
-            <button
-              onClick={() => {
-                handleLoadStudents(null, "reminder", "11 NCERT");
-              }}
-              className="w-full flex justify-around p-3 py-4 hover:bg-accent rounded-md"
-            >
-              <div className="w-full">
-                <p>11 NCERT</p>
-              </div>
-              <div className="w-full">
-                <p>3:00 to 4:00</p>
-              </div>
-            </button>
-            <button
-              onClick={() => {
-                handleLoadStudents(null, "reminder", "12 JEE");
-              }}
-              className="w-full flex justify-around p-3 py-4 hover:bg-accent rounded-md"
-            >
-              <div className="w-full">
-                <p>12 JEE</p>
-              </div>
-              <div className="w-full">
-                <p>3:00 to 4:00</p>
-              </div>
-            </button>
+            {/* loop through currentBactes */}
+            {currentBatches.map((batch) => {
+              // convert batch timing into 12 hour format
+              batch.timing = batch.timing.map((time) => {
+                let timeSplit = time.split(":");
+                let hour = parseInt(timeSplit[0]);
+                let minute = timeSplit[1];
+                if (hour > 12) {
+                  hour = hour - 12;
+                }
+                return hour + ":" + minute;
+              });
+
+              return (
+                <button
+                  key={batch.batch}
+                  onClick={() => {
+                    handleLoadStudents(null, "reminder", batch.batch);
+                  }}
+                  className="cursor-pointer w-full flex justify-around p-3 py-4 hover:bg-accent rounded-md"
+                >
+                  <div className="w-full">
+                    <p>{batch.batch}</p>
+                  </div>
+                  <div className="w-full">
+                    <p>{batch.timing.join(" - ")}</p>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
